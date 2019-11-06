@@ -32,11 +32,13 @@ class HomeScreenState extends State<HomeScreen> {
 
   List bannreData;
   List categoryData;
+  List featuredProduct;
   @override
   void initState() {
     super.initState();
-    this.getJSONData();
-    this.getCategoty();
+    this.getJSONData(); // Function for banner Images
+    this.getCategoty(); // Function for category display
+    this.getFeatureProduct(); //Function for featured product
   }
 
 /*
@@ -49,7 +51,6 @@ class HomeScreenState extends State<HomeScreen> {
     setState(() {
       bannreData = json.decode(response.body)['data'];
     });
-
     return "Successfull";
   }
 
@@ -63,7 +64,20 @@ class HomeScreenState extends State<HomeScreen> {
     setState(() {
       categoryData = json.decode(response.body)['data'];
     });
-    
+    return "Successfull";
+  }
+
+  /*
+ *  For getFeatureProduct
+ */
+  Future<String> getFeatureProduct() async {
+    var response = await http.get(
+        Uri.encodeFull(config.baseUrl + 'product-store/featureproduct-list'),
+        headers: {"Accept": "application/json"});
+    setState(() {
+      featuredProduct = json.decode(response.body)['data'];
+    });
+    print(featuredProduct);
     return "Successfull";
   }
 
@@ -180,64 +194,154 @@ class HomeScreenState extends State<HomeScreen> {
         ],
         onTap: _onTap,
       ),
-      body: Container(
+      body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
           child: Column(
-        children: <Widget>[
-          Column(children: [
-            CarouselSlider(
-              height: 200.0,
-              items: bannreData.map((i) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return Container(
-                        margin: EdgeInsets.symmetric(horizontal: 5.0),
-                        child: Image.network(
-                            config.mediaUrlBanner + '${i['image']}',
-                            width: MediaQuery.of(context).size.width,
-                            height: 200,
-                            fit: BoxFit.fill));
-                  },
-                );
-              }).toList(),
-            ),
-          ]),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: categoryData.map((i) {
-                return FlatButton(
-                  color: Colors.blue,
-                  textColor: Colors.white,
-                  disabledColor: Colors.grey,
-                  disabledTextColor: Colors.black,
-                  padding: EdgeInsets.all(8.0),
-                  splashColor: Colors.blueAccent,
-                  
-                  onPressed: () {
-                    print('${i["categoryId"]}');
-                    Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SubCategoryScreen(
-                                    id: '${i["categoryId"]}',
-                                    name: '${i["name"]}'),
-                              ));
-                  },
-                 
-                  child: Text(
-                    '${i['name']}',
-                    style: TextStyle(fontSize: 12.0),
+            children: <Widget>[
+              Column(children: [
+                CarouselSlider(
+                  height: 200.0,
+                  items: bannreData.map((i) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                            margin: EdgeInsets.symmetric(horizontal: 5.0),
+                            child: Image.network(
+                                config.mediaUrlBanner + '${i['image']}',
+                                width: MediaQuery.of(context).size.width,
+                                height: 200,
+                                fit: BoxFit.fill));
+                      },
+                    );
+                  }).toList(),
+                ),
+              ]),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: categoryData.map((i) {
+                    return Padding(
+                      padding: EdgeInsets.only(right: 8.0),
+                      child: new Container(
+                        margin: const EdgeInsets.only(
+                            left: 10.0, right: 10.0, top: 10.0),
+                        child: FlatButton(
+                          color: Colors.blue,
+                          textColor: Colors.white,
+                          disabledColor: Colors.grey,
+                          disabledTextColor: Colors.black,
+                          padding: EdgeInsets.all(8.0),
+                          splashColor: Colors.blueAccent,
+                          onPressed: () {
+                            print('${i["categoryId"]}');
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SubCategoryScreen(
+                                      id: '${i["categoryId"]}',
+                                      name: '${i["name"]}'),
+                                ));
+                          },
+                          child: Text(
+                            '${i['name']}',
+                            style: TextStyle(fontSize: 12.0),
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(right: 8.0),
+                        child: new Container(
+                            margin: const EdgeInsets.only(
+                                left: 20.0, right: 20.0, top: 10.0),
+                            child: Text('Featured Products',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                ))),
+                      ),
+                    ],
                   ),
-                );
-              }).toList(),
-            ),
-          ),
-
-          Column(children: <Widget>[
-           Text('hiiiiii'),
-          ],)
-        ],
-      )),
+                  Column(
+                    children: <Widget>[
+                      Container(
+                        margin: const EdgeInsets.only(left: 20.0, right: 20.0),
+                        child: Text('See all',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      )
+                    ],
+                  )
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  GridView.builder(
+                      shrinkWrap: true,
+                      itemCount: featuredProduct.length,
+                      gridDelegate:
+                          new SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2),
+                      itemBuilder: (BuildContext context, int i) {
+                        if (i <= 3) {
+                          return new GestureDetector(
+                              child: new Container(
+                            margin: const EdgeInsets.only(
+                                left: 5.0, right: 5.0, top: 5.0),
+                            child: SizedBox(
+                              child: new Card(
+                                elevation: 5.0,
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.only(right: 5.0, left: 5.0),
+                                  child: new Container(
+                                    alignment: Alignment.center,
+                                    child: Column(
+                                      children: [
+                                        new Container(
+                                          margin: const EdgeInsets.only(
+                                              bottom: 20.0, top: 10.0),
+                                          child: Image.network(
+                                            config.mediaUrlFeaturProduct +
+                                                '${featuredProduct[i]['Images']['containerName']}' +
+                                                '${featuredProduct[i]['Images']['image']}',
+                                            width: 100,
+                                            height: 100,
+                                          ),
+                                        ),
+                                        Text(
+                                          '${featuredProduct[i]['name'].substring(0, 22)}...',
+                                        ),
+                                        Text(
+                                          'Rs ${featuredProduct[i]['price']}',
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            color: Colors.red,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ));
+                        }
+                      })
+                ],
+              ),
+            ],
+          )),
     );
   }
 }

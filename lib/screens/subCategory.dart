@@ -5,6 +5,10 @@ import 'dart:convert';
 import 'package:spurtcommerce/config.dart' as config;
 import 'package:carousel_slider/carousel_slider.dart';
 
+
+void main() {
+  runApp(new SubCategoryScreen());
+}
 class SubCategoryScreen extends StatefulWidget {
   final id;
   final name;

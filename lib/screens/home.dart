@@ -8,6 +8,7 @@ import 'package:spurtcommerce/screens/cart.dart';
 import 'package:spurtcommerce/screens/profile.dart';
 import 'package:spurtcommerce/screens/subCategory.dart';
 import 'package:spurtcommerce/screens/wishlist.dart';
+import 'package:spurtcommerce/screens/productView.dart';
 
 const String _AccountName = 'Spurt Commerce';
 const String _AccountEmail = 'abc@gmail.com';
@@ -226,7 +227,7 @@ class HomeScreenState extends State<HomeScreen> {
                         margin: const EdgeInsets.only(
                             left: 10.0, right: 10.0, top: 10.0),
                         child: FlatButton(
-                          color: Colors.blue,
+                          color: Colors.deepPurple,
                           textColor: Colors.white,
                           disabledColor: Colors.grey,
                           disabledTextColor: Colors.black,
@@ -274,11 +275,16 @@ class HomeScreenState extends State<HomeScreen> {
                     children: <Widget>[
                       Container(
                         margin: const EdgeInsets.only(left: 20.0, right: 20.0),
-                        child: Text('See all',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            )),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushNamed("/featuredProduct");
+                          },
+                          child: const Text('See all',
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              )),
+                        ),
                       )
                     ],
                   )
@@ -296,46 +302,56 @@ class HomeScreenState extends State<HomeScreen> {
                         if (i <= 3) {
                           return new GestureDetector(
                               child: new Container(
-                            margin: const EdgeInsets.only(
-                                left: 5.0, right: 5.0, top: 5.0),
-                            child: SizedBox(
-                              child: new Card(
-                                elevation: 5.0,
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.only(right: 5.0, left: 5.0),
-                                  child: new Container(
-                                    alignment: Alignment.center,
-                                    child: Column(
-                                      children: [
-                                        new Container(
-                                          margin: const EdgeInsets.only(
-                                              bottom: 20.0, top: 10.0),
-                                          child: Image.network(
-                                            config.mediaUrlFeaturProduct +
-                                                '${featuredProduct[i]['Images']['containerName']}' +
-                                                '${featuredProduct[i]['Images']['image']}',
-                                            width: 100,
-                                            height: 100,
+                                  margin: const EdgeInsets.only(
+                                      left: 5.0, right: 5.0, top: 5.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ProductViewScreen(
+                                                id: '${featuredProduct[i]["_id"]}',
+                                                name:'${featuredProduct[i]["name"]}'),
+                                          ));
+                                    },
+                                    child: SizedBox(
+                                      child: new Card(
+                                        elevation: 5.0,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              right: 5.0, left: 5.0),
+                                          child: new Container(
+                                            alignment: Alignment.center,
+                                            child: Column(
+                                              children: [
+                                                new Container(
+                                                  margin: const EdgeInsets.only(
+                                                      bottom: 20.0, top: 10.0),
+                                                  child: Image.network(
+                                                    config.mediaUrl +
+                                                        '${featuredProduct[i]['Images']['containerName']}' +
+                                                        '${featuredProduct[i]['Images']['image']}',
+                                                    width: 100,
+                                                    height: 100,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  '${featuredProduct[i]['name'].substring(0, 22)}...',
+                                                ),
+                                                Text(
+                                                  'Rs ${featuredProduct[i]['price']}',
+                                                  style: TextStyle(
+                                                    fontSize: 12.0,
+                                                    color: Colors.red,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                        Text(
-                                          '${featuredProduct[i]['name'].substring(0, 22)}...',
-                                        ),
-                                        Text(
-                                          'Rs ${featuredProduct[i]['price']}',
-                                          style: TextStyle(
-                                            fontSize: 12.0,
-                                            color: Colors.red,
-                                          ),
-                                        )
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ));
+                                  )));
                         }
                       })
                 ],

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:spurtcommerce/screens/home.dart';
 import 'package:spurtcommerce/screens/login.dart';
@@ -6,27 +8,28 @@ import 'package:spurtcommerce/screens/cart.dart';
 import 'package:spurtcommerce/screens/profile.dart';
 import 'package:spurtcommerce/screens/wishlist.dart';
 import 'package:spurtcommerce/screens/subCategory.dart';
-
+import 'package:spurtcommerce/screens/featuredProduct.dart';
+import 'package:spurtcommerce/screens/productView.dart';
 
 class Routes {
   var routes = <String, WidgetBuilder>{
     "/dashboard": (BuildContext context) => new HomeScreen(),
     "/login": (BuildContext context) => new LoginScreen(),
     "/signup": (BuildContext context) => new SignupScreen(),
-    "/wishlist":(BuildContext context) => new WishlistScreen(),
-    "/cart":(BuildContext context) => new CartScreen(),
-    "/profile":(BuildContext context) => new ProfileScreen(),
-    "/subCategory":(BuildContext context) => new SubCategoryScreen(),
-    
+    "/wishlist": (BuildContext context) => new WishlistScreen(),
+    "/cart": (BuildContext context) => new CartScreen(),
+    "/profile": (BuildContext context) => new ProfileScreen(),
+    "/subCategory": (BuildContext context) => new SubCategoryScreen(),
+    "/featuredProduct": (BuildContext context) => new FeaturedProductScreen(),
+    "/productView": (BuildContext context) => new ProductViewScreen(),
   };
 
-  
   Routes() {
     runApp(new MaterialApp(
       title: "Flutter Flat App",
       home: new HomeScreen(),
       theme: ThemeData(
-        primaryColor: Colors.blueAccent[300],
+        primaryColor: Colors.deepPurple,
       ),
       routes: routes,
     ));

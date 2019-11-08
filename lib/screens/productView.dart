@@ -6,6 +6,7 @@ import 'package:spurtcommerce/config.dart' as config;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spurtcommerce/screens/cart.dart';
 import 'package:toast/toast.dart';
 
 class ProductViewScreen extends StatefulWidget {
@@ -19,12 +20,35 @@ class ProductViewScreen extends StatefulWidget {
 class ProductViewScreenState extends State<ProductViewScreen> {
   List product;
   List productImage;
-  int _counter = 1;
+  bool isaddtocart = true;
+  // List<String> productIdArray = new List();
 
   @override
   void initState() {
     super.initState();
     this.getProduct(); // Function for get product details
+    this.checkinCartid();
+  }
+
+  checkinCartid() async {
+    var id = this.widget.id;
+    final prefs = await SharedPreferences.getInstance();
+    List<String> show_id = prefs.getStringList('id_list') ?? List<String>();
+
+    List<String> list = show_id;
+
+    var n = list.contains(id);
+    if (n == true) {
+      setState(() {
+        isaddtocart = false;
+      });
+    } else {
+      setState(() {
+        isaddtocart = true;
+      });
+    }
+    // list.add(id);
+    // prefs.setStringList('id_list', list);
   }
 
 /*
@@ -39,41 +63,40 @@ class ProductViewScreenState extends State<ProductViewScreen> {
       product = json.decode(response.body)['data'];
     });
 
-    print(product[0]['productImage']);
     setState(() {
       productImage = product[0]['productImage'];
     });
+    // final prefs = await SharedPreferences.getInstance();
 
     return "Successfull";
   }
 
-/** For Qty Decrement */
-  countDecrement() {
-    setState(() {
-      _counter--;
-    });
-  }
-
-  /** For Qty Increment */
-  countIncrement() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  _saveQtyValue() async {
-   
+  _saveQtyValue(id) async {
+    print(id);
     final prefs = await SharedPreferences.getInstance();
-    final key = 'my_int_key';
-    final value = _counter;
-    prefs.setInt(key, value);
-    Toast.show("Added in cart", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
-    print('saved $value');
+    List<String> show_id = prefs.getStringList('id_list') ?? List<String>();
+
+    List<String> list = show_id;
+
+    list.add(id);
+    prefs.setStringList('id_list', list);
+    Toast.show("Added to cart", context,
+        duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+
+    print('list id=====$list');
+    setState(() {
+      isaddtocart = false;
+    });
+    // clear();
+  }
+
+  clear() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(this.widget.id);
     return new Scaffold(
         appBar: new AppBar(
           title: new Text(this.widget.name),
@@ -169,39 +192,6 @@ class ProductViewScreenState extends State<ProductViewScreen> {
                                                   ),
                                                 ],
                                               ),
-                                              Row(
-                                                children: <Widget>[
-                                                  Text(
-                                                    'Qty. :  ',
-                                                    style: TextStyle(
-                                                        fontSize: 15.0),
-                                                  ),
-                                                  GestureDetector(
-                                                      onTap: () {
-                                                        countDecrement();
-                                                      },
-                                                      child: Text(
-                                                        '-     ',
-                                                        style: TextStyle(
-                                                            fontSize: 20),
-                                                      )),
-                                                  Text(
-                                                    '$_counter',
-                                                    style: TextStyle(
-                                                        fontSize: 15.0),
-                                                  ),
-                                                  GestureDetector(
-                                                      onTap: () {
-                                                        countIncrement();
-                                                        
-                                                      },
-                                                      child: Text(
-                                                        '     +',
-                                                        style: TextStyle(
-                                                            fontSize: 20),
-                                                      )),
-                                                ],
-                                              )
                                             ],
                                           )),
                                           new Divider(),
@@ -216,24 +206,56 @@ class ProductViewScreenState extends State<ProductViewScreen> {
                                           new Divider(),
                                           Align(
                                             child: Card(
-                                              elevation: 3,
-                                              child: FlatButton(
-                                                onPressed: () => {_saveQtyValue()},
-                                                color: Color.fromRGBO(
-                                                    94, 199, 182, 0.9),
-                                                padding: EdgeInsets.all(10.0),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Icon(Icons.shopping_cart),
-                                                    Text(
-                                                      "   Add to Cart",
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
+                                                child: isaddtocart == true
+                                                    ? FlatButton(
+                                                        onPressed: () => {
+                                                          _saveQtyValue(
+                                                              '${product[i]['productId']}')
+                                                        },
+                                                        color: Color.fromRGBO(
+                                                            94, 199, 182, 0.9),
+                                                        padding: EdgeInsets.all(
+                                                            10.0),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: <Widget>[
+                                                            Icon(Icons
+                                                                .shopping_cart),
+                                                            Text(
+                                                              "   Add to Cart",
+                                                            )
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : FlatButton(
+                                                        onPressed: () => {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        CartScreen(),
+                                                              ))
+                                                        },
+                                                        color: Color.fromRGBO(
+                                                            94, 199, 182, 0.9),
+                                                        padding: EdgeInsets.all(
+                                                            10.0),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: <Widget>[
+                                                            Icon(Icons
+                                                                .shopping_basket),
+                                                            Text(
+                                                              "   Go to Cart",
+                                                            )
+                                                          ],
+                                                        ),
+                                                      )),
                                           ),
                                           new Divider(),
                                           Align(
@@ -264,3 +286,36 @@ class ProductViewScreenState extends State<ProductViewScreen> {
             )));
   }
 }
+
+// Row(
+//   children: <Widget>[
+//     Text(
+//       'Qty. :  ',
+//       style: TextStyle(
+//           fontSize: 15.0),
+//     ),
+//     GestureDetector(
+//         onTap: () {
+//           countDecrement();
+//         },
+//         child: Text(
+//           '-     ',
+//           style: TextStyle(
+//               fontSize: 20),
+//         )),
+//     Text(
+//       '$_counter',
+//       style: TextStyle(
+//           fontSize: 15.0),
+//     ),
+//     GestureDetector(
+//         onTap: () {
+//           countIncrement();
+//         },
+//         child: Text(
+//           '     +',
+//           style: TextStyle(
+//               fontSize: 20),
+//         )),
+//   ],
+// )

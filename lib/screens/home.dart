@@ -78,7 +78,7 @@ class HomeScreenState extends State<HomeScreen> {
     setState(() {
       featuredProduct = json.decode(response.body)['data'];
     });
-    print(featuredProduct);
+   
     return "Successfull";
   }
 
@@ -234,7 +234,7 @@ class HomeScreenState extends State<HomeScreen> {
                           padding: EdgeInsets.all(8.0),
                           splashColor: Colors.blueAccent,
                           onPressed: () {
-                            print('${i["categoryId"]}');
+                           
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

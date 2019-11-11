@@ -7,7 +7,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:spurtcommerce/config.dart' as config;
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:spurtcommerce/screens/cartView.dart';
 const String _AccountName = 'Spurt Commerce';
 const String _AccountEmail = 'abc@gmail.com';
 
@@ -22,7 +22,9 @@ class CartScreen extends StatefulWidget {
 
 class CartScreenState extends State<CartScreen> {
   List cartProduct;
-  List returnMovies = [];
+  List cartProductArray = [];
+  List cart = [];
+
   List Tabs = [HomeScreen(), WishlistScreen(), CartScreen(), ProfileScreen()];
   _onTap(int index) {
     Navigator.of(context)
@@ -34,30 +36,36 @@ class CartScreenState extends State<CartScreen> {
   @override
   void initState() {
     super.initState();
-    this.getCartProduct(); // Function for get product details
+    // this.getCartProduct(); // Function for get product details
   }
 
-  Future<String> getCartProduct() async {
-    final prefs = await SharedPreferences.getInstance();
-    List<String> show_id = prefs.getStringList('id_list') ?? List<String>();
-    print('id==cart==$show_id');
-    print(show_id.length);
-    var cart ;
-    for (var i = 0; i <= show_id.length; i++) {
-      var response = await http.get(
-          Uri.encodeFull(
-              config.baseUrl + 'product-store/productdetail/${show_id[i]}'),
-          headers: {"Accept": "application/json"});
-      
-     returnMovies.addAll({response.body});
-     print('array=========================${returnMovies.length}bodyyyyy$returnMovies');
-      // cart = returnMovies[1];
-    // setState(() {
-    //   cartProduct = cart['data'];
-    // });
-    }
-    // print('${show_id.length}cartProduct=======$cartProduct');
-  }
+  // Future<List> getCartProduct() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   List<String> show_id = prefs.getStringList('id_list') ?? List<String>();
+  //   print('id==cart==$show_id');
+  //   print(show_id.length);
+
+  //   for (var i = 0; i <= show_id.length; i++) {
+  //     var response = await http.get(
+  //         Uri.encodeFull(
+  //             config.baseUrl + 'product-store/productdetail/${show_id[i]}'),
+  //         headers: {"Accept": "application/json"});
+
+  //     cartProductArray.addAll({response.body});
+
+  //     print(
+  //         'cartProductArray=======${cartProductArray.length}=============$cartProductArray');
+  //     cart = cartProductArray;
+  //     print("cart=${cart.length}");
+  //     print('==>>>>>>${cart[i]['status']}');
+  //     // setState(() {
+  //     //   cartProduct = cartProductArray;
+  //     // });
+  //   }
+  //   print('cart====>>>>>$cartProduct');
+
+  //   // return "Successfull";
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -173,20 +181,29 @@ class CartScreenState extends State<CartScreen> {
           ],
           onTap: _onTap,
         ),
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            children: <Widget>[
-              // Row(
-              //   children: cartProduct.map((i) {
-              //     print(cartProduct.length);
-              //     return Row(
-              //       children: <Widget>[Text('${i['_id']}')],
-              //     );
-              //   }).toList(),
-              // )
-            ],
-          ),
-        ));
+        
+          body: Center(
+          child: CartView()
+        ),
+        // body: SingleChildScrollView(          
+        //   child: Column(
+        //     children: <Widget>[
+        //       Expanded(
+        //           child: SizedBox(
+        //           child: new ListView.builder(
+        //         itemCount: cart.length,
+        //         itemBuilder: (BuildContext ctxt, int i) {
+        //           print(cartProduct.length);
+        //           return SizedBox(
+        //             child: Card(
+        //               child: Text('aaaaaaaaaaa'),
+        //             ),
+        //           );
+        //         },
+        //       )))
+        //     ],
+        //   ),
+        // )
+        );
   }
 }

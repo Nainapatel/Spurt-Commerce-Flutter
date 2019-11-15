@@ -13,22 +13,21 @@ import 'package:spurtcommerce/screens/productView.dart';
 import 'package:spurtcommerce/screens/categoryProductlist.dart';
 
 
-class Routes {
+class RoutesHome {
   var routes = <String, WidgetBuilder>{
+    "/login": (BuildContext context) => new LoginScreen(),
     "/dashboard": (BuildContext context) => new HomeScreen(),
+    "/signup": (BuildContext context) => new SignupScreen(),
     "/wishlist": (BuildContext context) => new WishlistScreen(),
     "/cart": (BuildContext context) => new CartScreen(),
     "/profile": (BuildContext context) => new ProfileScreen(),
     "/subCategory": (BuildContext context) => new SubCategoryScreen(),
     "/featuredProduct": (BuildContext context) => new FeaturedProductScreen(),
     "/productView": (BuildContext context) => new ProductViewScreen(),
-        "/categoryProductlist": (BuildContext context) => new CategoryProductlistScreen(),
-
-    "/login": (BuildContext context) => new LoginScreen(),
-    "/signup": (BuildContext context) => new SignupScreen(),
+    "/categoryProductlist": (BuildContext context) => new CategoryProductlistScreen(),
   };
 
-  Routes() {
+  RoutesHome() {
     runApp(new MaterialApp(
       title: "Flutter Flat App",
       

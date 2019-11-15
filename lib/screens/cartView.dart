@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:convert';
 import 'package:spurtcommerce/config.dart' as config;
 import 'package:flutter/material.dart';
 import 'package:spurtcommerce/services.dart';
@@ -12,7 +12,7 @@ class Cart {
   final String shipping;
   final List<Product> productImage;
   final String productId;
-  final int qty;
+  dynamic qty;
 
   Cart(
       {this.id,
@@ -21,7 +21,7 @@ class Cart {
       this.shipping,
       this.productImage,
       this.productId,
-      this.qty = 0});
+      this.qty});
 
   factory Cart.fromJson(Map<String, dynamic> json) {
     var productImage = json['productImage'] as List;
@@ -56,22 +56,21 @@ class CartView extends StatefulWidget {
 }
 
 class CartViewScreenState extends State<CartView> {
-  int _counter = 0;
-  countDecrement(id) async {
-    print("call countDecrement");
-    setState(() {
-      _counter--;
-    });
+  int qtyData;
+  // List qtyArray = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // this.getQtyProduct(); // Function for get product details
   }
 
-  countIncrement(data) async {
-   
-    // data.qty++;
-    print("call countIncrement${data.qty}");
-    setState(() {
-      _counter++;
-    });
-  }
+  // getQtyProduct() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   int qtyData = prefs.getInt('qtyData');
+
+  //   print(' qtyData====$qtyData');
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -92,17 +91,13 @@ class CartViewScreenState extends State<CartView> {
 
   Future<List<Cart>> _fetchJobs() async {
     var response = await fetchJobs();
-    print('cart view screen ====>>>>>>>');
     return response;
   }
 
   ListView _jobsListView(data) {
     return ListView.builder(
-      
         itemCount: data.length,
         itemBuilder: (context, i) {
-         
-          print('in cart view====${data[i].productImage[0].image}');
           return Row(
             children: <Widget>[
               Column(
@@ -122,8 +117,8 @@ class CartViewScreenState extends State<CartView> {
               Row(
                 children: <Widget>[
                   new Container(
-                      margin: const EdgeInsets.only(top: 10.0),
-                      width: 280,
+                      margin: const EdgeInsets.only(top: 10.0, left: 15.0),
+                      width: 260,
                       child: SizedBox(
                           // height: 250,
                           child: Column(
@@ -154,8 +149,8 @@ class CartViewScreenState extends State<CartView> {
                                 style: TextStyle(fontSize: 15.0),
                               ),
                               GestureDetector(
-                                  onTap: () {
-                                    countDecrement('${data[i].productId}');
+                                  onTap: () async {
+                                    data[i].qty--;
                                   },
                                   child: Text(
                                     '-     ',
@@ -166,8 +161,33 @@ class CartViewScreenState extends State<CartView> {
                                 style: TextStyle(fontSize: 15.0),
                               ),
                               GestureDetector(
-                                  onTap: () {
-                                    countIncrement('${data[i]}');
+                                  onTap: () async {
+                                    data[i].qty++;
+
+                                    final prefs =
+                                        await SharedPreferences.getInstance();
+                                    List<String> show_qty =
+                                        prefs.getStringList('cart_obj') ??
+                                            List<String>();
+
+                                    List<String> qtyArray = show_qty;
+                                    var obj = {
+                                      'index': i,
+                                      'productId': data[i].productId,
+                                      'qty': data[i].qty,
+                                      'price': data[i].price,
+                                      
+                                    };
+                                    qtyArray.add(obj.toString());
+                                    prefs.setStringList('cart_obj', qtyArray);
+                                    print('array=====$qtyArray');
+                                  
+                                      var n = qtyArray
+                                          .contains(data[i].productId);
+                                      print('n====================$n');
+                                    
+                            
+                                 
                                   },
                                   child: Text(
                                     '     +',
@@ -184,3 +204,40 @@ class CartViewScreenState extends State<CartView> {
         });
   }
 }
+
+// final prefs =
+//                                         await SharedPreferences.getInstance();
+//                                     prefs.setStringList('qtyData',
+//                                         jsonDecode(qtyArray.toString()));
+//                                     List<String> show_qty =
+//                                         prefs.getString('qtyData') ??
+//                                             List<String>();
+//                                     print('show_qty==in onTap=$show_qty');
+
+
+
+  //  for (var i = 0; i < qtyArray.length; i++) {
+  //                                     var n = qtyArray
+  //                                         .contains(data[i].productId);
+  //                                     print('n====${qtyArray.length}===============$n');
+
+  //                                     if (n == true) {
+  //                                       print('i if');
+  //                                       Map<String, dynamic> data =
+  //                                           json.decode(qtyArray.toString());
+  //                                       (data["qtyArray"] as List<dynamic>)
+  //                                           .forEach((item) =>
+  //                                               item["productId"] =
+  //                                                   data[i].qty++);
+
+
+  //                                     } else {
+  //                                       print('in else');
+  //                                        obj = {
+  //                                         'index': i,
+  //                                         'productId': data[i].productId,
+  //                                         'qty': data[i].qty,
+  //                                         'price': data[i].price
+  //                                       };
+  //                                     }
+  //                                   }

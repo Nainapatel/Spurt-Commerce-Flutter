@@ -83,7 +83,6 @@ class ProductViewScreenState extends State<ProductViewScreen> {
     Toast.show("Added to cart", context,
         duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
 
-    print('list id=====$list');
     setState(() {
       isaddtocart = false;
     });

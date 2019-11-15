@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:spurtcommerce/config.dart' as config;
 import 'package:toast/toast.dart';
-
-const String _AccountName = 'Spurt Commerce';
-const String _AccountEmail = 'abc@gmail.com';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:spurtcommerce/screens/drawer.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
   LoginScreenState createState() => LoginScreenState();
 }
 
-
-
 class LoginScreenState extends State<LoginScreen> {
+  Map<String, dynamic> list;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   TextEditingController _passwordController = TextEditingController();
@@ -26,11 +26,17 @@ class LoginScreenState extends State<LoginScreen> {
         'emailId': _emailController.text,
         'password': _passwordController.text,
       });
-      FocusScope.of(context).requestFocus(FocusNode());
+      Navigator.of(context).pushNamed("/dashboard");
+      // FocusScope.of(context).requestFocus(FocusNode());
       Toast.show("Login Successfully", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
       _emailController.text = '';
       _passwordController.text = '';
+
+      list = json.decode(response.body);
+      print('jwt token===${list['data']['token']}');
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setStringList('jwt_token', list['data']['token']);
       return response;
     }
   }
@@ -45,84 +51,7 @@ class LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: new Drawer(
-          child: new ListView(
-              // padding: const EdgeInsets.only(top: 0.0),
-              children: <Widget>[
-            new UserAccountsDrawerHeader(
-                accountName: const Text(_AccountName),
-                accountEmail: const Text(_AccountEmail),
-                otherAccountsPictures: <Widget>[
-                  new GestureDetector(
-                    onTap: () => Navigator.of(context).pushNamed("/login"),
-                    child: new Semantics(
-                      label: 'Switch Account',
-                      child: new Text(
-                        "Login",
-                        style: TextStyle(fontSize: 15.0, color: Colors.black87),
-                      ),
-                    ),
-                  )
-                ]),
-            new ListTile(
-              leading: new Icon(Icons.lightbulb_outline),
-              title: new Text('Notes'),
-              // onTap: () => _onListTileTap(context),
-            ),
-            new Divider(),
-            new ListTile(
-              leading: new Text('Label'),
-              trailing: new Text('Edit'),
-              // onTap: () => _onListTileTap(context),
-            ),
-            new ListTile(
-              leading: new Icon(Icons.label),
-              title: new Text('Expense'),
-              // onTap: () => _onListTileTap(context),
-            ),
-            new ListTile(
-              leading: new Icon(Icons.label),
-              title: new Text('Inspiration'),
-              // onTap: () => _onListTileTap(context),
-            ),
-            new ListTile(
-              leading: new Icon(Icons.label),
-              title: new Text('Personal'),
-              // onTap: () => _onListTileTap(context),
-            ),
-            new ListTile(
-              leading: new Icon(Icons.label),
-              title: new Text('Work'),
-              // onTap: () => _onListTileTap(context),
-            ),
-            new ListTile(
-              leading: new Icon(Icons.add),
-              title: new Text('Create new label'),
-              // onTap: () => _onListTileTap(context),
-            ),
-            new Divider(),
-            new ListTile(
-              leading: new Icon(Icons.archive),
-              title: new Text('Archive'),
-              // onTap: () => _onListTileTap(context),
-            ),
-            new ListTile(
-              leading: new Icon(Icons.delete),
-              title: new Text('Trash'),
-              // onTap: () => _onListTileTap(context),
-            ),
-            new Divider(),
-            new ListTile(
-              leading: new Icon(Icons.settings),
-              title: new Text('Settings'),
-              // onTap: () => _onListTileTap(context),
-            ),
-            new ListTile(
-              leading: new Icon(Icons.help),
-              title: new Text('Help & feedback'),
-              // onTap: () => _onListTileTap(context),
-            )
-          ])),
+      drawer: DrawerScreen(),
       appBar: AppBar(
         title: Text('Login'),
       ),

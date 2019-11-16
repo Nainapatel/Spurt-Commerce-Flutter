@@ -12,7 +12,6 @@ import 'package:spurtcommerce/screens/featuredProduct.dart';
 import 'package:spurtcommerce/screens/productView.dart';
 import 'package:spurtcommerce/screens/categoryProductlist.dart';
 
-
 class Routes {
   var routes = <String, WidgetBuilder>{
     "/dashboard": (BuildContext context) => new HomeScreen(),
@@ -22,8 +21,7 @@ class Routes {
     "/subCategory": (BuildContext context) => new SubCategoryScreen(),
     "/featuredProduct": (BuildContext context) => new FeaturedProductScreen(),
     "/productView": (BuildContext context) => new ProductViewScreen(),
-        "/categoryProductlist": (BuildContext context) => new CategoryProductlistScreen(),
-
+    "/categoryProductlist": (BuildContext context) => new CategoryProductlistScreen(),
     "/login": (BuildContext context) => new LoginScreen(),
     "/signup": (BuildContext context) => new SignupScreen(),
   };
@@ -31,18 +29,14 @@ class Routes {
   Routes() {
     runApp(new MaterialApp(
       title: "Flutter Flat App",
-      
       home: HomeScreen(),
       theme: ThemeData(
         primaryColor: Colors.deepPurple,
       ),
       routes: routes,
-    )
-    );
+    ));
   }
 }
-
-
 
 // class MyApp extends StatelessWidget {
 //   @override
@@ -51,7 +45,7 @@ class Routes {
 //       future: auth(), //check if user logged in or not
 //       builder: (context, snapshot) {
 //         if (!snapshot.hasData) {
-//           return MaterialApp( //if user is loggin first time then show login screen 
+//           return MaterialApp( //if user is loggin first time then show login screen
 //             title: 'Flutter Demo',
 //             theme: ThemeData(
 //               primarySwatch: Colors.blue,
@@ -69,6 +63,6 @@ class Routes {
 //         }
 //       },
 //     );
-    
+
 //   }
 // }

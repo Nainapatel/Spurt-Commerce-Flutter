@@ -10,6 +10,7 @@ import 'package:spurtcommerce/screens/drawer.dart';
 import 'package:spurtcommerce/screens/bottomTab.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+
 void main() {
   runApp(new HomeScreen());
 }
@@ -96,7 +97,10 @@ class HomeScreenState extends State<HomeScreen> {
           child: loader == true
               ? Column(
                   children: <Widget>[
-                    Column(children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                      
                       CarouselSlider(
                         height: 200.0,
                         items: bannreData.map((i) {

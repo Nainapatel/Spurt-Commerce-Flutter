@@ -7,6 +7,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spurtcommerce/screens/cart.dart';
+import 'package:spurtcommerce/screens/wishlist.dart';
 import 'package:toast/toast.dart';
 
 class ProductViewScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class ProductViewScreenState extends State<ProductViewScreen> {
   List product;
   List productImage;
   bool isaddtocart = true;
-  // List<String> productIdArray = new List();
+  bool iswishlisted = true;
 
   @override
   void initState() {
@@ -34,8 +35,10 @@ class ProductViewScreenState extends State<ProductViewScreen> {
     var id = this.widget.id;
     final prefs = await SharedPreferences.getInstance();
     List<String> show_id = prefs.getStringList('id_list') ?? List<String>();
-
     List<String> list = show_id;
+    List<String> show_wishlist =
+        prefs.getStringList('id_wishlist') ?? List<String>();
+    List<String> wishlist = show_wishlist;
 
     var n = list.contains(id);
     if (n == true) {
@@ -44,11 +47,20 @@ class ProductViewScreenState extends State<ProductViewScreen> {
       });
     } else {
       setState(() {
-        isaddtocart = true;
+        iswishlisted = true;
       });
     }
-    // list.add(id);
-    // prefs.setStringList('id_list', list);
+
+    var listid = wishlist.contains(id);
+    if (listid == true) {
+      setState(() {
+        iswishlisted = false;
+      });
+    } else {
+      setState(() {
+        iswishlisted = true;
+      });
+    }
   }
 
 /*
@@ -75,9 +87,7 @@ class ProductViewScreenState extends State<ProductViewScreen> {
     print(id);
     final prefs = await SharedPreferences.getInstance();
     List<String> show_id = prefs.getStringList('id_list') ?? List<String>();
-
     List<String> list = show_id;
-
     list.add(id);
     prefs.setStringList('id_list', list);
     Toast.show("Added to cart", context,
@@ -86,12 +96,33 @@ class ProductViewScreenState extends State<ProductViewScreen> {
     setState(() {
       isaddtocart = false;
     });
-    // clear();
   }
 
-  clear() async {
+  addtowishlist(id) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.clear();
+    var show_token = prefs.getString('jwt_token');
+
+    if (show_token == null) {
+      print('call if');
+      Navigator.of(context).pushNamed("/login");
+    } else {
+      List<String> show_wishid =
+          prefs.getStringList('id_wishlist') ?? List<String>(); // <-EDITED HERE
+
+      List<String> wishlist = show_wishid;
+      wishlist.add(id);
+      prefs.setStringList('id_wishlist', wishlist);
+
+      var response = await http.post(
+        config.baseUrl + 'customer/add-product-to-wishlist',
+        headers: {"Authorization": json.decode(show_token)},
+        body: {'productId': id},
+      );
+
+      setState(() {
+        iswishlisted = false;
+      });
+    }
   }
 
   @override
@@ -194,14 +225,39 @@ class ProductViewScreenState extends State<ProductViewScreen> {
                                             ],
                                           )),
                                           new Divider(),
-                                          Align(
-                                            alignment: Alignment.center,
-                                            child: Icon(
-                                              Icons.favorite,
-                                              color: Colors.deepPurple,
-                                              size: 40.0,
-                                            ),
-                                          ),
+                                          iswishlisted == true
+                                              ? GestureDetector(
+                                                  onTap: () {
+                                                    addtowishlist(
+                                                        '${product[i]['productId']}');
+                                                  },
+                                                  child: Align(
+                                                    alignment: Alignment.center,
+                                                    child: Icon(
+                                                      Icons.favorite,
+                                                      color: Colors.deepPurple,
+                                                      size: 40.0,
+                                                    ),
+                                                  ),
+                                                )
+                                              : GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              WishlistScreen(),
+                                                        ));
+                                                  },
+                                                  child: Align(
+                                                    alignment: Alignment.center,
+                                                    child: Icon(
+                                                      Icons.favorite,
+                                                      color: Colors.red,
+                                                      size: 40.0,
+                                                    ),
+                                                  ),
+                                                ),
                                           new Divider(),
                                           Align(
                                             child: Card(

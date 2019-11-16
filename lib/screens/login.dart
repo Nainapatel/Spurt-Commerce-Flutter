@@ -27,16 +27,16 @@ class LoginScreenState extends State<LoginScreen> {
         'password': _passwordController.text,
       });
       Navigator.of(context).pushNamed("/dashboard");
-      // FocusScope.of(context).requestFocus(FocusNode());
+
       Toast.show("Login Successfully", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
       _emailController.text = '';
       _passwordController.text = '';
+      list = json.decode(response.body)['data'];
 
-      list = json.decode(response.body);
-      print('jwt token===${list['data']['token']}');
       final prefs = await SharedPreferences.getInstance();
-      prefs.setStringList('jwt_token', list['data']['token']);
+      prefs.setString('jwt_token', jsonEncode(list['token']));
+
       return response;
     }
   }

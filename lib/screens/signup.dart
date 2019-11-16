@@ -3,9 +3,10 @@ import 'package:http/http.dart' as http;
 import 'package:spurtcommerce/config.dart' as config;
 import 'package:toast/toast.dart';
 import 'package:spurtcommerce/screens/drawer.dart';
-const String _AccountName = 'Spurt Commerce';
-const String _AccountEmail = 'abc@gmail.com';
- 
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'dart:async';
+import 'dart:convert';
 
 class SignupScreen extends StatefulWidget {
   @override
@@ -14,22 +15,21 @@ class SignupScreen extends StatefulWidget {
 
 class SignupScreenState extends State<SignupScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  Map<String, dynamic> list;
   TextEditingController _nameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPassword = TextEditingController();
   TextEditingController _phoneNumber = TextEditingController();
   TextEditingController _emailController = TextEditingController();
 
-  Future<http.Response> signup(
-      ) async {
+  Future<http.Response> signup() async {
     if (_emailController.text != '' &&
         _passwordController.text != '' &&
         _nameController.text != '' &&
         _phoneNumber.text != '' &&
         _confirmPassword.text != '') {
-      final response = await http
-          .post(config.baseUrl+'customer/register', body: {
+      final response =
+          await http.post(config.baseUrl + 'customer/register', body: {
         'emailId': _emailController.text,
         'password': _passwordController.text,
         'name': _nameController.text,
@@ -43,10 +43,13 @@ class SignupScreenState extends State<SignupScreen> {
       _confirmPassword.text = '';
       _phoneNumber.text = '';
 
-       Toast.show("Signup Successfully", context,
-        duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-
+      Toast.show("Signup Successfully", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      list = json.decode(response.body)['data'];
       Navigator.of(context).pop();
+      print('username======${list['username']}');
+       final prefs = await SharedPreferences.getInstance();
+      prefs.setString('username',list['username'] );
       return response;
     }
   }
@@ -64,7 +67,7 @@ class SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       drawer: DrawerScreen(),
+      drawer: DrawerScreen(),
       appBar: AppBar(
         title: Text('Signup'),
       ),

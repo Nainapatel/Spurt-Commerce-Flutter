@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:spurtcommerce/config.dart' as config;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:spurtcommerce/screens/productView.dart';
 
 class CategoryProductlistScreen extends StatefulWidget {
    final id;
@@ -75,13 +76,13 @@ class CategoryProductlistScreenState extends State<CategoryProductlistScreen> {
 
                                child: GestureDetector(
                                     onTap: () {
-                                      // Navigator.push(
-                                      //     context,
-                                      //     MaterialPageRoute(
-                                      //       builder: (context) => ProductViewScreen(
-                                      //           id: '${categoryProduct[i]["_id"]}',
-                                      //           name:'${categoryProduct[i]["name"]}'),
-                                      //     ));
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ProductViewScreen(
+                                                id: '${categoryProduct[i]["_id"]}',
+                                                name:'${categoryProduct[i]["name"]}'),
+                                          ));
                                     },
                           child: SizedBox(
                       

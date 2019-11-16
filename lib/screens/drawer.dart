@@ -7,6 +7,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:spurtcommerce/screens/categoryProductlist.dart';
 import 'package:spurtcommerce/screens/login.dart';
 import 'package:spurtcommerce/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const String _AccountName = 'Spurt Commerce';
 const String _AccountEmail = 'abc@gmail.com';
@@ -23,8 +24,19 @@ class DrawerScreenState extends State<DrawerScreen> {
   void initState() {
     super.initState();
     this.getCategoty(); // Function for category display
+    // this.chechlogin();
   }
+// chechlogin() async{
+//     final prefs = await SharedPreferences.getInstance();
+//    var show_token =
+//         prefs.getStringList('jwt_token');
+//     print('token for drawer===$show_token');
 
+//     // var show_username =
+//     //     prefs.getStringList('username');
+//     // print('token for drawer===$show_username');
+
+// }
   /*
  *  For Category
  */

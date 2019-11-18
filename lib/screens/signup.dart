@@ -101,7 +101,7 @@ class SignupScreenState extends State<SignupScreen> {
                       decoration: InputDecoration(
                         labelText: "name",
                         icon: Icon(
-                          Icons.person,
+                          Icons.perm_identity,
                           color: Theme.of(context).primaryColor,
                         ),
                       ),
@@ -122,7 +122,7 @@ class SignupScreenState extends State<SignupScreen> {
                       decoration: InputDecoration(
                         labelText: "password",
                         icon: Icon(
-                          Icons.lock,
+                          Icons.lock_open,
                           color: Theme.of(context).primaryColor,
                         ),
                       ),
@@ -133,7 +133,7 @@ class SignupScreenState extends State<SignupScreen> {
                       decoration: InputDecoration(
                         labelText: "Confirm Password",
                         icon: Icon(
-                          Icons.lock,
+                          Icons.lock_outline,
                           color: Theme.of(context).primaryColor,
                         ),
                       ),
@@ -145,7 +145,7 @@ class SignupScreenState extends State<SignupScreen> {
                       decoration: InputDecoration(
                         labelText: "Phone Number",
                         icon: Icon(
-                          Icons.lock,
+                          Icons.phone_android,
                           color: Theme.of(context).primaryColor,
                         ),
                       ),

@@ -20,23 +20,27 @@ class DrawerScreen extends StatefulWidget {
 class DrawerScreenState extends State<DrawerScreen> {
   List categoryData;
   bool loader = false;
+  bool datatoken = false;
+
   @override
   void initState() {
     super.initState();
     this.getCategoty(); // Function for category display
-    // this.chechlogin();
+    this.chechlogin();
   }
-// chechlogin() async{
-//     final prefs = await SharedPreferences.getInstance();
-//    var show_token =
-//         prefs.getStringList('jwt_token');
-//     print('token for drawer===$show_token');
 
-//     // var show_username =
-//     //     prefs.getStringList('username');
-//     // print('token for drawer===$show_username');
+  chechlogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    var show_token = prefs.getString('jwt_token');
+    print('token for drawer===$show_token');
 
-// }
+    if (show_token == null) {
+      datatoken = false;
+    } else {
+      datatoken = true;
+    }
+  }
+
   /*
  *  For Category
  */
@@ -56,38 +60,71 @@ class DrawerScreenState extends State<DrawerScreen> {
     return Drawer(
         child: new ListView(
       children: <Widget>[
-        new UserAccountsDrawerHeader(
-            accountName: const Text(_AccountName),
-            accountEmail: const Text(_AccountEmail),
-            otherAccountsPictures: <Widget>[
+        DrawerHeader(
+          child: Column(
+            children: <Widget>[
+              datatoken == false
+                  ? new GestureDetector(
+                      onTap: () => Navigator.of(context).pushNamed("/login"),
+                      child: new Semantics(
+                        label: 'Switch Account',
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            'Login',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    )
+                  : new GestureDetector(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: new Text(
+                          "Hello",
+                          style: TextStyle(fontSize: 15.0, color: Colors.white),
+                        ),
+                      ),
+                    ),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Image.asset('assets/favicon.png',
+                    width: 80, height: 80, fit: BoxFit.fill),
+              ),
               new GestureDetector(
-                onTap: () => Navigator.of(context).pushNamed("/login"),
-                child: new Semantics(
-                  label: 'Switch Account',
-                  child: new Text(
-                    "Login",
-                    style: TextStyle(fontSize: 15.0, color: Colors.black87),
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Text(
+                    _AccountName,
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               )
-            ]),
+            ],
+          ),
+          decoration: BoxDecoration(
+            color: Colors.deepPurple,
+          ),
+        ),
         new Container(
           margin: const EdgeInsets.only(left: 15.0),
           child: Column(
             children: <Widget>[
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pushNamed("/dashboard");
-                },
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'HOME',
-                    style:
-                        TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              )
+              new Container(
+                  margin: const EdgeInsets.only(bottom: 18.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed("/dashboard");
+                    },
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'HOME',
+                        style: TextStyle(
+                            fontSize: 14.0, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ))
             ],
           ),
         ),
@@ -104,7 +141,7 @@ class DrawerScreenState extends State<DrawerScreen> {
                                   builder: (context) =>
                                       CategoryProductlistScreen(
                                     id: '${i["categoryId"]}',
-                                    name:'${i['name']}',
+                                    name: '${i['name']}',
                                   ),
                                 ))
                           });
@@ -118,19 +155,21 @@ class DrawerScreenState extends State<DrawerScreen> {
           margin: const EdgeInsets.only(left: 15.0),
           child: Column(
             children: <Widget>[
-              GestureDetector(
-                onTap: () {
-                  _logout();
-                },
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'LOGOUT',
-                    style:
-                        TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              )
+              new Container(
+                  margin: const EdgeInsets.only(top: 18.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      _logout();
+                    },
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'LOGOUT',
+                        style: TextStyle(
+                            fontSize: 14.0, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ))
             ],
           ),
         ),

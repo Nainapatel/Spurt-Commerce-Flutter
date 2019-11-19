@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'package:spurtcommerce/config.dart' as config;
+import 'package:spurtcommerce/screens/editprofile.dart';
 
 void main() {
   runApp(new ProfileScreen());
@@ -17,9 +18,11 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class ProfileScreenState extends State<ProfileScreen> {
-  List<dynamic> profile;
   var email;
   var name;
+  var number;
+  var username;
+  var id;
 
   @override
   void initState() {
@@ -40,18 +43,15 @@ class ProfileScreenState extends State<ProfileScreen> {
         Uri.encodeFull(config.baseUrl + 'customer/get-profile'),
         headers: {"Authorization": json.decode(show_token)},
       );
-      setState(() {
-        profile = json.decode(response.body)['data'];
-      });
+
       print('profile======${json.decode(response.body)['data']['firstName']}');
       setState(() {
         email = json.decode(response.body)['data']['email'];
-      });
-      setState(() {
         name = json.decode(response.body)['data']['firstName'];
+        number = json.decode(response.body)['data']['mobileNumber'];
+        username = json.decode(response.body)['data']['username'];
+        id = json.decode(response.body)['data']['id'];
       });
-
-
       return "Successfull";
     }
   }
@@ -63,12 +63,23 @@ class ProfileScreenState extends State<ProfileScreen> {
         bottomNavigationBar: BottomTabScreen(),
         appBar: new AppBar(
           title: new Text('Profile'),
-          actions: [
-            Icon(
-              Icons.notifications,
-              color: Colors.yellowAccent,
-              size: 24.0,
-            ),
+          actions: <Widget>[
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditprofileScreen(
+                        id: '$id',
+                      ),
+                    ));
+              },
+              child: Icon(
+                Icons.edit,
+                color: Colors.white,
+                size: 24.0,
+              ),
+            )
           ],
         ),
         body: Center(
@@ -78,7 +89,7 @@ class ProfileScreenState extends State<ProfileScreen> {
               children: <Widget>[
                 Container(
                     child: Image.asset('assets/favicon.png',
-                        width: 100, height: 100),
+                        width: 50, height: 50),
                     color: Colors.deepPurple[300],
                     width: MediaQuery.of(context).size.width / 0.5,
                     height: 200),
@@ -95,32 +106,72 @@ class ProfileScreenState extends State<ProfileScreen> {
             ),
             Container(
                 margin: const EdgeInsets.only(top: 60.0, left: 10.0),
-                child: ListView.builder(
-                    itemCount: profile.length,
-                    itemBuilder: (BuildContext ctxt, int i) {
-                      print('in widget${profile.length}');
-                     return Row(
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              'First Name',
-                              style: TextStyle(
-                                  fontSize: 15, color: Colors.grey[300]),
-                            ),
-                          ),
-                          Divider(),
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              '${profile[i]['email']}',
-                              style:
-                                  TextStyle(fontSize: 15, color: Colors.black),
-                            ),
-                          )
-                        ],
-                      );
-                    }))
+                child: Row(children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          'Name',
+                          style: TextStyle(fontSize: 15, color: Colors.grey),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          '$name',
+                          style: TextStyle(fontSize: 15, color: Colors.black),
+                        ),
+                      ),
+                      Divider(),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          'Username',
+                          style: TextStyle(fontSize: 15, color: Colors.grey),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          '$username',
+                          style: TextStyle(fontSize: 15, color: Colors.black),
+                        ),
+                      ),
+                      Divider(),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          'Email',
+                          style: TextStyle(fontSize: 15, color: Colors.grey),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          '$email',
+                          style: TextStyle(fontSize: 15, color: Colors.black),
+                        ),
+                      ),
+                      Divider(),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          'Phone number',
+                          style: TextStyle(fontSize: 15, color: Colors.grey),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          '$number',
+                          style: TextStyle(fontSize: 15, color: Colors.black),
+                        ),
+                      ),
+                      Divider(),
+                    ],
+                  ),
+                ]))
           ]),
         ));
   }

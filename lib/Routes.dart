@@ -11,6 +11,7 @@ import 'package:spurtcommerce/screens/subCategory.dart';
 import 'package:spurtcommerce/screens/featuredProduct.dart';
 import 'package:spurtcommerce/screens/productView.dart';
 import 'package:spurtcommerce/screens/categoryProductlist.dart';
+import 'package:spurtcommerce/screens/editprofile.dart';
 
 class Routes {
   var routes = <String, WidgetBuilder>{
@@ -21,9 +22,11 @@ class Routes {
     "/subCategory": (BuildContext context) => new SubCategoryScreen(),
     "/featuredProduct": (BuildContext context) => new FeaturedProductScreen(),
     "/productView": (BuildContext context) => new ProductViewScreen(),
-    "/categoryProductlist": (BuildContext context) => new CategoryProductlistScreen(),
+    "/categoryProductlist": (BuildContext context) =>
+        new CategoryProductlistScreen(),
     "/login": (BuildContext context) => new LoginScreen(),
     "/signup": (BuildContext context) => new SignupScreen(),
+    "/editprofile": (BuildContext context) => new EditprofileScreen(),
   };
 
   Routes() {

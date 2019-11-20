@@ -170,18 +170,25 @@ class EditprofileScreenState extends State<EditprofileScreen> {
       );
     } else {
       print('call else');
-      // return Image.file(
-      //   imageFile,
-      //   width: MediaQuery.of(context).size.width / 3.0,
-      //   height: MediaQuery.of(context).size.width / 3.0,
-      //   fit: BoxFit.fill,
-      // );
       return Image.network(
         config.mediaUrl + '$_avtarpathcontroller' + '$_avtarcontroller',
         width: MediaQuery.of(context).size.width / 3.0,
         height: MediaQuery.of(context).size.width / 3.0,
         fit: BoxFit.fill,
       );
+    }
+  }
+
+  String validateEmail(String value) {
+    String pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regExp = new RegExp(pattern);
+    if (value.length == 0) {
+      return "Email is required";
+    } else if (!regExp.hasMatch(value)) {
+      return "Invalid Email";
+    } else {
+      return null;
     }
   }
 
@@ -192,13 +199,6 @@ class EditprofileScreenState extends State<EditprofileScreen> {
         bottomNavigationBar: BottomTabScreen(),
         appBar: new AppBar(
           title: new Text('Profile'),
-          actions: [
-            Icon(
-              Icons.edit,
-              color: Colors.white,
-              size: 24.0,
-            ),
-          ],
         ),
         body: Container(
             child: SingleChildScrollView(
@@ -282,12 +282,7 @@ class EditprofileScreenState extends State<EditprofileScreen> {
                                       color: Theme.of(context).primaryColor,
                                     ),
                                   ),
-                                  validator: (String arg) {
-                                    if (arg.length < 3)
-                                      return 'Email not valid';
-                                    else
-                                      return null;
-                                  },
+                                  validator: validateEmail,
                                   onSaved: (String val) {
                                     _firstnamecontroller = _firstnamecontroller;
                                   },

@@ -75,7 +75,7 @@ class SignupScreenState extends State<SignupScreen> {
         child: Container(
           decoration: new BoxDecoration(
             image: new DecorationImage(
-              image: new AssetImage("login.jpg"),
+              image: new AssetImage("login.png"),
               colorFilter: new ColorFilter.mode(
                   Colors.red.withOpacity(0.3), BlendMode.dstATop),
               fit: BoxFit.cover,

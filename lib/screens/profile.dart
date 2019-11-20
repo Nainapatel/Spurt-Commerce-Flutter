@@ -23,6 +23,9 @@ class ProfileScreenState extends State<ProfileScreen> {
   var number;
   var username;
   var id;
+  var avtar;
+  var avatarPath;
+  bool isavtar = true;
 
   @override
   void initState() {
@@ -51,7 +54,18 @@ class ProfileScreenState extends State<ProfileScreen> {
         number = json.decode(response.body)['data']['mobileNumber'];
         username = json.decode(response.body)['data']['username'];
         id = json.decode(response.body)['data']['id'];
+        avtar = json.decode(response.body)['data']['avatar'];
+        avatarPath = json.decode(response.body)['data']['avatarPath'];
       });
+      if(avtar == ''){
+          setState(() {
+            isavtar =false;
+          });
+      }else{
+        setState(() {
+          isavtar = true;
+        });
+      }
       return "Successfull";
     }
   }
@@ -96,12 +110,21 @@ class ProfileScreenState extends State<ProfileScreen> {
                 FractionalTranslation(
                   translation: Offset(0.0, 0.5),
                   child: Container(
-                    child: Image.asset('assets/user.png',
+                     child: ClipRRect(
+                            borderRadius: new BorderRadius.circular(90.0),
+                    child: isavtar == true ?
+                     Image.network(
+                      config.mediaUrl + '$avatarPath' + '$avtar',
+                       width: MediaQuery.of(context).size.width / 3.0,
+                        height: MediaQuery.of(context).size.width / 3.0,
+                        fit: BoxFit.fill
+                    ):
+                    Image.asset('assets/user.png',
                         width: MediaQuery.of(context).size.width / 3.0,
                         height: MediaQuery.of(context).size.width / 3.0,
                         fit: BoxFit.fill),
                   ),
-                )
+                ))
               ],
             ),
             Container(

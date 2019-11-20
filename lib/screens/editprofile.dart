@@ -19,11 +19,16 @@ class EditprofileScreen extends StatefulWidget {
 
 class EditprofileScreenState extends State<EditprofileScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _usernamecontroller;
+
   TextEditingController _emailcontroller;
   TextEditingController _firstnamecontroller;
   TextEditingController _phonenumbercontroller;
+  String _avtarcontroller;
+  String _avtarpathcontroller;
   File imageFile;
+  String base64Image;
+  var tmpFile;
+  String errMessage = 'Error';
 
   @override
   void initState() {
@@ -80,6 +85,7 @@ class EditprofileScreenState extends State<EditprofileScreen> {
       Navigator.of(context).pushNamed("/login");
     } else {
       print('call else');
+
       var response = await http.get(
         Uri.encodeFull(config.baseUrl + 'customer/get-profile'),
         headers: {"Authorization": json.decode(show_token)},
@@ -90,7 +96,11 @@ class EditprofileScreenState extends State<EditprofileScreen> {
           text: json.decode(response.body)['data']['firstName']);
       _phonenumbercontroller = new TextEditingController(
           text: json.decode(response.body)['data']['mobileNumber']);
+      _avtarcontroller =  json.decode(response.body)['data']['avatar'];
+      _avtarpathcontroller =  json.decode(response.body)['data']['avatarPath'];
 
+
+          print('avtar=====$_avtarcontroller======$_avtarpathcontroller');
       return "Successfull";
     }
   }
@@ -103,6 +113,12 @@ class EditprofileScreenState extends State<EditprofileScreen> {
       print('call if');
       Navigator.of(context).pushNamed("/login");
     } else {
+      print('image path ===== $imageFile');
+      tmpFile = imageFile.toString();
+      base64Image = base64Encode(imageFile.readAsBytesSync());
+
+      String filename = tmpFile.split('/').last;
+
       var response = await http.post(
           Uri.encodeFull(config.baseUrl + 'customer/edit-profile'),
           headers: {
@@ -112,6 +128,7 @@ class EditprofileScreenState extends State<EditprofileScreen> {
             'emailId': _emailcontroller.text,
             'firstName': _firstnamecontroller.text,
             'phoneNumber': _phonenumbercontroller.text,
+            'image': base64Image,
           });
       print('res====${response.body}');
       Navigator.of(context).pushNamed("/profile");
@@ -120,16 +137,27 @@ class EditprofileScreenState extends State<EditprofileScreen> {
   }
 
   Widget decideImageView() {
-    if (imageFile == null) {
+    if (imageFile == null && _avtarcontroller == '') {
       return Image.asset('assets/user.png',
           width: MediaQuery.of(context).size.width / 3.0,
           height: MediaQuery.of(context).size.width / 3.0,
           fit: BoxFit.fill);
-    } else {
-      print('call image function');
+    } 
+     else if (_avtarcontroller == '') {
+    
       return Image.file(
         imageFile,
         width: MediaQuery.of(context).size.width / 3.0,
+        height: MediaQuery.of(context).size.width / 3.0,
+        fit: BoxFit.fill,
+      );
+    } 
+    else {
+      print('in else');
+      print('${config.mediaUrl + '$_avtarpathcontroller' + '$_avtarcontroller'}');
+      return Image.network(
+        config.mediaUrl + '$_avtarpathcontroller' + '$_avtarcontroller',
+       width: MediaQuery.of(context).size.width / 3.0,
         height: MediaQuery.of(context).size.width / 3.0,
         fit: BoxFit.fill,
       );

@@ -118,24 +118,29 @@ class ProfileScreenState extends State<ProfileScreen> {
                 FractionalTranslation(
                     translation: Offset(0.0, 0.5),
                     child: Container(
-                      child: ClipRRect(
+                      decoration: new BoxDecoration(
                         borderRadius: new BorderRadius.circular(90.0),
-                        child: isavtar == true
-                            ? Image.network(
-                                config.mediaUrl + '$avatarPath' + '$avtar',
-                                width: MediaQuery.of(context).size.width / 3.0,
-                                height: MediaQuery.of(context).size.width / 3.0,
-                                fit: BoxFit.fill)
-                            : Image.asset('assets/user.png',
-                                width: MediaQuery.of(context).size.width / 3.0,
-                                height: MediaQuery.of(context).size.width / 3.0,
-                                fit: BoxFit.fill),
+                        border: new Border.all(
+                          width: 2.0,
+                          color: Colors.deepPurple,
+                        ),
                       ),
-                    ))
+                      child: isavtar == true
+                          ? Image.network(
+                              config.mediaUrl + '$avatarPath' + '$avtar',
+                              width: MediaQuery.of(context).size.width / 3.0,
+                              height: MediaQuery.of(context).size.width / 3.0,
+                              fit: BoxFit.fill)
+                          : Image.asset('assets/user.png',
+                              width: MediaQuery.of(context).size.width / 3.0,
+                              height: MediaQuery.of(context).size.width / 3.0,
+                              fit: BoxFit.fill),
+                    )
+                    )
               ],
             ),
             Container(
-                margin: const EdgeInsets.only(top: 60.0, left: 10.0),
+                margin: const EdgeInsets.only(top: 60.0, left: 25.0),
                 child: Column(children: <Widget>[
                   Column(
                     children: <Widget>[
@@ -143,7 +148,8 @@ class ProfileScreenState extends State<ProfileScreen> {
                         alignment: Alignment.topLeft,
                         child: Text(
                           'Name',
-                          style: TextStyle(fontSize: 18, color: Colors.grey),
+                          style: TextStyle(
+                              fontSize: 18, color: Colors.deepPurple[300]),
                           textAlign: TextAlign.left,
                         ),
                       ),
@@ -159,7 +165,8 @@ class ProfileScreenState extends State<ProfileScreen> {
                         alignment: Alignment.topLeft,
                         child: Text(
                           'Username',
-                          style: TextStyle(fontSize: 18, color: Colors.grey),
+                          style: TextStyle(
+                              fontSize: 18, color: Colors.deepPurple[300]),
                         ),
                       ),
                       Align(
@@ -174,7 +181,8 @@ class ProfileScreenState extends State<ProfileScreen> {
                         alignment: Alignment.topLeft,
                         child: Text(
                           'Email',
-                          style: TextStyle(fontSize: 18, color: Colors.grey),
+                          style: TextStyle(
+                              fontSize: 18, color: Colors.deepPurple[300]),
                         ),
                       ),
                       Align(
@@ -189,7 +197,8 @@ class ProfileScreenState extends State<ProfileScreen> {
                         alignment: Alignment.topLeft,
                         child: Text(
                           'Phone number',
-                          style: TextStyle(fontSize: 18, color: Colors.grey),
+                          style: TextStyle(
+                              fontSize: 18, color: Colors.deepPurple[300]),
                         ),
                       ),
                       Align(

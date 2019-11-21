@@ -22,7 +22,8 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> {
   List bannreData;
   List categoryData;
-  List featuredProduct;
+  List<dynamic> featuredProduct = new List<dynamic>();
+  // List featuredProduct;
   bool loader = false;
 
   List img = [
@@ -94,6 +95,12 @@ class HomeScreenState extends State<HomeScreen> {
         ),
         padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
         decoration: BoxDecoration(
+            boxShadow: [
+              new BoxShadow(
+                color: Colors.black,
+                blurRadius: 20.0,
+              ),
+            ],
             border: Border.all(
                 width: 5, color: Colors.white, style: BorderStyle.solid)),
       ),
@@ -116,222 +123,206 @@ class HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        body: Center(
-          child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: loader == true
-                  ? Column(
-                      children: <Widget>[
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              CarouselSlider(
-                                height: 250.0,
-                                items: bannreData.map((i) {
-                                  return Builder(
-                                    builder: (BuildContext context) {
-                                      return Container(
-                                          margin: EdgeInsets.symmetric(
-                                              horizontal: 5.0),
-                                          child: Image.network(
-                                              config.mediaUrlBanner +
-                                                  '${i['image']}',
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              height: 200,
-                                              fit: BoxFit.fill));
-                                    },
-                                  );
-                                }).toList(),
-                                autoPlay: true,
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverList(
+              delegate: SliverChildListDelegate([
+                Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      CarouselSlider(
+                        height: 250.0,
+                        items: bannreData.map((i) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  child: Image.network(
+                                      config.mediaUrlBanner + '${i['image']}',
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 200,
+                                      fit: BoxFit.fill));
+                            },
+                          );
+                        }).toList(),
+                        autoPlay: true,
+                      ),
+                    ]),
+              ]),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate([
+                Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(right: 8.0),
+                      child: new Container(
+                          margin: const EdgeInsets.only(
+                              left: 20.0, right: 20.0, top: 10.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                          child: Text(
+                            'Category',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )),)
+                    ),
+                  ],
+                ),
+              ]),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate([
+                Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 18.0),
+                  height: MediaQuery.of(context).size.height * 0.30,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: categoryData.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SubCategoryScreen(
+                                        id: '${categoryData[index]["categoryId"]}',
+                                        name: '${categoryData[index]["name"]}'),
+                                  ));
+                            },
+                            child: Card(
+                              child: Container(
+                                decoration: new BoxDecoration(
+                                  image: new DecorationImage(
+                                    image: new AssetImage(img[index]),
+                                    colorFilter: new ColorFilter.mode(
+                                        Colors.black.withOpacity(0.8),
+                                        BlendMode.dstATop),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                child: Center(
+                                    child: buildTitle(
+                                        categoryData[index]['name'])),
                               ),
-                            ]),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(right: 8.0),
-                                  child: new Container(
-                                      margin: const EdgeInsets.only(
-                                          left: 20.0, right: 20.0, top: 10.0),
-                                      child: Text('Category',
-                                          style: TextStyle(
-                                            fontSize: 20.0,
-                                            fontWeight: FontWeight.bold,
-                                          ))),
-                                ),
-                              ],
                             ),
-                          ],
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 18.0),
-                          height: MediaQuery.of(context).size.height * 0.30,
-                          child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: categoryData.length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.6,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => SubCategoryScreen(
-                                                id:
-                                                    '${categoryData[index]["categoryId"]}',
-                                                name:
-                                                    '${categoryData[index]["name"]}'),
-                                          ));
-                                    },
-                                    child: Card(
-                                      child: Container(
-                                        decoration: new BoxDecoration(
-                                          image: new DecorationImage(
-                                            image: new AssetImage(img[index]),
-                                            colorFilter: new ColorFilter.mode(
-                                                Colors.black.withOpacity(0.8),
-                                                BlendMode.dstATop),
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        child: Center(
-                                            child: buildTitle(
-                                                categoryData[index]['name'])),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(right: 8.0),
-                                  child: new Container(
-                                      margin: const EdgeInsets.only(
-                                          left: 20.0, right: 20.0, top: 10.0),
-                                      child: Text('Products',
-                                          style: TextStyle(
-                                            fontSize: 20.0,
-                                            fontWeight: FontWeight.bold,
-                                          ))),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: <Widget>[
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 20.0, right: 20.0),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context)
-                                          .pushNamed("/featuredProduct");
-                                    },
-                                    child: const Text('View all',
-                                        style: TextStyle(
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold,
-                                        )),
-                                  ),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                        Column(
-                          children: <Widget>[
-                            GridView.builder(
-                                shrinkWrap: true,
-                                itemCount: featuredProduct.length,
-                                gridDelegate:
-                                    new SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2),
-                                itemBuilder: (BuildContext context, int i) {
-                                  if (i <= 3) {
-                                    return new GestureDetector(
-                                        child: new Container(
-                                            margin: const EdgeInsets.only(
-                                                left: 5.0,
-                                                right: 5.0,
-                                                top: 5.0),
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ProductViewScreen(
-                                                              id:
-                                                                  '${featuredProduct[i]["_id"]}',
-                                                              name:
-                                                                  '${featuredProduct[i]["name"]}'),
-                                                    ));
-                                              },
-                                              child: SizedBox(
-                                                child: new Card(
-                                                  elevation: 5.0,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        right: 5.0, left: 5.0),
-                                                    child: new Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Column(
-                                                        children: [
-                                                          new Container(
-                                                            margin:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    bottom:
-                                                                        20.0,
-                                                                    top: 10.0),
-                                                            child:
-                                                                Image.network(
-                                                              config.mediaUrl +
-                                                                  '${featuredProduct[i]['Images']['containerName']}' +
-                                                                  '${featuredProduct[i]['Images']['image']}',
-                                                              width: 100,
-                                                              height: 100,
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            '${featuredProduct[i]['name'].substring(0, 22)}...',
-                                                          ),
-                                                          Text(
-                                                            'Rs ${featuredProduct[i]['price']}',
-                                                            style: TextStyle(
-                                                              fontSize: 12.0,
-                                                              color: Colors.red,
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            )));
-                                  }
-                                })
-                          ],
+                          ),
+                        );
+                      }),
+                ),
+              ]),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate([
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(right: 8.0),
+                          child: new Container(
+                              margin: const EdgeInsets.only(
+                                  left: 20.0, right: 20.0, top: 10.0),
+                              child: Text('Products',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold,
+                                  ))),
                         ),
                       ],
+                    ),
+                    Column(
+                      children: <Widget>[
+                        Container(
+                          margin:
+                              const EdgeInsets.only(left: 20.0, right: 20.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushNamed("/featuredProduct");
+                            },
+                            child: const Text('View all',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ),
+                        )
+                      ],
                     )
-                  : Align(
-                      alignment: Alignment.center,
-                      child: SpinKitCircle(color: Colors.deepPurple),
-                    )),
+                  ],
+                ),
+              ]),
+            ),
+            SliverGrid(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 0.0,
+                  crossAxisSpacing: 0.0,
+                ),
+                delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                  if (index <= 3) {
+                    return new Container(
+                        margin: const EdgeInsets.only(
+                            left: 5.0, right: 5.0, top: 5.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProductViewScreen(
+                                      id: '${featuredProduct[index]["_id"]}',
+                                      name:
+                                          '${featuredProduct[index]["name"]}'),
+                                ));
+                          },
+                          child: SizedBox(
+                            child: new Card(
+                              elevation: 5.0,
+                              child: Padding(
+                                padding: EdgeInsets.only(right: 5.0, left: 5.0),
+                                child: new Container(
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    children: [
+                                      new Container(
+                                        margin: const EdgeInsets.only(
+                                            bottom: 20.0, top: 10.0),
+                                        child: Image.network(
+                                          config.mediaUrl +
+                                              '${featuredProduct[index]['Images']['containerName']}' +
+                                              '${featuredProduct[index]['Images']['image']}',
+                                          width: 100,
+                                          height: 100,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${featuredProduct[index]['name'].substring(0, 22)}...',
+                                      ),
+                                      Text(
+                                        'Rs ${featuredProduct[index]['price']}',
+                                        style: TextStyle(
+                                          fontSize: 12.0,
+                                          color: Colors.red,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ));
+                  }
+                }, childCount: featuredProduct.length)),
+          ],
         ));
   }
 }

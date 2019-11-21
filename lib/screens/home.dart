@@ -122,9 +122,13 @@ class HomeScreenState extends State<HomeScreen> {
               size: 24.0,
             ),
           ],
+
         ),
-        body: CustomScrollView(
+        body:Center(
+       child:   loader == true ?
+         CustomScrollView(
           slivers: <Widget>[
+            
             SliverList(
               delegate: SliverChildListDelegate([
                 Column(
@@ -155,20 +159,20 @@ class HomeScreenState extends State<HomeScreen> {
                 Column(
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(right: 8.0),
-                      child: new Container(
+                        padding: EdgeInsets.only(right: 8.0),
+                        child: new Container(
                           margin: const EdgeInsets.only(
                               left: 20.0, right: 20.0, top: 10.0),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                          child: Text(
-                            'Category',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )),)
-                    ),
+                          child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                'Category',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )),
+                        )),
                   ],
                 ),
               ]),
@@ -323,6 +327,10 @@ class HomeScreenState extends State<HomeScreen> {
                   }
                 }, childCount: featuredProduct.length)),
           ],
+        ): Align(
+                      alignment: Alignment.center,
+                      child: SpinKitCircle(color: Colors.deepPurple),
+                    )
         ));
   }
 }

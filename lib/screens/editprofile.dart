@@ -8,7 +8,7 @@ import 'dart:convert';
 import 'package:spurtcommerce/config.dart' as config;
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:email_validator/email_validator.dart';
+
 
 class EditprofileScreen extends StatefulWidget {
   final id;
@@ -204,14 +204,7 @@ class EditprofileScreenState extends State<EditprofileScreen> {
             child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: Container(
-                  // decoration: new BoxDecoration(
-                  //   image: new DecorationImage(
-                  //     image: new AssetImage("profilebg.jpg"),
-                  //     colorFilter: new ColorFilter.mode(
-                  //         Colors.red.withOpacity(0.3), BlendMode.dstATop),
-                  //     fit: BoxFit.cover,
-                  //   ),
-                  // ),
+ 
                   child: Column(children: <Widget>[
                     Stack(
                       alignment: Alignment.bottomCenter,

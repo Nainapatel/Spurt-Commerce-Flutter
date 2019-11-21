@@ -9,7 +9,6 @@ import 'package:spurtcommerce/screens/productView.dart';
 import 'package:spurtcommerce/screens/drawer.dart';
 import 'package:spurtcommerce/screens/bottomTab.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:carousel_pro/carousel_pro.dart';
 
 void main() {
   runApp(new HomeScreen());
@@ -25,6 +24,16 @@ class HomeScreenState extends State<HomeScreen> {
   List categoryData;
   List featuredProduct;
   bool loader = false;
+
+  List img = [
+    'assets/Electronic.png',
+    'assets/man.jpeg',
+    'assets/baby.jpg',
+    'assets/Sports.jpg',
+    'assets/house.jpg',
+    'assets/women.jpeg'
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -75,6 +84,22 @@ class HomeScreenState extends State<HomeScreen> {
     return "Successfull";
   }
 
+  Widget buildTitle(String name) {
+    return Center(
+      child: Container(
+        child: Text(
+          name,
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+        decoration: BoxDecoration(
+            border: Border.all(
+                width: 5, color: Colors.white, style: BorderStyle.solid)),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     print('loader==$loader');
@@ -101,7 +126,7 @@ class HomeScreenState extends State<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               CarouselSlider(
-                                height: 200.0,
+                                height: 250.0,
                                 items: bannreData.map((i) {
                                   return Builder(
                                     builder: (BuildContext context) {
@@ -119,43 +144,71 @@ class HomeScreenState extends State<HomeScreen> {
                                     },
                                   );
                                 }).toList(),
+                                autoPlay: true,
                               ),
                             ]),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: categoryData.map((i) {
-                              return Padding(
-                                padding: EdgeInsets.only(right: 8.0),
-                                child: new Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 10.0, right: 10.0, top: 10.0),
-                                  child: FlatButton(
-                                    color: Colors.deepPurple,
-                                    textColor: Colors.white,
-                                    disabledColor: Colors.grey,
-                                    disabledTextColor: Colors.black,
-                                    padding: EdgeInsets.all(8.0),
-                                    splashColor: Colors.blueAccent,
-                                    onPressed: () {
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Column(
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(right: 8.0),
+                                  child: new Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 20.0, right: 20.0, top: 10.0),
+                                      child: Text('Category',
+                                          style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.bold,
+                                          ))),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 18.0),
+                          height: MediaQuery.of(context).size.height * 0.30,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: categoryData.length,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.6,
+                                  child: GestureDetector(
+                                    onTap: () {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                SubCategoryScreen(
-                                                    id: '${i["categoryId"]}',
-                                                    name: '${i["name"]}'),
+                                            builder: (context) => SubCategoryScreen(
+                                                id:
+                                                    '${categoryData[index]["categoryId"]}',
+                                                name:
+                                                    '${categoryData[index]["name"]}'),
                                           ));
                                     },
-                                    child: Text(
-                                      '${i['name']}',
-                                      style: TextStyle(fontSize: 12.0),
+                                    child: Card(
+                                      child: Container(
+                                        decoration: new BoxDecoration(
+                                          image: new DecorationImage(
+                                            image: new AssetImage(img[index]),
+                                            colorFilter: new ColorFilter.mode(
+                                                Colors.black.withOpacity(0.8),
+                                                BlendMode.dstATop),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        child: Center(
+                                            child: buildTitle(
+                                                categoryData[index]['name'])),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            }).toList(),
-                          ),
+                                );
+                              }),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -167,7 +220,7 @@ class HomeScreenState extends State<HomeScreen> {
                                   child: new Container(
                                       margin: const EdgeInsets.only(
                                           left: 20.0, right: 20.0, top: 10.0),
-                                      child: Text('Featured Products',
+                                      child: Text('Products',
                                           style: TextStyle(
                                             fontSize: 20.0,
                                             fontWeight: FontWeight.bold,
@@ -185,7 +238,7 @@ class HomeScreenState extends State<HomeScreen> {
                                       Navigator.of(context)
                                           .pushNamed("/featuredProduct");
                                     },
-                                    child: const Text('See all',
+                                    child: const Text('View all',
                                         style: TextStyle(
                                           fontSize: 20.0,
                                           fontWeight: FontWeight.bold,

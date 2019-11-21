@@ -4,11 +4,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:spurtcommerce/config.dart' as config;
 import 'package:carousel_slider/carousel_slider.dart';
-
+import 'package:spurtcommerce/screens/categoryProductlist.dart';
 
 void main() {
   runApp(new SubCategoryScreen());
 }
+
 class SubCategoryScreen extends StatefulWidget {
   final id;
   final name;
@@ -55,7 +56,6 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
     var category = json.decode(response.body)['data'];
 
     for (var i = 0; i <= await category.length; i++) {
-    
       if (id == category[i]['children'][0]['parentInt']) {
         subcategory = await category[i]['children'];
       }
@@ -110,13 +110,25 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
                       itemCount: subcategoryList.length,
                       itemBuilder: (BuildContext ctxt, int i) {
                         return SizedBox(
+                            child: GestureDetector(
+                          onTap: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CategoryProductlistScreen(
+                                    id: '${subcategoryList[i]["categoryId"]}',
+                                    name: '${subcategoryList[i]['name']}',
+                                  ),
+                                ))
+                          },
                           child: Card(
                               margin: EdgeInsets.all(10),
                               child: Text(
                                 '${subcategoryList[i]['name']}',
                                 style: TextStyle(fontSize: 20.0),
                               )),
-                        );
+                        ));
                       },
                     ),
                   ),

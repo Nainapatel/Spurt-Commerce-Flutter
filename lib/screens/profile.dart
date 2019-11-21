@@ -98,14 +98,6 @@ class ProfileScreenState extends State<ProfileScreen> {
         ),
         body: Center(
             child: Container(
-          // decoration: new BoxDecoration(
-          //   image: new DecorationImage(
-          //     image: new AssetImage("profilebg.jpg"),
-          //     colorFilter: new ColorFilter.mode(
-          //         Colors.red.withOpacity(0.3), BlendMode.dstATop),
-          //     fit: BoxFit.cover,
-          //   ),
-          // ),
           child: Column(children: <Widget>[
             Stack(
               alignment: Alignment.bottomCenter,
@@ -117,26 +109,42 @@ class ProfileScreenState extends State<ProfileScreen> {
                     height: 200),
                 FractionalTranslation(
                     translation: Offset(0.0, 0.5),
-                    child: Container(
-                      decoration: new BoxDecoration(
-                        borderRadius: new BorderRadius.circular(90.0),
-                        border: new Border.all(
-                          width: 2.0,
-                          color: Colors.deepPurple,
-                        ),
-                      ),
-                      child: isavtar == true
-                          ? Image.network(
-                              config.mediaUrl + '$avatarPath' + '$avtar',
-                              width: MediaQuery.of(context).size.width / 3.0,
-                              height: MediaQuery.of(context).size.width / 3.0,
-                              fit: BoxFit.fill)
-                          : Image.asset('assets/user.png',
-                              width: MediaQuery.of(context).size.width / 3.0,
-                              height: MediaQuery.of(context).size.width / 3.0,
-                              fit: BoxFit.fill),
-                    )
-                    )
+                    child: isavtar == true
+                        ? Container(
+                            width: MediaQuery.of(context).size.width / 3.0,
+                            height: MediaQuery.of(context).size.width / 3.0,
+                            decoration: new BoxDecoration(
+                              color: const Color(0xff7c94b6),
+                              image: new DecorationImage(
+                                image: new NetworkImage(
+                                    config.mediaUrl + '$avatarPath' + '$avtar'),
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: new BorderRadius.all(
+                                  new Radius.circular(90.0)),
+                              border: new Border.all(
+                                color: Colors.deepPurple,
+                                width: 3.0,
+                              ),
+                            ),
+                          )
+                        : Container(
+                            width: MediaQuery.of(context).size.width / 3.0,
+                            height: MediaQuery.of(context).size.width / 3.0,
+                            decoration: new BoxDecoration(
+                              color: const Color(0xff7c94b6),
+                              image: new DecorationImage(
+                                image: new ExactAssetImage('assets/user.png'),
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: new BorderRadius.all(
+                                  new Radius.circular(90.0)),
+                              border: new Border.all(
+                                color: Colors.deepPurple,
+                                width: 3.0,
+                              ),
+                            ),
+                          ))
               ],
             ),
             Container(

@@ -24,8 +24,8 @@ class HomeScreenState extends State<HomeScreen> {
   List bannreData;
   List categoryData;
   List<dynamic> featuredProduct = new List<dynamic>();
-  // List featuredProduct;
   bool loader = false;
+  double opacityLevel = 1.0;
 
   List img = [
     'assets/Electronic.png',
@@ -70,6 +70,10 @@ class HomeScreenState extends State<HomeScreen> {
     });
     loader = true;
     return "Successfull";
+  }
+
+  _changeOpacity() {
+    setState(() => opacityLevel = opacityLevel == 0 ? 1.0 : 0.0);
   }
 
   /*
@@ -118,6 +122,7 @@ class HomeScreenState extends State<HomeScreen> {
     image.insert(4, AssetImage('assets/sale/sports.jpg'));
     image.insert(5, AssetImage('assets/sale/women.jpg'));
     print('loader==$loader');
+
     return new Scaffold(
         drawer: DrawerScreen(),
         bottomNavigationBar: BottomTabScreen(),
@@ -367,7 +372,25 @@ class HomeScreenState extends State<HomeScreen> {
                                 boxFit: BoxFit.fill,
                               )),
                         )
-                      ]))
+                      ])),
+                      SliverList(
+                        delegate: SliverChildListDelegate([
+                          Column(
+                            children: <Widget>[
+                              GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .pushNamed("/featuredProduct");
+                                  },
+                                  child: Image.asset(
+                                    'assets/sale/offer.jpg',
+                                    height: 300,
+                                    width: MediaQuery.of(context).size.width,
+                                  ))
+                            ],
+                          ),
+                        ]),
+                      ),
                     ],
                   )
                 : Align(

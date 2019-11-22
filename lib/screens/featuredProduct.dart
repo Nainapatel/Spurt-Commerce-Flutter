@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:spurtcommerce/config.dart' as config;
 import 'package:spurtcommerce/screens/productView.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 void main() {
   runApp(new FeaturedProductScreen());
@@ -16,6 +17,7 @@ class FeaturedProductScreen extends StatefulWidget {
 
 class FeaturedProductScreenState extends State<FeaturedProductScreen> {
   List featuredProduct;
+  bool loader = false;
   @override
   void initState() {
     super.initState();
@@ -33,6 +35,7 @@ class FeaturedProductScreenState extends State<FeaturedProductScreen> {
       featuredProduct = json.decode(response.body)['data'];
     });
     print(featuredProduct);
+    loader = true;
     return "Successfull";
   }
 
@@ -49,75 +52,78 @@ class FeaturedProductScreenState extends State<FeaturedProductScreen> {
             ),
           ],
         ),
-        body: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(children: <Widget>[
-              Column(
-                children: <Widget>[
-                  GridView.builder(
-                      shrinkWrap: true,
-                      itemCount: featuredProduct.length,
-                      gridDelegate:
-                          new SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2),
-                      itemBuilder: (BuildContext context, int i) {
-                        return new GestureDetector(
-                            child: new Container(
-                          margin: const EdgeInsets.only(
-                              left: 5.0, right: 5.0, top: 5.0),
-
-                               child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => ProductViewScreen(
-                                                id: '${featuredProduct[i]["_id"]}',
-                                                name:'${featuredProduct[i]["name"]}'),
-                                          ));
-                                    },
-                          child: SizedBox(
-                      
-                            child: new Card(
-                              elevation: 5.0,
-                              child: Padding(
-                                padding: EdgeInsets.only(right: 5.0, left: 5.0),
-                                child: new Container(
-                                  alignment: Alignment.center,
-                                  child: Column(
-                                    children: [
-                                      new Container(
-                                        margin: const EdgeInsets.only(
-                                            bottom: 20.0, top: 10.0),
-                                        child: Image.network(
-                                          config.mediaUrl +
-                                              '${featuredProduct[i]['Images']['containerName']}' +
-                                              '${featuredProduct[i]['Images']['image']}',
-                                          width: 100,
-                                          height: 100,
-                                        ),
-                                      ),
-                                      Text(
-                                        '${featuredProduct[i]['name'].substring(0, 22)}...',
-                                      ),
-                                      Text(
-                                        'Rs ${featuredProduct[i]['price']}',
-                                        style: TextStyle(
-                                          fontSize: 12.0,
-                                          color: Colors.red,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
+        body: Center(
+            child: loader == true
+                ? CustomScrollView(
+                    slivers: <Widget>[
+                      SliverGrid(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 0.0,
+                            crossAxisSpacing: 0.0,
                           ),
-                               ),
-                        ));
-                      })
-                ],
-              ),
-            ])));
+                          delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                            return new Container(
+                                margin: const EdgeInsets.only(
+                                    left: 5.0, right: 5.0, top: 5.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ProductViewScreen(
+                                              id:
+                                                  '${featuredProduct[index]["_id"]}',
+                                              name:
+                                                  '${featuredProduct[index]["name"]}'),
+                                        ));
+                                  },
+                                  child: SizedBox(
+                                    child: new Card(
+                                      elevation: 5.0,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            right: 5.0, left: 5.0),
+                                        child: new Container(
+                                          alignment: Alignment.center,
+                                          child: Column(
+                                            children: [
+                                              new Container(
+                                                margin: const EdgeInsets.only(
+                                                    bottom: 20.0, top: 10.0),
+                                                child: Image.network(
+                                                  config.mediaUrl +
+                                                      '${featuredProduct[index]['Images']['containerName']}' +
+                                                      '${featuredProduct[index]['Images']['image']}',
+                                                  width: 100,
+                                                  height: 100,
+                                                ),
+                                              ),
+                                              Text(
+                                                '${featuredProduct[index]['name'].substring(0, 22)}...',
+                                              ),
+                                              Text(
+                                                'Rs ${featuredProduct[index]['price']}',
+                                                style: TextStyle(
+                                                  fontSize: 12.0,
+                                                  color: Colors.red,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ));
+                          }, childCount: featuredProduct.length)),
+                    ],
+                  )
+                : Align(
+                    alignment: Alignment.center,
+                    child: SpinKitCircle(color: Colors.deepPurple),
+                  )));
   }
 }

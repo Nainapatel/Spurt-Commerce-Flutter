@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:spurtcommerce/config.dart' as config;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:spurtcommerce/screens/categoryProductlist.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 void main() {
   runApp(new SubCategoryScreen());
@@ -21,8 +22,14 @@ class SubCategoryScreen extends StatefulWidget {
 
 class SubCategoryScreenState extends State<SubCategoryScreen> {
   List bannreData;
-
+  bool loader = false;
   List subcategoryList;
+  List img = [
+    'assets/Electronic.png',
+    'assets/man.jpeg',
+    'assets/baby.jpg',
+    'assets/Sports.jpg',
+  ];
 
   @override
   void initState() {
@@ -41,6 +48,7 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
     setState(() {
       bannreData = json.decode(response.body)['data'];
     });
+    loader = true;
     return "Successfull";
   }
 
@@ -63,82 +71,98 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
         subcategoryList = subcategory;
       });
     }
+    loader = true;
     return "Successfull";
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(this.widget.name),
-        actions: [
-          Icon(
-            Icons.notifications,
-            color: Colors.yellowAccent,
-            size: 24.0,
-          ),
-        ],
-      ),
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            Column(children: [
-              CarouselSlider(
-                height: 200.0,
-                items: bannreData.map((i) {
-                  return Builder(
-                    builder: (BuildContext context) {
-                      return Container(
-                          margin: EdgeInsets.symmetric(horizontal: 5.0),
-                          child: Image.network(
-                              config.mediaUrlBanner + '${i['image']}',
-                              width: MediaQuery.of(context).size.width,
-                              height: 200,
-                              fit: BoxFit.fill));
-                    },
-                  );
-                }).toList(),
-              ),
-            ]),
-            new Row(
-              children: <Widget>[
-                Expanded(
-                  child: SizedBox(
-                    height: 350.0,
-                    child: new ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      itemCount: subcategoryList.length,
-                      itemBuilder: (BuildContext ctxt, int i) {
-                        return SizedBox(
-                            child: GestureDetector(
-                          onTap: () => {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      CategoryProductlistScreen(
-                                    id: '${subcategoryList[i]["categoryId"]}',
-                                    name: '${subcategoryList[i]['name']}',
-                                  ),
-                                ))
-                          },
-                          child: Card(
-                              margin: EdgeInsets.all(10),
-                              child: Text(
-                                '${subcategoryList[i]['name']}',
-                                style: TextStyle(fontSize: 20.0),
-                              )),
-                        ));
-                      },
-                    ),
-                  ),
-                ),
-              ],
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            )
+        appBar: new AppBar(
+          title: new Text(this.widget.name),
+          actions: [
+            Icon(
+              Icons.notifications,
+              color: Colors.yellowAccent,
+              size: 24.0,
+            ),
           ],
         ),
-      ),
-    );
+        body: Center(
+            child: loader == true
+                ? CustomScrollView(
+                    slivers: <Widget>[
+                      SliverList(
+                        delegate: SliverChildListDelegate([
+                          Column(children: [
+                            CarouselSlider(
+                              height: 200.0,
+                              items: bannreData.map((i) {
+                                return Builder(
+                                  builder: (BuildContext context) {
+                                    return Container(
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 5.0),
+                                        child: Image.network(
+                                            config.mediaUrlBanner +
+                                                '${i['image']}',
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: 200,
+                                            fit: BoxFit.fill));
+                                  },
+                                );
+                              }).toList(),
+                            ),
+                          ]),
+                        ]),
+                      ),
+                      SliverList(
+                          delegate: SliverChildListDelegate([
+                        new Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: SizedBox(
+                                height: 350.0,
+                                child: new ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: subcategoryList.length,
+                                  itemBuilder: (BuildContext ctxt, int i) {
+                                    return SizedBox(
+                                        child: GestureDetector(
+                                      onTap: () => {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CategoryProductlistScreen(
+                                                id: '${subcategoryList[i]["categoryId"]}',
+                                                name:
+                                                    '${subcategoryList[i]['name']}',
+                                              ),
+                                            ))
+                                      },
+                                      child: Card(
+                                          margin: EdgeInsets.all(10),
+                                          child: Text(
+                                            '${subcategoryList[i]['name']}',
+                                            style: TextStyle(fontSize: 20.0),
+                                          )),
+                                    ));
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        )
+                      ]))
+                    ],
+                  )
+                : Align(
+                    alignment: Alignment.center,
+                    child: SpinKitCircle(color: Colors.deepPurple),
+                  )));
   }
 }

@@ -9,7 +9,6 @@ import 'package:spurtcommerce/config.dart' as config;
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
-
 class EditprofileScreen extends StatefulWidget {
   final id;
   EditprofileScreen({Key key, @required this.id}) : super(key: key);
@@ -204,7 +203,6 @@ class EditprofileScreenState extends State<EditprofileScreen> {
             child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: Container(
- 
                   child: Column(children: <Widget>[
                     Stack(
                       alignment: Alignment.bottomCenter,
@@ -310,10 +308,15 @@ class EditprofileScreenState extends State<EditprofileScreen> {
                               Align(
                                 alignment: Alignment.center,
                                 child: RaisedButton(
+                                  color: Colors.deepPurple,
                                   onPressed: () {
                                     updatePost();
                                   },
-                                  child: Text('Update'),
+                                  child: Text('Update',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold)),
                                 ),
                               )
                             ],

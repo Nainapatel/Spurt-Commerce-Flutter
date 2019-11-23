@@ -56,81 +56,160 @@ class CategoryProductlistScreenState extends State<CategoryProductlistScreen> {
           ),
         ],
       ),
-           body: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: loader == true ?
-             Column(children: <Widget>[
-              Column(
-                children: <Widget>[
-                  GridView.builder(
-                      shrinkWrap: true,
-                      itemCount: categoryProduct.length,
-                      gridDelegate:
-                          new SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2),
-                      itemBuilder: (BuildContext context, int i) {
-                        return new GestureDetector(
-                            child: new Container(
-                          margin: const EdgeInsets.only(
-                              left: 5.0, right: 5.0, top: 5.0),
-
-                               child: GestureDetector(
+         body: Center(
+            child: loader == true
+                ? CustomScrollView(
+                    slivers: <Widget>[
+            
+                      SliverGrid(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 0.0,
+                            crossAxisSpacing: 0.0,
+                          ),
+                          delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                          
+                              return new Container(
+                                  margin: const EdgeInsets.only(
+                                      left: 5.0, right: 5.0, top: 5.0),
+                                  child: GestureDetector(
                                     onTap: () {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => ProductViewScreen(
-                                                id: '${categoryProduct[i]["_id"]}',
-                                                name:'${categoryProduct[i]["name"]}'),
+                                                id:
+                                                    '${categoryProduct[index]["_id"]}',
+                                                name:
+                                                    '${categoryProduct[index]["name"]}'),
                                           ));
                                     },
-                          child: SizedBox(
+                                    child: SizedBox(
+                                      child: new Card(
+                                        elevation: 5.0,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              right: 5.0, left: 5.0),
+                                          child: new Container(
+                                            alignment: Alignment.center,
+                                            child: Column(
+                                              children: [
+                                                new Container(
+                                                  margin: const EdgeInsets.only(
+                                                      bottom: 20.0, top: 10.0),
+                                                  child: Image.network(
+                                                    config.mediaUrl +
+                                                        '${categoryProduct[index]['Images']['containerName']}' +
+                                                        '${categoryProduct[index]['Images']['image']}',
+                                                    width: 100,
+                                                    height: 100,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  '${categoryProduct[index]['name'].substring(0, 15)}...',
+                                                ),
+                                                Text(
+                                                  'Rs ${categoryProduct[index]['price']}',
+                                                  style: TextStyle(
+                                                    fontSize: 12.0,
+                                                    color: Colors.red,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ));
+                            
+                          }, childCount: categoryProduct.length)),
                       
-                            child: new Card(
-                              elevation: 5.0,
-                              child: Padding(
-                                padding: EdgeInsets.only(right: 5.0, left: 5.0),
-                                child: new Container(
-                                  alignment: Alignment.center,
-                                  child: Column(
-                                    children: [
-                                      new Container(
-                                        margin: const EdgeInsets.only(
-                                            bottom: 20.0, top: 10.0),
-                                        child: Image.network
-                                        (
-                                          config.mediaUrl +
-                                              '${categoryProduct[i]['Images']['containerName']}' +
-                                              '${categoryProduct[i]['Images']['image']}',
-                                          width: 100,
-                                          height: 100,
-                                        ),
-                                      ),
-                                      Text(
-                                        '${categoryProduct[i]['name'].substring(0, 15)}...',
-                                      ),
-                                      Text(
-                                        'Rs ${categoryProduct[i]['price']}',
-                                        style: TextStyle(
-                                          fontSize: 12.0,
-                                          color: Colors.red,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                               ),
-                        ));
-                      })
-                ],
-              )
-            ]) :Align(
-                  alignment: Alignment.center,
-                  child: SpinKitCircle(color: Colors.deepPurple),
-                )),
+                   
+                 
+                    ],
+                  )
+                : Align(
+                    alignment: Alignment.center,
+                    child: SpinKitCircle(color: Colors.deepPurple),
+                  ))
+          //  body: SingleChildScrollView(
+          //   scrollDirection: Axis.vertical,
+          //   child: loader == true ?
+          //    Column(children: <Widget>[
+          //     Column(
+          //       children: <Widget>[
+          //         GridView.builder(
+          //             shrinkWrap: true,
+          //             itemCount: categoryProduct.length,
+          //             gridDelegate:
+          //                 new SliverGridDelegateWithFixedCrossAxisCount(
+          //                     crossAxisCount: 2),
+          //             itemBuilder: (BuildContext context, int i) {
+          //               return new GestureDetector(
+          //                   child: new Container(
+          //                 margin: const EdgeInsets.only(
+          //                     left: 5.0, right: 5.0, top: 5.0),
+
+          //                      child: GestureDetector(
+          //                           onTap: () {
+          //                             Navigator.push(
+          //                                 context,
+          //                                 MaterialPageRoute(
+          //                                   builder: (context) => ProductViewScreen(
+          //                                       id: '${categoryProduct[i]["_id"]}',
+          //                                       name:'${categoryProduct[i]["name"]}'),
+          //                                 ));
+          //                           },
+          //                 child: SizedBox(
+                      
+          //                   child: new Card(
+          //                     elevation: 5.0,
+          //                     child: Padding(
+          //                       padding: EdgeInsets.only(right: 5.0, left: 5.0),
+          //                       child: new Container(
+          //                         alignment: Alignment.center,
+          //                         child: Column(
+          //                           children: [
+          //                             new Container(
+          //                               margin: const EdgeInsets.only(
+          //                                   bottom: 20.0, top: 10.0),
+          //                               child: Image.network
+          //                               (
+          //                                 config.mediaUrl +
+          //                                     '${categoryProduct[i]['Images']['containerName']}' +
+          //                                     '${categoryProduct[i]['Images']['image']}',
+          //                                 width: 100,
+          //                                 height: 100,
+          //                               ),
+          //                             ),
+          //                             Text(
+          //                               '${categoryProduct[i]['name'].substring(0, 15)}...',
+          //                             ),
+          //                             Text(
+          //                               'Rs ${categoryProduct[i]['price']}',
+          //                               style: TextStyle(
+          //                                 fontSize: 12.0,
+          //                                 color: Colors.red,
+          //                               ),
+          //                             )
+          //                           ],
+          //                         ),
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 ),
+          //                      ),
+          //               ));
+          //             })
+          //       ],
+          //     )
+          //   ]) :Align(
+          //         alignment: Alignment.center,
+          //         child: SpinKitCircle(color: Colors.deepPurple),
+          //       )),
             );
   }
 }

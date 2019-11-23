@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -55,6 +54,11 @@ class HomeScreenState extends State<HomeScreen> {
       bannreData = json.decode(response.body)['data'];
     });
     loader = true;
+    print(config.mediaUrlBanner + '${bannreData[0]['image']}');
+    print(config.mediaUrlBanner + '${bannreData[1]['image']}');
+    print(config.mediaUrlBanner + '${bannreData[2]['image']}');
+    print(config.mediaUrlBanner + '${bannreData[3]['image']}');
+    print(config.mediaUrlBanner + '${bannreData[4]['image']}');
     return "Successfull";
   }
 
@@ -141,34 +145,29 @@ class HomeScreenState extends State<HomeScreen> {
                 ? CustomScrollView(
                     slivers: <Widget>[
                       SliverList(
-                        delegate: SliverChildListDelegate([
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                CarouselSlider(
-                                  height: 250.0,
-                                  items: bannreData.map((i) {
-                                    return Builder(
-                                      builder: (BuildContext context) {
-                                        return Container(
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: 5.0),
-                                            child: Image.network(
-                                                config.mediaUrlBanner +
-                                                    '${i['image']}',
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                height: 200,
-                                                fit: BoxFit.fill));
-                                      },
-                                    );
-                                  }).toList(),
-                                  autoPlay: true,
-                                ),
-                              ]),
-                        ]),
-                      ),
+                          delegate: SliverChildListDelegate([
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height / 3.5,
+                            width: MediaQuery.of(context).size.width,
+                            child: Carousel(
+                              images: [
+                                NetworkImage(config.mediaUrlBanner +
+                                    '${bannreData[0]['image']}'),
+                                NetworkImage(config.mediaUrlBanner +
+                                    '${bannreData[1]['image']}'),
+                                NetworkImage(config.mediaUrlBanner +
+                                    '${bannreData[2]['image']}'),
+                                NetworkImage(config.mediaUrlBanner +
+                                    '${bannreData[3]['image']}'),
+                                NetworkImage(config.mediaUrlBanner +
+                                    '${bannreData[4]['image']}'),
+                              ],
+                              dotSpacing: 15.0,
+                              dotBgColor: Colors.black.withOpacity(0.0),
+                              borderRadius: false,
+                              boxFit: BoxFit.fill,
+                            )),
+                      ])),
                       SliverList(
                         delegate: SliverChildListDelegate([
                           Column(
@@ -355,7 +354,7 @@ class HomeScreenState extends State<HomeScreen> {
                             vertical: 10,
                           ),
                           child: SizedBox(
-                              height: MediaQuery.of(context).size.height / 2.5,
+                              height: MediaQuery.of(context).size.height / 3,
                               width: MediaQuery.of(context).size.width,
                               child: Carousel(
                                 images: [
@@ -387,6 +386,38 @@ class HomeScreenState extends State<HomeScreen> {
                                     height: 300,
                                     width: MediaQuery.of(context).size.width,
                                   ))
+                            ],
+                          ),
+                        ]),
+                      ),
+                      SliverList(
+                        delegate: SliverChildListDelegate([
+                          Column(
+                            children: <Widget>[
+                              GestureDetector(
+                                child: RaisedButton(
+                                    color: Colors.deepPurple,
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pushNamed("/featuredProduct");
+                                    },
+                                    child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text('Shop Now',
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold)),
+                                          Image.asset(
+                                            'assets/giphy.gif',
+                                            height: 35,
+                                            width: 35,
+                                            color: Colors.white,
+                                          )
+                                        ])),
+                              )
                             ],
                           ),
                         ]),

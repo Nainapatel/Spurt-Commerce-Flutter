@@ -64,7 +64,15 @@ flutter:
     - Sports.jpg
     - house.jpg
     - women.jpeg
+    - offer.jpg
+    - giphy.gif
     - assets/sale/
+    - assets/electronics/
+    - assets/men/
+    - assets/baby/
+    - assets/sports/
+    - assets/home/
+    - assets/women/
     
 
   # To add assets to your application, add an assets section, like this:

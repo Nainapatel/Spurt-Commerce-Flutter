@@ -153,66 +153,89 @@ class ProfileScreenState extends State<ProfileScreen> {
                   Column(
                     children: <Widget>[
                       Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'Name',
-                          style: TextStyle(
-                              fontSize: 18, color: Colors.deepPurple[300]),
-                          textAlign: TextAlign.left,
-                        ),
-                      ),
+                          alignment: Alignment.topLeft,
+                          child: Row(
+                            children: <Widget>[
+                              Icon(
+                                Icons.tag_faces,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              Text(
+                                '  Name',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.deepPurple[300]),
+                                textAlign: TextAlign.left,
+                              ),
+                            ],
+                          )),
                       Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          '$name',
+                          '       $name',
                           style: TextStyle(fontSize: 18, color: Colors.black),
                         ),
                       ),
                       Divider(),
                       Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'Username',
-                          style: TextStyle(
-                              fontSize: 18, color: Colors.deepPurple[300]),
-                        ),
-                      ),
+                          alignment: Alignment.topLeft,
+                          child: Row(children: <Widget>[
+                            Icon(
+                              Icons.face,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            Text(
+                              '  Username',
+                              style: TextStyle(
+                                  fontSize: 18, color: Colors.deepPurple[300]),
+                            ),
+                          ])),
                       Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          '$username',
+                          '       $username',
                           style: TextStyle(fontSize: 18, color: Colors.black),
                         ),
                       ),
                       Divider(),
                       Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'Email',
-                          style: TextStyle(
-                              fontSize: 18, color: Colors.deepPurple[300]),
-                        ),
-                      ),
+                          alignment: Alignment.topLeft,
+                          child: Row(children: <Widget>[
+                            Icon(
+                              Icons.email,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            Text(
+                              '  Email',
+                              style: TextStyle(
+                                  fontSize: 18, color: Colors.deepPurple[300]),
+                            ),
+                          ])),
                       Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          '$email',
+                          '       $email',
                           style: TextStyle(fontSize: 18, color: Colors.black),
                         ),
                       ),
                       Divider(),
                       Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'Phone number',
-                          style: TextStyle(
-                              fontSize: 18, color: Colors.deepPurple[300]),
-                        ),
-                      ),
+                          alignment: Alignment.topLeft,
+                          child: Row(children: <Widget>[
+                            Icon(
+                              Icons.phone,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            Text(
+                              '  Phone number',
+                              style: TextStyle(
+                                  fontSize: 18, color: Colors.deepPurple[300]),
+                            ),
+                          ])),
                       Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          '$number',
+                          '       $number',
                           style: TextStyle(fontSize: 18, color: Colors.black),
                         ),
                       ),

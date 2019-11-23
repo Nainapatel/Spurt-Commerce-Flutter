@@ -3,8 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'package:spurtcommerce/config.dart' as config;
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:spurtcommerce/screens/categoryProductlist.dart';
+import 'package:carousel_pro/carousel_pro.dart';import 'package:spurtcommerce/screens/categoryProductlist.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 void main() {
@@ -24,18 +23,68 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
   List bannreData;
   bool loader = false;
   List subcategoryList;
-  List img = [
-    'assets/Electronic.png',
-    'assets/man.jpeg',
-    'assets/baby.jpg',
-    'assets/Sports.jpg',
-  ];
+
+  List image;
 
   @override
   void initState() {
     super.initState();
     this.getJSONData();
     this.getSubCategory();
+    this.getimg();
+  }
+
+  getimg() {
+
+    if (this.widget.name == "ELECTRONICS") {
+      image = [
+        'assets/electronics/mobile.png',
+        'assets/electronics/laptop.jpg',
+        'assets/electronics/headphone.jpg',
+        'assets/electronics/tv.jpg'
+      ];
+     
+    } else if (this.widget.name == "MEN's FASHION") {
+      image = [
+        'assets/men/menwatch.jpg',
+        'assets/men/menclothes.jpg',
+        'assets/men/shoesmen.jpg',
+        'assets/men/shortswear.jpg',
+      ];
+     
+    } else if (this.widget.name == "BABY & KIDS") {
+      image = [
+        'assets/baby/toys.jpg',
+        'assets/baby/boycloths.jpg',
+        'assets/baby/girlcloths.jpg',
+        'assets/baby/kidbag.jpeg',
+      ];
+      
+    } else if (this.widget.name == "SPORTS") {
+      image = [
+        'assets/sports/cricket.jpg',
+        'assets/sports/cycling.jpeg',
+        'assets/sports/badminton.jpg',
+        'assets/sports/football.jpg',
+      ];
+      
+    } else if (this.widget.name == "HOME DECOR & FURNITURE") {
+      image = [
+        'assets/home/kitchen.jpg',
+        'assets/home/furnichar.jpeg',
+        'assets/home/decore.jpg',
+        'assets/home/lighting.jpg',
+      ];
+      
+    } else if (this.widget.name == "WOMEN FASHION") {
+      image = [
+        'assets/women/watch.webp',
+        'assets/women/clothes.jpg',
+        'assets/women/shoes.jpg',
+        'assets/women/shortwear.jpg',
+      ];
+     
+    }
   }
 
 /*
@@ -71,6 +120,7 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
         subcategoryList = subcategory;
       });
     }
+
     loader = true;
     return "Successfull";
   }
@@ -93,71 +143,109 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
                 ? CustomScrollView(
                     slivers: <Widget>[
                       SliverList(
+                          delegate: SliverChildListDelegate([
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height / 3.5,
+                            width: MediaQuery.of(context).size.width,
+                            child: Carousel(
+                              images: [
+                                NetworkImage(config.mediaUrlBanner +
+                                    '${bannreData[0]['image']}'),
+                                NetworkImage(config.mediaUrlBanner +
+                                    '${bannreData[1]['image']}'),
+                                NetworkImage(config.mediaUrlBanner +
+                                    '${bannreData[2]['image']}'),
+                                NetworkImage(config.mediaUrlBanner +
+                                    '${bannreData[3]['image']}'),
+                                NetworkImage(config.mediaUrlBanner +
+                                    '${bannreData[4]['image']}'),
+                              ],
+                              dotSpacing: 15.0,
+                              dotBgColor: Colors.black.withOpacity(0.0),
+                              borderRadius: false,
+                              boxFit: BoxFit.fill,
+                            )),
+                      ])),
+                      SliverList(
                         delegate: SliverChildListDelegate([
-                          Column(children: [
-                            CarouselSlider(
-                              height: 200.0,
-                              items: bannreData.map((i) {
-                                return Builder(
-                                  builder: (BuildContext context) {
-                                    return Container(
-                                        margin: EdgeInsets.symmetric(
-                                            horizontal: 5.0),
-                                        child: Image.network(
-                                            config.mediaUrlBanner +
-                                                '${i['image']}',
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            height: 200,
-                                            fit: BoxFit.fill));
-                                  },
-                                );
-                              }).toList(),
-                            ),
-                          ]),
+                          Column(
+                            children: <Widget>[
+                              Padding(
+                                  padding: EdgeInsets.only(right: 8.0),
+                                  child: new Container(
+                                    margin: const EdgeInsets.only(
+                                        left: 20.0,
+                                        right: 20.0,
+                                        top: 20.0,
+                                        bottom: 20),
+                                    child: Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          'New Arrivals',
+                                          style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        )),
+                                  )),
+                            ],
+                          ),
                         ]),
                       ),
-                      SliverList(
-                          delegate: SliverChildListDelegate([
-                        new Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: SizedBox(
-                                height: 350.0,
-                                child: new ListView.builder(
-                                  scrollDirection: Axis.vertical,
-                                  itemCount: subcategoryList.length,
-                                  itemBuilder: (BuildContext ctxt, int i) {
-                                    return SizedBox(
-                                        child: GestureDetector(
-                                      onTap: () => {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CategoryProductlistScreen(
-                                                id: '${subcategoryList[i]["categoryId"]}',
-                                                name:
-                                                    '${subcategoryList[i]['name']}',
-                                              ),
-                                            ))
-                                      },
-                                      child: Card(
-                                          margin: EdgeInsets.all(10),
-                                          child: Text(
-                                            '${subcategoryList[i]['name']}',
-                                            style: TextStyle(fontSize: 20.0),
-                                          )),
-                                    ));
-                                  },
+                      SliverGrid(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 0.0,
+                            crossAxisSpacing: 0.0,
+                          ),
+                          delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                            if (index <= 3) {
+                              return new Container(
+                                  child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CategoryProductlistScreen(
+                                          id: '${subcategoryList[index]["categoryId"]}',
+                                          name:
+                                              '${subcategoryList[index]['name']}',
+                                        ),
+                                      ));
+                                },
+                                child: SizedBox(
+                                  child: new Card(
+                                    elevation: 5.0,
+                                    child: new Container(
+                                      alignment: Alignment.center,
+                                      child: Column(
+                                        children: [
+                                          new Container(
+                                            child: Image.asset(image[index],
+                                                width: 150,
+                                                height: 150,
+                                                fit: BoxFit.fitWidth),
+                                          ),
+                                          new Divider(),
+                                          Text(
+                                            '${subcategoryList[index]['name']}',
+                                            style: TextStyle(
+                                              fontSize: 15.0,
+                                              color: Colors.black,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ],
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        )
-                      ]))
+                              ));
+                            }
+                          }, childCount: subcategoryList.length)),
+                     
                     ],
                   )
                 : Align(

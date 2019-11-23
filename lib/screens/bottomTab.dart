@@ -13,18 +13,25 @@ class BottomTabScreen extends StatefulWidget {
 }
 
 class BottomTabScreenState extends State<BottomTabScreen> {
+   int _selectedIndex = 0;
   List Tabs = [HomeScreen(), WishlistScreen(), CartScreen(), ProfileScreen()];
   _onTap(int index) {
+   setState(() {
+      _selectedIndex = index;
+    });
     Navigator.of(context)
         .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
       return Tabs[index];
     }));
   }
 
+
+  Widget currentScreen;
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
+       currentIndex: _selectedIndex, 
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
@@ -44,6 +51,12 @@ class BottomTabScreenState extends State<BottomTabScreen> {
         ),
       ],
       onTap: _onTap,
+        selectedFontSize: 12,
+        unselectedFontSize: 12,
+        selectedItemColor: Colors.amber[800],
+        unselectedItemColor: Colors.grey[500],
+        showUnselectedLabels: true,
+        
     );
   }
 }

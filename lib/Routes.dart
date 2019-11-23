@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:spurtcommerce/screens/home.dart';
 import 'package:spurtcommerce/screens/login.dart';
@@ -40,32 +38,3 @@ class Routes {
     ));
   }
 }
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return FutureBuilder<String>(
-//       future: auth(), //check if user logged in or not
-//       builder: (context, snapshot) {
-//         if (!snapshot.hasData) {
-//           return MaterialApp( //if user is loggin first time then show login screen
-//             title: 'Flutter Demo',
-//             theme: ThemeData(
-//               primarySwatch: Colors.blue,
-//             ),
-//             home: LoginScreen(),
-//           );
-//         } else {
-//           return MaterialApp( //if user already logged in redirect to second screen
-//             title: 'Flutter Demo',
-//             theme: ThemeData(
-//               primarySwatch: Colors.blue,
-//             ),
-//             home: HomeScreen(),
-//           );
-//         }
-//       },
-//     );
-
-//   }
-// }

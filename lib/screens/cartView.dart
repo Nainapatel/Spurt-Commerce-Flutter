@@ -57,7 +57,9 @@ class CartView extends StatefulWidget {
 
 class CartViewScreenState extends State<CartView> {
   int qtyData;
+  List product;
   // List qtyArray = [];
+  bool qty = true;
 
   @override
   void initState() {
@@ -65,12 +67,18 @@ class CartViewScreenState extends State<CartView> {
     // this.getQtyProduct(); // Function for get product details
   }
 
-  // getQtyProduct() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   int qtyData = prefs.getInt('qtyData');
-
-  //   print(' qtyData====$qtyData');
-  // }
+  getQtyProduct(data, index) async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> show_cartData =
+        prefs.getStringList('show_cartData') ?? List<String>(); // <-EDITED HERE
+    List<String> cartData = data[index].qty++;
+    prefs.setStringList('show_cartData', cartData);
+    print('show_cartData-------$show_cartData');
+    setState(() {
+      qty = true;
+    });
+    print('data==$index======${data[index].qty}');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +87,6 @@ class CartViewScreenState extends State<CartView> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<Cart> data = snapshot.data;
-
           return _jobsListView(data);
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
@@ -156,38 +163,41 @@ class CartViewScreenState extends State<CartView> {
                                     '-     ',
                                     style: TextStyle(fontSize: 20),
                                   )),
-                              Text(
-                                '${data[i].qty}',
-                                style: TextStyle(fontSize: 15.0),
-                              ),
+                              qty == true
+                                  ? Text(
+                                      '${data[i].qty}',
+                                      style: TextStyle(fontSize: 15.0),
+                                    )
+                                  : Text(
+                                      '${data[i].qty}',
+                                      style: TextStyle(fontSize: 15.0),
+                                    ),
                               GestureDetector(
                                   onTap: () async {
-                                    data[i].qty++;
+                                    //  data[i].qty++;
+                                    getQtyProduct(data, i);
 
-                                    final prefs =
-                                        await SharedPreferences.getInstance();
-                                    List<String> show_qty =
-                                        prefs.getStringList('cart_obj') ??
-                                            List<String>();
+                                    // final prefs =
+                                    //     await SharedPreferences.getInstance();
+                                    // List<String> show_qty =
+                                    //     prefs.getStringList('cart_obj') ??
+                                    //         List<String>();
 
-                                    List<String> qtyArray = show_qty;
-                                    var obj = {
-                                      'index': i,
-                                      'productId': data[i].productId,
-                                      'qty': data[i].qty,
-                                      'price': data[i].price,
-                                      
-                                    };
-                                    qtyArray.add(obj.toString());
-                                    prefs.setStringList('cart_obj', qtyArray);
-                                    print('array=====$qtyArray');
-                                  
-                                      var n = qtyArray
-                                          .contains(data[i].productId);
-                                      print('n====================$n');
-                                    
-                            
-                                 
+                                    // List<String> qtyArray = show_qty;
+                                    // var obj = {
+                                    //   'index': i,
+                                    //   'productId': data[i].productId,
+                                    //   'qty': data[i].qty,
+                                    //   'price': data[i].price,
+                                    // };
+                                    // print('array=====$qtyArray');
+                                    // for (var i = 0; i < qtyArray.length; i++) {
+                                    //   var n = qtyArray[i]
+                                    //       .contains(data[i].productId);
+                                    //   print('n=============$i=======$n');
+                                    // }
+                                    // qtyArray.add(obj.toString());
+                                    // prefs.setStringList('cart_obj', qtyArray);
                                   },
                                   child: Text(
                                     '     +',
@@ -214,30 +224,27 @@ class CartViewScreenState extends State<CartView> {
 //                                             List<String>();
 //                                     print('show_qty==in onTap=$show_qty');
 
+//  for (var i = 0; i < qtyArray.length; i++) {
+//                                     var n = qtyArray
+//                                         .contains(data[i].productId);
+//                                     print('n====${qtyArray.length}===============$n');
 
+//                                     if (n == true) {
+//                                       print('i if');
+//                                       Map<String, dynamic> data =
+//                                           json.decode(qtyArray.toString());
+//                                       (data["qtyArray"] as List<dynamic>)
+//                                           .forEach((item) =>
+//                                               item["productId"] =
+//                                                   data[i].qty++);
 
-  //  for (var i = 0; i < qtyArray.length; i++) {
-  //                                     var n = qtyArray
-  //                                         .contains(data[i].productId);
-  //                                     print('n====${qtyArray.length}===============$n');
-
-  //                                     if (n == true) {
-  //                                       print('i if');
-  //                                       Map<String, dynamic> data =
-  //                                           json.decode(qtyArray.toString());
-  //                                       (data["qtyArray"] as List<dynamic>)
-  //                                           .forEach((item) =>
-  //                                               item["productId"] =
-  //                                                   data[i].qty++);
-
-
-  //                                     } else {
-  //                                       print('in else');
-  //                                        obj = {
-  //                                         'index': i,
-  //                                         'productId': data[i].productId,
-  //                                         'qty': data[i].qty,
-  //                                         'price': data[i].price
-  //                                       };
-  //                                     }
-  //                                   }
+//                                     } else {
+//                                       print('in else');
+//                                        obj = {
+//                                         'index': i,
+//                                         'productId': data[i].productId,
+//                                         'qty': data[i].qty,
+//                                         'price': data[i].price
+//                                       };
+//                                     }
+//                                   }

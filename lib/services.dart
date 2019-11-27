@@ -11,11 +11,13 @@ List cartProductArray = [];
 var jsonResponseCart;
 var jsonResponseCategory;
 /** fetch cart data */
-Future<List<Cart>> fetchJobs() async {
+Future<List<Cart>> fetchcartItem() async {
   final prefs = await SharedPreferences.getInstance();
   List<String> show_id = prefs.getStringList('id_list') ?? List<String>();
-  print("show_id====$show_id");
+
+  print("length=====${show_id.length}========${cartProductArray.length}");
   if (show_id.length != cartProductArray.length) {
+  
     for (var i = 0; i < show_id.length; i++) {
       var response = await http.get(
           Uri.encodeFull(
@@ -24,6 +26,7 @@ Future<List<Cart>> fetchJobs() async {
       jsonResponseCart = await json.decode(response.body);
     }
     cartProductArray.add(jsonResponseCart['data'][0]);
+
     for (var i = 0; i < cartProductArray.length; i++) {
       var jsonobject = cartProductArray[i];
 
@@ -38,4 +41,3 @@ Future<String> logout() async {
   prefs.clear();
   return "log out successfully";
 }
-

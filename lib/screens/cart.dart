@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spurtcommerce/screens/wishlist.dart';
-import 'package:spurtcommerce/screens/profile.dart';
-import 'package:spurtcommerce/screens/home.dart';
 import 'package:spurtcommerce/screens/cartView.dart';
 import 'package:spurtcommerce/screens/drawer.dart';
 import 'package:spurtcommerce/screens/bottomTab.dart';

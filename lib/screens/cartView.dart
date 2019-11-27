@@ -4,6 +4,7 @@ import 'package:spurtcommerce/config.dart' as config;
 import 'package:flutter/material.dart';
 import 'package:spurtcommerce/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Cart {
   final int id;
@@ -58,160 +59,286 @@ class CartView extends StatefulWidget {
 class CartViewScreenState extends State<CartView> {
   int qtyData;
   List product;
-  // List qtyArray = [];
   bool qty = true;
+  List<String> listobj = [];
+  var obj;
+  bool loader = false;
+  List<String> show_id;
+  var price;
+  List priceCartItem;
 
   @override
   void initState() {
     super.initState();
-    // this.getQtyProduct(); // Function for get product details
+    priceCount();
   }
 
-  getQtyProduct(data, index) async {
+  priceCount() async {
+    print("call price count");
     final prefs = await SharedPreferences.getInstance();
-    List<String> show_cartData =
-        prefs.getStringList('show_cartData') ?? List<String>(); // <-EDITED HERE
-    List<String> cartData = data[index].qty++;
-    prefs.setStringList('show_cartData', cartData);
-    print('show_cartData-------$show_cartData');
-    setState(() {
-      qty = true;
-    });
-    print('data==$index======${data[index].qty}');
+    List show_obj = prefs.getStringList('obj_list') ?? List<String>();
+    price = jsonDecode(show_obj.toString())[0]['price'];
+      print("price length=====${show_obj.length}");
+    for (var i = 0; i < show_obj.length; i++) {
+      priceCartItem.add(jsonDecode(show_obj.toString())[i]['price']);
+      print("for price=====${priceCartItem.length}=====$priceCartItem");
+    }
   }
 
-  @override
-  Widget build(BuildContext context) {
+  getQtyProduct(data, index, id) async {
+    // print("==========================");
+    // print('index===$index=====${data[index].qty++}======');
+    // final prefs = await SharedPreferences.getInstance();
+    // List show_obj = prefs.getStringList('obj_list').toList();
+    // print('before=first time=====$show_obj');
+    // var prodLists = jsonDecode(show_obj.toString())
+    //     .where((prod) => prod["id"] == id)
+    //     .toList();
+    // print("prodLists-====old=$prodLists");
+    // dynamic value = prodLists[0]['qty'];
+    // value++;
+    // print("in==$index== cart view sorted value ====$value");
+    // var updatedqty = jsonDecode(show_obj.toString())[index]['qty'] = value;
+    // print('updatedqty=======$updatedqty');
+    // obj = {'id': data[index].productId, 'qty': updatedqty};
+    // print('obj=before if=show_obj==$show_obj');
+
+    // if (obj['id'] == id) {
+    //   print("in if==${obj['id']}====$id");
+    //   show_obj.removeWhere((item) => item['id'] == id);
+    //   print("after removing object=$show_obj");
+    // }
+
+    // show_obj.add(json.encode(obj));
+    // print("=after added===show_obj=====$show_obj");
+
+    // prefs.setStringList('obj_list', show_obj);
+    // List show_objnew = prefs.getStringList('obj_list').toList();
+    // print("show_===at last time==$show_objnew");
+// -------------------------------------------------------------------
+    // var n = show_id.contains(data[index].productId);
+    // dynamic show_cartData = prefs.getInt('show_cartData');
+    // if (n == true) {
+    // if (show_cartData != null && show_cartData != 1) {
+    //   show_cartData = show_cartData + 1;
+    //   prefs.setInt('show_cartData', show_cartData);
+    //   print('in if===$show_cartData');
+    // } else {
+    //   prefs.setInt('show_cartData', data[index].qty++);
+    //   print('in else===$show_cartData');
+    // }
+    // print("$index==show_cartData====$show_cartData");
+    // }
+  }
+
+  deleteCartItem(id, data) async {
+    final prefs = await SharedPreferences.getInstance();
+    show_id = prefs.getStringList('id_list') ?? List<String>();
+    var listid = show_id.contains(id);
+    if (listid == true) {
+      show_id.remove(id);
+      await prefs.setStringList('id_list', show_id);
+      cartProductArray = [];
+      fetchcartItem();
+      loader = true;
+      print("in if====$listid======$show_id");
+    } else {
+      print("in else===$listid");
+    }
+    print('show_id in delete function===$show_id');
+  }
+
+  Future<List<Cart>> _fetchcartItem() async {
+    print("recall in if condition");
+    var response = await fetchcartItem();
+    setState(() {
+      loader = true;
+    });
+    return response;
+  }
+
+  Widget cartItem() {
     return FutureBuilder<List<Cart>>(
-      future: _fetchJobs(),
+      future: _fetchcartItem(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<Cart> data = snapshot.data;
-          return _jobsListView(data);
+
+          return ListView.builder(
+              shrinkWrap: true,
+              itemCount: data.length,
+              itemBuilder: (context, i) {
+                loader = true;
+                print("re call ,${cartProductArray.length}");
+                return Row(
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        new Container(
+                          margin:
+                              const EdgeInsets.only(bottom: 20.0, top: 10.0),
+                          child: Image.network(
+                            config.mediaUrl +
+                                '${data[i].productImage[0].containerName}' +
+                                '${data[i].productImage[0].image}',
+                            width: 100,
+                            height: 100,
+                          ),
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        new Container(
+                            margin:
+                                const EdgeInsets.only(top: 10.0, left: 15.0),
+                            width: 260,
+                            child: SizedBox(
+                                // height: 250,
+                                child: Column(
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    '${data[i].name}',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(fontSize: 15.0),
+                                  ),
+                                ),
+                                new Divider(),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Rs.${data[i].price}',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontSize: 15.0, color: Colors.red),
+                                  ),
+                                ),
+                                new Divider(),
+                                Row(
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          'Qty. :  ',
+                                          style: TextStyle(fontSize: 15.0),
+                                        ),
+                                        GestureDetector(
+                                            onTap: () async {
+                                              data[i].qty--;
+                                            },
+                                            child: Text(
+                                              '-     ',
+                                              style: TextStyle(fontSize: 20),
+                                            )),
+                                        Text(
+                                          '${data[i].qty}',
+                                          style: TextStyle(fontSize: 15.0),
+                                        ),
+                                        GestureDetector(
+                                            onTap: () async {
+                                              //  data[i].qty++;
+                                              getQtyProduct(
+                                                  data, i, data[i].productId);
+                                            },
+                                            child: Text(
+                                              '     +',
+                                              style: TextStyle(fontSize: 20),
+                                            )),
+                                      ],
+                                    ),
+                                    Spacer(),
+                                    Column(
+                                      children: <Widget>[
+                                        GestureDetector(
+                                            onTap: () {
+                                              deleteCartItem(
+                                                  '${data[i].productId}',
+                                                  '$data');
+                                            },
+                                            child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Icon(
+                                                Icons.delete,
+                                                color: Colors.deepPurple,
+                                                size: 30.0,
+                                              ),
+                                            ))
+                                      ],
+                                    )
+                                  ],
+                                )
+                              ],
+                            )))
+                      ],
+                    )
+                  ],
+                );
+              });
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
-        return CircularProgressIndicator();
+        return SpinKitCircle(color: Colors.deepPurple);
       },
     );
   }
 
-  Future<List<Cart>> _fetchJobs() async {
-    var response = await fetchJobs();
-    return response;
-  }
-
-  ListView _jobsListView(data) {
-    return ListView.builder(
-        itemCount: data.length,
-        itemBuilder: (context, i) {
-          return Row(
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  new Container(
-                    margin: const EdgeInsets.only(bottom: 20.0, top: 10.0),
-                    child: Image.network(
-                      config.mediaUrl +
-                          '${data[i].productImage[0].containerName}' +
-                          '${data[i].productImage[0].image}',
-                      width: 100,
-                      height: 100,
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Center(
+            child: Column(
+      children: <Widget>[
+        Column(
+          children: <Widget>[cartItem()],
+        ),
+        new Divider(),
+        Container(
+            child: loader == true
+                ? Column(children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          'Sub total',
+                          style: TextStyle(color: Colors.grey, fontSize: 15),
+                        ),
+                        Spacer(),
+                        Text('Rs. $price',
+                            style: TextStyle(color: Colors.grey, fontSize: 15))
+                      ],
                     ),
-                  )
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  new Container(
-                      margin: const EdgeInsets.only(top: 10.0, left: 15.0),
-                      width: 260,
-                      child: SizedBox(
-                          // height: 250,
-                          child: Column(
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              '${data[i].name}',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(fontSize: 15.0),
-                            ),
-                          ),
-                          new Divider(),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Rs.${data[i].price}',
-                              textAlign: TextAlign.left,
-                              style:
-                                  TextStyle(fontSize: 15.0, color: Colors.red),
-                            ),
-                          ),
-                          new Divider(),
-                          Row(
-                            children: <Widget>[
-                              Text(
-                                'Qty. :  ',
-                                style: TextStyle(fontSize: 15.0),
-                              ),
-                              GestureDetector(
-                                  onTap: () async {
-                                    data[i].qty--;
-                                  },
-                                  child: Text(
-                                    '-     ',
-                                    style: TextStyle(fontSize: 20),
-                                  )),
-                              qty == true
-                                  ? Text(
-                                      '${data[i].qty}',
-                                      style: TextStyle(fontSize: 15.0),
-                                    )
-                                  : Text(
-                                      '${data[i].qty}',
-                                      style: TextStyle(fontSize: 15.0),
-                                    ),
-                              GestureDetector(
-                                  onTap: () async {
-                                    //  data[i].qty++;
-                                    getQtyProduct(data, i);
-
-                                    // final prefs =
-                                    //     await SharedPreferences.getInstance();
-                                    // List<String> show_qty =
-                                    //     prefs.getStringList('cart_obj') ??
-                                    //         List<String>();
-
-                                    // List<String> qtyArray = show_qty;
-                                    // var obj = {
-                                    //   'index': i,
-                                    //   'productId': data[i].productId,
-                                    //   'qty': data[i].qty,
-                                    //   'price': data[i].price,
-                                    // };
-                                    // print('array=====$qtyArray');
-                                    // for (var i = 0; i < qtyArray.length; i++) {
-                                    //   var n = qtyArray[i]
-                                    //       .contains(data[i].productId);
-                                    //   print('n=============$i=======$n');
-                                    // }
-                                    // qtyArray.add(obj.toString());
-                                    // prefs.setStringList('cart_obj', qtyArray);
-                                  },
-                                  child: Text(
-                                    '     +',
-                                    style: TextStyle(fontSize: 20),
-                                  )),
-                            ],
-                          )
-                        ],
-                      )))
-                ],
-              )
-            ],
-          );
-        });
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          'Shipping',
+                          style: TextStyle(color: Colors.grey, fontSize: 15),
+                        ),
+                        Spacer(),
+                        Text('Free',
+                            style: TextStyle(color: Colors.grey, fontSize: 15))
+                      ],
+                    ),
+                    new Divider(),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          'Total',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Spacer(),
+                        Text('Rs. $price',
+                            style: TextStyle(color: Colors.black, fontSize: 20))
+                      ],
+                    )
+                  ])
+                : null)
+      ],
+    )));
   }
 }
 
@@ -248,3 +375,27 @@ class CartViewScreenState extends State<CartView> {
 //                                       };
 //                                     }
 //                                   }
+
+// ======================================
+
+// final prefs =
+//     await SharedPreferences.getInstance();
+// List<String> show_qty =
+//     prefs.getStringList('cart_obj') ??
+//         List<String>();
+
+// List<String> qtyArray = show_qty;
+// var obj = {
+//   'index': i,
+//   'productId': data[i].productId,
+//   'qty': data[i].qty,
+//   'price': data[i].price,
+// };
+// print('array=====$qtyArray');
+// for (var i = 0; i < qtyArray.length; i++) {
+//   var n = qtyArray[i]
+//       .contains(data[i].productId);
+//   print('n=============$i=======$n');
+// }
+// qtyArray.add(obj.toString());
+// prefs.setStringList('cart_obj', qtyArray);

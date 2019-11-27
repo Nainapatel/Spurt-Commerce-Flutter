@@ -25,7 +25,9 @@ class ProductViewScreenState extends State<ProductViewScreen> {
   bool isaddtocart = true;
   bool iswishlisted = true;
   bool loader = false;
-
+  dynamic qty = 1;
+  var obj;
+  List<dynamic> listobj = [];
   @override
   void initState() {
     super.initState();
@@ -85,9 +87,18 @@ class ProductViewScreenState extends State<ProductViewScreen> {
     return "Successfull";
   }
 
-  _saveQtyValue(id) async {
+  _saveQtyValue(id, price) async {
     print(id);
     final prefs = await SharedPreferences.getInstance();
+    List<String> show_obj = prefs.getStringList('obj_list') ?? List<String>();
+    listobj = show_obj;
+    print('price===$price');
+    obj = {'id': id, 'qty': qty, 'price' : price};
+    print('obj====$obj');
+    listobj.add(json.encode(obj));
+    prefs.setStringList('obj_list', listobj);
+    print("in product view ===$show_obj");
+
     List<String> show_id = prefs.getStringList('id_list') ?? List<String>();
     List<String> list = show_id;
     list.add(id);
@@ -290,7 +301,7 @@ class ProductViewScreenState extends State<ProductViewScreen> {
                                                                     onPressed:
                                                                         () => {
                                                                       _saveQtyValue(
-                                                                          '${product[i]['productId']}')
+                                                                          '${product[i]['productId']}','${product[i]['price']}')
                                                                     },
                                                                     color: Color
                                                                         .fromRGBO(

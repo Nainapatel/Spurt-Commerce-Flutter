@@ -18,8 +18,8 @@ Future<List<Cart>> fetchcartItem() async {
   List<String> show_obj = prefs.getStringList('obj_list') ?? List<String>();
 
   print(
-      "length==service file===${show_obj.length}========${cartProductArray.length}");
-  if (show_obj.length != cartProductArray.length) {
+      ">>>>>>>>>>>>>>>>>length==service file===${show_obj.length}========${cartProductArray.length}");
+ 
     for (var i = 0; i < show_obj.length; i++) {
       var response = await http.get(
           Uri.encodeFull(config.baseUrl +
@@ -43,7 +43,7 @@ Future<List<Cart>> fetchcartItem() async {
 
       jsonobject["qty"] = 1;
     }
-  }
+  
   
   return cartProductArray.map((i) => new Cart.fromJson(i)).toList();
 }

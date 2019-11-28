@@ -138,7 +138,7 @@ class CartViewScreenState extends State<CartView> {
     // }
   }
 
-  deleteCartItem(id, data, index) async {
+  deleteCartItem(id) async {
     final prefs = await SharedPreferences.getInstance();
     List<String> show_obj = prefs.getStringList('obj_list') ?? List<String>();
     List<String> show_id = prefs.getStringList('id_list') ?? List<String>();
@@ -148,9 +148,7 @@ class CartViewScreenState extends State<CartView> {
     prefs.setStringList('obj_list', show_obj);
     Toast.show("Remove item Successfully", context,
         duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-
-    cartItem();
-
+    priceCount();
     print("after delete show===${cartProductArray.length}==${show_obj.length}");
     var listid = show_id.contains(id);
     if (listid == true) {
@@ -266,9 +264,8 @@ class CartViewScreenState extends State<CartView> {
                                         GestureDetector(
                                             onTap: () {
                                               deleteCartItem(
-                                                  '${data[i].productId}',
-                                                  '$data',
-                                                  '$i');
+                                                '${data[i].productId}',
+                                              );
                                             },
                                             child: Align(
                                               alignment: Alignment.centerLeft,
@@ -314,8 +311,8 @@ class CartViewScreenState extends State<CartView> {
         SliverList(
             delegate: SliverChildListDelegate([
           Container(
-              child: loader == false
-                  ? Column(children: <Widget>[
+              // child: loader == false
+                 child:  Column(children: <Widget>[
                       new Container(
                           margin: EdgeInsets.all(3.0),
                           child: Card(
@@ -386,8 +383,8 @@ class CartViewScreenState extends State<CartView> {
                                       )
                                     ],
                                   ))))
-                    ])
-                  : null)
+                    ]))
+                  // : null)
         ]))
       ],
     ));

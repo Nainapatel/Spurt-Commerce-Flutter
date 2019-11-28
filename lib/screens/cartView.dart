@@ -78,15 +78,15 @@ class CartViewScreenState extends State<CartView> {
   priceCount() async {
     print("call price count");
     final prefs = await SharedPreferences.getInstance();
-    List<String> show_price =
-        prefs.getStringList('show_price') ?? List<String>();
 
-    var result =
-        show_price.map<int>((m) => int.parse(m)).reduce((a, b) => a + b);
+    List<String> show_obj = prefs.getStringList('obj_list') ?? List<String>();
+    var result = show_obj
+        .map<int>((m) => int.parse(jsonDecode(m.toString())['price']))
+        .reduce((a, b) => a + b);
+
     price = result;
-    // var lengthofitems = show_price.length;
     setState(() {
-      lengthofitems = show_price.length;
+      lengthofitems = show_obj.length;
     });
     print("price======$lengthofitems");
     print("result===================$result");
@@ -312,79 +312,73 @@ class CartViewScreenState extends State<CartView> {
             delegate: SliverChildListDelegate([
           Container(
               // child: loader == false
-                 child:  Column(children: <Widget>[
-                      new Container(
-                          margin: EdgeInsets.all(3.0),
-                          child: Card(
-                              color: Colors.grey[300],
-                              child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 5,
-                                    vertical: 5,
-                                  ),
-                                  child: Column(
-                                    children: <Widget>[
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                              'PRICE DETAILS ($lengthofitems Items)',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold))
-                                        ],
-                                      ),
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            'Sub total',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 15),
-                                          ),
-                                          Spacer(),
-                                          Text('Rs. $price',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 15))
-                                        ],
-                                      ),
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            'Shipping',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 15),
-                                          ),
-                                          Spacer(),
-                                          Text('Free',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 15))
-                                        ],
-                                      ),
-                                      new Divider(),
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            'Total',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Spacer(),
-                                          Text('Rs. $price',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 20))
-                                        ],
-                                      )
-                                    ],
-                                  ))))
-                    ]))
-                  // : null)
+              child: Column(children: <Widget>[
+            new Container(
+                margin: EdgeInsets.all(3.0),
+                child: Card(
+                    color: Colors.grey[300],
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 5,
+                          vertical: 5,
+                        ),
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Text('PRICE DETAILS ($lengthofitems Items)',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold))
+                              ],
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                  'Sub total',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 15),
+                                ),
+                                Spacer(),
+                                Text('Rs. $price',
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 15))
+                              ],
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                  'Shipping',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 15),
+                                ),
+                                Spacer(),
+                                Text('Free',
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 15))
+                              ],
+                            ),
+                            new Divider(),
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                  'Total',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Spacer(),
+                                Text('Rs. $price',
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 20))
+                              ],
+                            )
+                          ],
+                        ))))
+          ]))
+          // : null)
         ]))
       ],
     ));

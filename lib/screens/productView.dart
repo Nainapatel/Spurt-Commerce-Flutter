@@ -99,6 +99,15 @@ class ProductViewScreenState extends State<ProductViewScreen> {
     prefs.setStringList('obj_list', listobj);
     print("in product view ===$show_obj");
 
+
+
+  List<String> show_price = prefs.getStringList('show_price') ?? List<String>();
+    List<String> listPrice = show_price;
+    listPrice.add(price);
+    prefs.setStringList('show_price', listPrice);
+
+
+
     List<String> show_id = prefs.getStringList('id_list') ?? List<String>();
     List<String> list = show_id;
     list.add(id);

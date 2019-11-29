@@ -60,11 +60,13 @@ class CartView extends StatefulWidget {
 class CartViewScreenState extends State<CartView> {
   int qtyData;
   List product;
-  bool qty = true;
+  bool qty = false;
   List<String> listobj = [];
   var obj;
   bool loader = false;
-
+  var updateprice;
+  var oldPriceValue;
+  int indexofremoveobj;
   var price;
   List priceCartItem;
   var lengthofitems;
@@ -80,62 +82,79 @@ class CartViewScreenState extends State<CartView> {
     final prefs = await SharedPreferences.getInstance();
 
     List<String> show_obj = prefs.getStringList('obj_list') ?? List<String>();
-    var result = show_obj
-        .map<int>((m) => int.parse(jsonDecode(m.toString())['price']))
-        .reduce((a, b) => a + b);
 
-    price = result;
+    if (show_obj.length != 0) {
+      print("in if price====${jsonDecode(show_obj.toString())[0]['price']}");
+      var result = show_obj
+          .map<int>((m) => int.parse(jsonDecode(m.toString())['price']))
+          .reduce(
+            (a, b) => a + b,
+          );
+      price = result;
+      loader = true;
+      print("result==========$price=========");
+    } else {
+      loader = false;
+    }
     setState(() {
       lengthofitems = show_obj.length;
     });
     print("price======$lengthofitems");
-    print("result===================$result");
   }
 
   getQtyProduct(data, index, id) async {
-    // print("==========================");
-    // print('index===$index=====${data[index].qty++}======');
-    // final prefs = await SharedPreferences.getInstance();
-    // List show_obj = prefs.getStringList('obj_list').toList();
-    // print('before=first time=====$show_obj');
-    // var prodLists = jsonDecode(show_obj.toString())
-    //     .where((prod) => prod["id"] == id)
-    //     .toList();
-    // print("prodLists-====old=$prodLists");
-    // dynamic value = prodLists[0]['qty'];
-    // value++;
-    // print("in==$index== cart view sorted value ====$value");
-    // var updatedqty = jsonDecode(show_obj.toString())[index]['qty'] = value;
-    // print('updatedqty=======$updatedqty');
-    // obj = {'id': data[index].productId, 'qty': updatedqty};
-    // print('obj=before if=show_obj==$show_obj');
+    print("==========================");
 
-    // if (obj['id'] == id) {
-    //   print("in if==${obj['id']}====$id");
-    //   show_obj.removeWhere((item) => item['id'] == id);
-    //   print("after removing object=$show_obj");
-    // }
+    final prefs = await SharedPreferences.getInstance();
+    List show_obj = prefs.getStringList('obj_list');
 
-    // show_obj.add(json.encode(obj));
-    // print("=after added===show_obj=====$show_obj");
+    var prodLists = jsonDecode(show_obj.toString())
+        .where((prod) => prod["id"] == id)
+        .toList();
 
-    // prefs.setStringList('obj_list', show_obj);
-    // List show_objnew = prefs.getStringList('obj_list').toList();
-    // print("show_===at last time==$show_objnew");
-// -------------------------------------------------------------------
-    // var n = show_id.contains(data[index].productId);
-    // dynamic show_cartData = prefs.getInt('show_cartData');
-    // if (n == true) {
-    // if (show_cartData != null && show_cartData != 1) {
-    //   show_cartData = show_cartData + 1;
-    //   prefs.setInt('show_cartData', show_cartData);
-    //   print('in if===$show_cartData');
-    // } else {
-    //   prefs.setInt('show_cartData', data[index].qty++);
-    //   print('in else===$show_cartData');
-    // }
-    // print("$index==show_cartData====$show_cartData");
-    // }
+    print("prodLists=====$prodLists");
+
+    oldPriceValue = jsonDecode(show_obj.toString())[index]['price'];
+    print("oldPriceValue========$oldPriceValue");
+    dynamic value = prodLists[0]['qty'];
+    value++;
+    dynamic pricevalue = prodLists[0]['price'];
+    print("pricevalue===old====$pricevalue");
+    var updatedqty = jsonDecode(show_obj.toString())[index]['qty'] = value;
+    if (jsonDecode(show_obj.toString())[index]['price'].runtimeType == String) {
+      updateprice = jsonDecode(show_obj.toString())[index]['price'] =
+          int.parse(oldPriceValue) * updatedqty;
+      print("price=updated===$updateprice");
+    } else {
+      updateprice = jsonDecode(show_obj.toString())[index]['price'] =
+          oldPriceValue * updatedqty;
+      print("price=updated===$updateprice");
+    }
+
+    obj = {
+      'id': id,
+      'qty': updatedqty,
+      'price': data[index].price,
+      'updatedPrice': updateprice
+    };
+
+    if (obj['id'] == id) {
+      indexofremoveobj = show_obj
+          .indexWhere((prod) => jsonDecode(prod.toString())['id'] == id);
+      print('index===========================$index');
+      show_obj.removeWhere((item) => jsonDecode(item.toString())['id'] == id);
+    }
+    var idx = indexofremoveobj;
+    show_obj.insert(idx, json.encode(obj));
+
+    print("=after added===show_obj=====$show_obj");
+
+    prefs.setStringList('obj_list', show_obj);
+    List<String> show_objnew =
+        prefs.getStringList('obj_list') ?? List<String>();
+    print("show_===at last time==$show_objnew");
+
+    qty = true;
   }
 
   deleteCartItem(id) async {
@@ -159,26 +178,19 @@ class CartViewScreenState extends State<CartView> {
 
   Future<List<Cart>> _fetchcartItem() async {
     var response = await fetchcartItem();
-    // setState(() {
-    //   loader = true;
-    // });
     return response;
   }
 
   Widget cartItem() {
-    print("CART ITEM RECALL==============");
     return FutureBuilder<List<Cart>>(
       future: _fetchcartItem(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<Cart> data = snapshot.data;
-
           return ListView.builder(
               shrinkWrap: true,
               itemCount: data.length,
               itemBuilder: (context, i) {
-                loader = true;
-
                 return Row(
                   children: <Widget>[
                     Column(
@@ -242,13 +254,19 @@ class CartViewScreenState extends State<CartView> {
                                               '-     ',
                                               style: TextStyle(fontSize: 20),
                                             )),
-                                        Text(
-                                          '${data[i].qty}',
-                                          style: TextStyle(fontSize: 15.0),
-                                        ),
+                                        qty == true
+                                            ? Text(
+                                                '${data[i].qty}',
+                                                style:
+                                                    TextStyle(fontSize: 15.0),
+                                              )
+                                            : Text(
+                                                '${data[i].qty}',
+                                                style:
+                                                    TextStyle(fontSize: 15.0),
+                                              ),
                                         GestureDetector(
                                             onTap: () async {
-                                              //  data[i].qty++;
                                               getQtyProduct(
                                                   data, i, data[i].productId);
                                             },
@@ -311,74 +329,80 @@ class CartViewScreenState extends State<CartView> {
         SliverList(
             delegate: SliverChildListDelegate([
           Container(
-              // child: loader == false
-              child: Column(children: <Widget>[
-            new Container(
-                margin: EdgeInsets.all(3.0),
-                child: Card(
-                    color: Colors.grey[300],
-                    child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 5,
-                          vertical: 5,
-                        ),
-                        child: Column(
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Text('PRICE DETAILS ($lengthofitems Items)',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold))
-                              ],
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Text(
-                                  'Sub total',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 15),
-                                ),
-                                Spacer(),
-                                Text('Rs. $price',
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 15))
-                              ],
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Text(
-                                  'Shipping',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 15),
-                                ),
-                                Spacer(),
-                                Text('Free',
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 15))
-                              ],
-                            ),
-                            new Divider(),
-                            Row(
-                              children: <Widget>[
-                                Text(
-                                  'Total',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Spacer(),
-                                Text('Rs. $price',
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 20))
-                              ],
-                            )
-                          ],
-                        ))))
-          ]))
-          // : null)
+              child: loader == true
+                  ? Column(children: <Widget>[
+                      new Container(
+                          margin: EdgeInsets.all(3.0),
+                          child: Card(
+                              color: Colors.grey[300],
+                              child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5,
+                                    vertical: 5,
+                                  ),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Row(
+                                        children: <Widget>[
+                                          Text(
+                                              'PRICE DETAILS ($lengthofitems Items)',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold))
+                                        ],
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          Text(
+                                            'Sub total',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 15),
+                                          ),
+                                          Spacer(),
+                                          Text('Rs. $price',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 15))
+                                        ],
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          Text(
+                                            'Shipping',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 15),
+                                          ),
+                                          Spacer(),
+                                          Text('Free',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 15))
+                                        ],
+                                      ),
+                                      new Divider(),
+                                      Row(
+                                        children: <Widget>[
+                                          Text(
+                                            'Total',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Spacer(),
+                                          Text('Rs. $price',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 20))
+                                        ],
+                                      )
+                                    ],
+                                  ))))
+                    ])
+                  : null)
         ]))
       ],
     ));

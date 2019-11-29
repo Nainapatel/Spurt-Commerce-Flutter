@@ -27,7 +27,9 @@ class ProductViewScreenState extends State<ProductViewScreen> {
   bool loader = false;
   dynamic qty = 1;
   var obj;
+  var objPrice;
   List<dynamic> listobj = [];
+   List<dynamic> listprice = [];
   @override
   void initState() {
     super.initState();
@@ -98,8 +100,6 @@ class ProductViewScreenState extends State<ProductViewScreen> {
     listobj.add(json.encode(obj));
     prefs.setStringList('obj_list', listobj);
     print("in product view ===$show_obj");
-
-
 
   List<String> show_price = prefs.getStringList('show_price') ?? List<String>();
     List<String> listPrice = show_price;

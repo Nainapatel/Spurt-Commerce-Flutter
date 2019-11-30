@@ -95,7 +95,7 @@ class ProductViewScreenState extends State<ProductViewScreen> {
     List<String> show_obj = prefs.getStringList('obj_list') ?? List<String>();
     listobj = show_obj;
     print('price===$price');
-    obj = {'id': id, 'qty': qty, 'price' : price};
+    obj = {'id': id, 'qty': qty, 'price' : price, 'updatedPrice': price};
     print('obj====$obj');
     listobj.add(json.encode(obj));
     prefs.setStringList('obj_list', listobj);

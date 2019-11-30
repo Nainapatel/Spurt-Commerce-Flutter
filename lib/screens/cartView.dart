@@ -88,8 +88,8 @@ class CartViewScreenState extends State<CartView> {
       var result = show_obj
           .map<int>((m) =>
               jsonDecode(m.toString())['price'].runtimeType == String
-                  ? int.parse(jsonDecode(m.toString())['price'])
-                  : jsonDecode(m.toString())['price'])
+                  ? int.parse(jsonDecode(m.toString())['updatedPrice'])
+                  : jsonDecode(m.toString())['updatedPrice'])
           .reduce(
             (a, b) => a + b,
           );
@@ -105,7 +105,7 @@ class CartViewScreenState extends State<CartView> {
     print("price======$lengthofitems");
   }
 
-  decremateQtyProduct(data, index, id) async{
+  decremateQtyProduct(data, index, id) async {
     print("==========================");
 
     final prefs = await SharedPreferences.getInstance();
@@ -123,10 +123,12 @@ class CartViewScreenState extends State<CartView> {
     var updatedqty = jsonDecode(show_obj.toString())[index]['qty'] = value;
     if (jsonDecode(show_obj.toString())[index]['price'].runtimeType == String) {
       updateprice = jsonDecode(show_obj.toString())[index]['price'] =
-        int.parse(jsonDecode(show_obj.toString())[index]['updatedPrice'] ) - int.parse(oldPriceValue) ;
+          int.parse(jsonDecode(show_obj.toString())[index]['updatedPrice']) -
+              int.parse(oldPriceValue);
     } else {
       updateprice = jsonDecode(show_obj.toString())[index]['price'] =
-         jsonDecode(show_obj.toString())[index]['updatedPrice'] -  oldPriceValue ;
+          jsonDecode(show_obj.toString())[index]['updatedPrice'] -
+              oldPriceValue;
     }
     obj = {
       'id': id,
@@ -234,6 +236,7 @@ class CartViewScreenState extends State<CartView> {
               shrinkWrap: true,
               itemCount: data.length,
               itemBuilder: (context, i) {
+                print("main loop in widget===${data.length}===$i");
                 return Row(
                   children: <Widget>[
                     Column(
@@ -274,7 +277,7 @@ class CartViewScreenState extends State<CartView> {
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    'Rs.${data[i].price}',
+                                    'Rs. ${jsonDecode(show_obj.toString())[i]['updatedPrice']}',
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                         fontSize: 15.0, color: Colors.red),
@@ -297,13 +300,10 @@ class CartViewScreenState extends State<CartView> {
                                             '-     ',
                                             style: TextStyle(fontSize: 20),
                                           )),
-                                      Row(
-                                          children: show_obj.map((item) {
-                                        return Text(
-                                          '${jsonDecode(item.toString())['qty']}',
-                                          style: TextStyle(fontSize: 15.0),
-                                        );
-                                      }).toList()),
+                                      Text(
+                                        '${jsonDecode(show_obj.toString())[i]['qty']}',
+                                        style: TextStyle(fontSize: 15.0),
+                                      ),
                                       GestureDetector(
                                           onTap: () async {
                                             incremateQtyProduct(
@@ -399,7 +399,7 @@ class CartViewScreenState extends State<CartView> {
                                                 fontSize: 15),
                                           ),
                                           Spacer(),
-                                          Text('Rs. $price',
+                                          Text('Rs. $price ',
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 15))
@@ -438,7 +438,7 @@ class CartViewScreenState extends State<CartView> {
                                         ],
                                       )
                                     ],
-                                  ))))
+                                  )))),
                     ])
                   : null)
         ]))

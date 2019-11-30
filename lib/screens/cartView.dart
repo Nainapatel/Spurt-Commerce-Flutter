@@ -58,8 +58,6 @@ class CartView extends StatefulWidget {
 }
 
 class CartViewScreenState extends State<CartView> {
-  int qtyData;
-  List product;
   bool qty = false;
   List<String> listobj = [];
   var obj;
@@ -70,6 +68,7 @@ class CartViewScreenState extends State<CartView> {
   var price;
   List priceCartItem;
   var lengthofitems;
+  List<String> show_obj;
 
   @override
   void initState() {
@@ -81,12 +80,16 @@ class CartViewScreenState extends State<CartView> {
     print("call price count");
     final prefs = await SharedPreferences.getInstance();
 
-    List<String> show_obj = prefs.getStringList('obj_list') ?? List<String>();
+    show_obj = prefs.getStringList('obj_list') ?? List<String>();
 
     if (show_obj.length != 0) {
       print("in if price====${jsonDecode(show_obj.toString())[0]['price']}");
+
       var result = show_obj
-          .map<int>((m) => int.parse(jsonDecode(m.toString())['price']))
+          .map<int>((m) =>
+              jsonDecode(m.toString())['price'].runtimeType == String
+                  ? int.parse(jsonDecode(m.toString())['price'])
+                  : jsonDecode(m.toString())['price'])
           .reduce(
             (a, b) => a + b,
           );
@@ -102,7 +105,7 @@ class CartViewScreenState extends State<CartView> {
     print("price======$lengthofitems");
   }
 
-  getQtyProduct(data, index, id) async {
+  decremateQtyProduct(data, index, id) async{
     print("==========================");
 
     final prefs = await SharedPreferences.getInstance();
@@ -112,49 +115,88 @@ class CartViewScreenState extends State<CartView> {
         .where((prod) => prod["id"] == id)
         .toList();
 
-    print("prodLists=====$prodLists");
-
     oldPriceValue = jsonDecode(show_obj.toString())[index]['price'];
-    print("oldPriceValue========$oldPriceValue");
+
     dynamic value = prodLists[0]['qty'];
-    value++;
-    dynamic pricevalue = prodLists[0]['price'];
-    print("pricevalue===old====$pricevalue");
+    value--;
+
     var updatedqty = jsonDecode(show_obj.toString())[index]['qty'] = value;
     if (jsonDecode(show_obj.toString())[index]['price'].runtimeType == String) {
       updateprice = jsonDecode(show_obj.toString())[index]['price'] =
-          int.parse(oldPriceValue) * updatedqty;
-      print("price=updated===$updateprice");
+        int.parse(jsonDecode(show_obj.toString())[index]['updatedPrice'] ) - int.parse(oldPriceValue) ;
     } else {
       updateprice = jsonDecode(show_obj.toString())[index]['price'] =
-          oldPriceValue * updatedqty;
-      print("price=updated===$updateprice");
+         jsonDecode(show_obj.toString())[index]['updatedPrice'] -  oldPriceValue ;
     }
-
     obj = {
       'id': id,
       'qty': updatedqty,
       'price': data[index].price,
       'updatedPrice': updateprice
     };
-
     if (obj['id'] == id) {
       indexofremoveobj = show_obj
           .indexWhere((prod) => jsonDecode(prod.toString())['id'] == id);
-      print('index===========================$index');
+
       show_obj.removeWhere((item) => jsonDecode(item.toString())['id'] == id);
     }
     var idx = indexofremoveobj;
     show_obj.insert(idx, json.encode(obj));
 
-    print("=after added===show_obj=====$show_obj");
+    prefs.setStringList('obj_list', show_obj);
+    List<String> show_objnew =
+        prefs.getStringList('obj_list') ?? List<String>();
+    print("show_===at last time==$show_objnew");
+    qty = true;
+
+    priceCount();
+  }
+
+  incremateQtyProduct(data, index, id) async {
+    print("==========================");
+
+    final prefs = await SharedPreferences.getInstance();
+    List show_obj = prefs.getStringList('obj_list');
+
+    var prodLists = jsonDecode(show_obj.toString())
+        .where((prod) => prod["id"] == id)
+        .toList();
+
+    oldPriceValue = jsonDecode(show_obj.toString())[index]['price'];
+
+    dynamic value = prodLists[0]['qty'];
+    value++;
+
+    var updatedqty = jsonDecode(show_obj.toString())[index]['qty'] = value;
+    if (jsonDecode(show_obj.toString())[index]['price'].runtimeType == String) {
+      updateprice = jsonDecode(show_obj.toString())[index]['price'] =
+          int.parse(oldPriceValue) * updatedqty;
+    } else {
+      updateprice = jsonDecode(show_obj.toString())[index]['price'] =
+          oldPriceValue * updatedqty;
+    }
+    obj = {
+      'id': id,
+      'qty': updatedqty,
+      'price': data[index].price,
+      'updatedPrice': updateprice
+    };
+    if (obj['id'] == id) {
+      indexofremoveobj = show_obj
+          .indexWhere((prod) => jsonDecode(prod.toString())['id'] == id);
+
+      show_obj.removeWhere((item) => jsonDecode(item.toString())['id'] == id);
+    }
+    var idx = indexofremoveobj;
+    show_obj.insert(idx, json.encode(obj));
 
     prefs.setStringList('obj_list', show_obj);
     List<String> show_objnew =
         prefs.getStringList('obj_list') ?? List<String>();
     print("show_===at last time==$show_objnew");
-
     qty = true;
+
+    priceCount();
   }
 
   deleteCartItem(id) async {
@@ -182,6 +224,7 @@ class CartViewScreenState extends State<CartView> {
   }
 
   Widget cartItem() {
+    print("call cart item======");
     return FutureBuilder<List<Cart>>(
       future: _fetchcartItem(),
       builder: (context, snapshot) {
@@ -238,65 +281,60 @@ class CartViewScreenState extends State<CartView> {
                                   ),
                                 ),
                                 new Divider(),
-                                Row(
-                                  children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Text(
-                                          'Qty. :  ',
+                                Row(children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Text(
+                                        'Qty. :  ',
+                                        style: TextStyle(fontSize: 15.0),
+                                      ),
+                                      GestureDetector(
+                                          onTap: () async {
+                                            decremateQtyProduct(
+                                                data, i, data[i].productId);
+                                          },
+                                          child: Text(
+                                            '-     ',
+                                            style: TextStyle(fontSize: 20),
+                                          )),
+                                      Row(
+                                          children: show_obj.map((item) {
+                                        return Text(
+                                          '${jsonDecode(item.toString())['qty']}',
                                           style: TextStyle(fontSize: 15.0),
-                                        ),
-                                        GestureDetector(
-                                            onTap: () async {
-                                              data[i].qty--;
-                                            },
-                                            child: Text(
-                                              '-     ',
-                                              style: TextStyle(fontSize: 20),
-                                            )),
-                                        qty == true
-                                            ? Text(
-                                                '${data[i].qty}',
-                                                style:
-                                                    TextStyle(fontSize: 15.0),
-                                              )
-                                            : Text(
-                                                '${data[i].qty}',
-                                                style:
-                                                    TextStyle(fontSize: 15.0),
-                                              ),
-                                        GestureDetector(
-                                            onTap: () async {
-                                              getQtyProduct(
-                                                  data, i, data[i].productId);
-                                            },
-                                            child: Text(
-                                              '     +',
-                                              style: TextStyle(fontSize: 20),
-                                            )),
-                                      ],
-                                    ),
-                                    Spacer(),
-                                    Column(
-                                      children: <Widget>[
-                                        GestureDetector(
-                                            onTap: () {
-                                              deleteCartItem(
-                                                '${data[i].productId}',
-                                              );
-                                            },
-                                            child: Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Icon(
-                                                Icons.delete,
-                                                color: Colors.deepPurple,
-                                                size: 30.0,
-                                              ),
-                                            ))
-                                      ],
-                                    )
-                                  ],
-                                )
+                                        );
+                                      }).toList()),
+                                      GestureDetector(
+                                          onTap: () async {
+                                            incremateQtyProduct(
+                                                data, i, data[i].productId);
+                                          },
+                                          child: Text(
+                                            '     +',
+                                            style: TextStyle(fontSize: 20),
+                                          )),
+                                    ],
+                                  ),
+                                  Spacer(),
+                                  Column(
+                                    children: <Widget>[
+                                      GestureDetector(
+                                          onTap: () {
+                                            deleteCartItem(
+                                              '${data[i].productId}',
+                                            );
+                                          },
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Icon(
+                                              Icons.delete,
+                                              color: Colors.deepPurple,
+                                              size: 30.0,
+                                            ),
+                                          ))
+                                    ],
+                                  )
+                                ])
                               ],
                             )))
                       ],
@@ -408,61 +446,3 @@ class CartViewScreenState extends State<CartView> {
     ));
   }
 }
-
-// final prefs =
-//                                         await SharedPreferences.getInstance();
-//                                     prefs.setStringList('qtyData',
-//                                         jsonDecode(qtyArray.toString()));
-//                                     List<String> show_qty =
-//                                         prefs.getString('qtyData') ??
-//                                             List<String>();
-//                                     print('show_qty==in onTap=$show_qty');
-
-//  for (var i = 0; i < qtyArray.length; i++) {
-//                                     var n = qtyArray
-//                                         .contains(data[i].productId);
-//                                     print('n====${qtyArray.length}===============$n');
-
-//                                     if (n == true) {
-//                                       print('i if');
-//                                       Map<String, dynamic> data =
-//                                           json.decode(qtyArray.toString());
-//                                       (data["qtyArray"] as List<dynamic>)
-//                                           .forEach((item) =>
-//                                               item["productId"] =
-//                                                   data[i].qty++);
-
-//                                     } else {
-//                                       print('in else');
-//                                        obj = {
-//                                         'index': i,
-//                                         'productId': data[i].productId,
-//                                         'qty': data[i].qty,
-//                                         'price': data[i].price
-//                                       };
-//                                     }
-//                                   }
-
-// ======================================
-
-// final prefs =
-//     await SharedPreferences.getInstance();
-// List<String> show_qty =
-//     prefs.getStringList('cart_obj') ??
-//         List<String>();
-
-// List<String> qtyArray = show_qty;
-// var obj = {
-//   'index': i,
-//   'productId': data[i].productId,
-//   'qty': data[i].qty,
-//   'price': data[i].price,
-// };
-// print('array=====$qtyArray');
-// for (var i = 0; i < qtyArray.length; i++) {
-//   var n = qtyArray[i]
-//       .contains(data[i].productId);
-//   print('n=============$i=======$n');
-// }
-// qtyArray.add(obj.toString());
-// prefs.setStringList('cart_obj', qtyArray);

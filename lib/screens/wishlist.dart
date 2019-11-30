@@ -49,7 +49,8 @@ class WishlistScreenState extends State<WishlistScreen> {
       return "Successfull";
     }
   }
-/** @params {String} id for remove product
+/*
+ * @params {String} id for remove product
  * This Function contains remove product from wishlist
  */
   removeWishlistProduct(id) async {

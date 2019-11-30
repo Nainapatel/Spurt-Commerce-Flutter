@@ -76,7 +76,9 @@ class CartViewScreenState extends State<CartView> {
     priceCount();
   }
 
-/** This function for addition of price */
+/*
+ This function for addition of price 
+*/
   priceCount() async {
     print("call price count");
     final prefs = await SharedPreferences.getInstance();
@@ -107,7 +109,8 @@ class CartViewScreenState extends State<CartView> {
     print("price======$lengthofitems");
   }
 
-/** @params {object} data contains instance  of Cart class
+/*
+ * @params {object} data contains instance  of Cart class
  * @params {int} index of product
  * @params {String} id of produce
  */
@@ -160,7 +163,8 @@ class CartViewScreenState extends State<CartView> {
     priceCount();
   }
 
-/** @params {object} data contains instance  of Cart class
+/*
+ * @params {object} data contains instance  of Cart class
  * @params {int} index of product
  * @params {String} id of produce
  */
@@ -211,7 +215,9 @@ class CartViewScreenState extends State<CartView> {
     priceCount();
   }
 
-/** @params {String} id of Product */
+/*
+ * @params {String} id of Product 
+*/
   deleteCartItem(id) async {
     final prefs = await SharedPreferences.getInstance();
     List<String> show_obj = prefs.getStringList('obj_list') ??
@@ -237,7 +243,10 @@ class CartViewScreenState extends State<CartView> {
     var response = await fetchcartItem(); // call from services
     return response;
   }
-  /** cartItem fetch all cart item */
+
+  /*
+   cartItem fetch all cart item 
+   */
   Widget cartItem() {
     print("call cart item======");
     return FutureBuilder<List<Cart>>(
@@ -250,122 +259,137 @@ class CartViewScreenState extends State<CartView> {
               itemCount: data.length,
               itemBuilder: (context, i) {
                 print("main loop in widget===${data.length}===$i");
-                return Row(
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        new Container(
-                          margin:
-                              const EdgeInsets.only(bottom: 20.0, top: 10.0),
-                          child: Image.network(
-                            config.mediaUrl +
-                                '${data[i].productImage[0].containerName}' +
-                                '${data[i].productImage[0].image}',
-                            width: 100,
-                            height: 100,
-                          ),
-                        )
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        new Container(
-                            margin:
-                                const EdgeInsets.only(top: 10.0, left: 15.0),
-                            width: 260,
-                            child: SizedBox(
-                                // height: 250,
-                                child: Column(
+                return Card(
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 2,
+                          vertical: 2,
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            Column(
                               children: <Widget>[
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    '${data[i].name}',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(fontSize: 15.0),
+                                new Container(
+                                  margin: const EdgeInsets.only(
+                                      bottom: 20.0, top: 10.0),
+                                  child: Image.network(
+                                    config.mediaUrl +
+                                        '${data[i].productImage[0].containerName}' +
+                                        '${data[i].productImage[0].image}',
+                                    width: 100,
+                                    height: 100,
                                   ),
-                                ),
-                                new Divider(),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Rs. ${jsonDecode(show_obj.toString())[i]['updatedPrice']}',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        fontSize: 15.0, color: Colors.red),
-                                  ),
-                                ),
-                                new Divider(),
-                                Row(children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      Text(
-                                        'Qty. :  ',
-                                        style: TextStyle(fontSize: 15.0),
-                                      ),
-                                      jsonDecode(show_obj.toString())[i]
-                                                  ['qty'] ==
-                                              1
-                                          ? GestureDetector(
-                                              onTap: () {},
-                                              child: Text(
-                                                '     ',
-                                                style: TextStyle(fontSize: 20),
-                                              ))
-                                          : GestureDetector(
-                                              onTap: () async {
-                                                decremateQtyProduct(
-                                                    data, i, data[i].productId);
-                                              },
-                                              child: Text(
-                                                '-     ',
-                                                style: TextStyle(fontSize: 20),
-                                              )),
-                                      Text(
-                                        '${jsonDecode(show_obj.toString())[i]['qty']}',
-                                        style: TextStyle(fontSize: 15.0),
-                                      ),
-                                      GestureDetector(
-                                          onTap: () async {
-                                            incremateQtyProduct(
-                                                data, i, data[i].productId);
-                                          },
-                                          child: Text(
-                                            '     +',
-                                            style: TextStyle(fontSize: 20),
-                                          )),
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  Column(
-                                    children: <Widget>[
-                                      GestureDetector(
-                                          onTap: () {
-                                            deleteCartItem(
-                                              '${data[i].productId}',
-                                            );
-                                          },
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Icon(
-                                              Icons.delete,
-                                              color: Colors.deepPurple,
-                                              size: 30.0,
-                                            ),
-                                          ))
-                                    ],
-                                  )
-                                ])
+                                )
                               ],
-                            )))
-                      ],
-                    ),
-                  ],
-                );
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                new Container(
+                                    margin: const EdgeInsets.only(
+                                        top: 10.0, left: 15.0),
+                                    width: 260,
+                                    child: SizedBox(
+                                        // height: 250,
+                                        child: Column(
+                                      children: <Widget>[
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            '${data[i].name}',
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(fontSize: 15.0),
+                                          ),
+                                        ),
+                                        new Divider(),
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            '\u20B9. ${jsonDecode(show_obj.toString())[i]['updatedPrice']}',
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                                fontSize: 15.0,
+                                                color: Colors.red),
+                                          ),
+                                        ),
+                                        new Divider(),
+                                        Row(children: <Widget>[
+                                          Row(
+                                            children: <Widget>[
+                                              Text(
+                                                'Qty. :  ',
+                                                style:
+                                                    TextStyle(fontSize: 15.0),
+                                              ),
+                                              jsonDecode(show_obj.toString())[i]
+                                                          ['qty'] ==
+                                                      1
+                                                  ? GestureDetector(
+                                                      onTap: () {},
+                                                      child: Text(
+                                                        '     ',
+                                                        style: TextStyle(
+                                                            fontSize: 20),
+                                                      ))
+                                                  : GestureDetector(
+                                                      onTap: () async {
+                                                        decremateQtyProduct(
+                                                            data,
+                                                            i,
+                                                            data[i].productId);
+                                                      },
+                                                      child: Text(
+                                                        '-     ',
+                                                        style: TextStyle(
+                                                            fontSize: 20),
+                                                      )),
+                                              Text(
+                                                '${jsonDecode(show_obj.toString())[i]['qty']}',
+                                                style:
+                                                    TextStyle(fontSize: 15.0),
+                                              ),
+                                              GestureDetector(
+                                                  onTap: () async {
+                                                    incremateQtyProduct(data, i,
+                                                        data[i].productId);
+                                                  },
+                                                  child: Text(
+                                                    '     +',
+                                                    style:
+                                                        TextStyle(fontSize: 20),
+                                                  )),
+                                            ],
+                                          ),
+                                          Spacer(),
+                                          Column(
+                                            children: <Widget>[
+                                              GestureDetector(
+                                                  onTap: () {
+                                                    deleteCartItem(
+                                                      '${data[i].productId}',
+                                                    );
+                                                  },
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Icon(
+                                                      Icons.delete,
+                                                      color: Colors.deepPurple,
+                                                      size: 30.0,
+                                                    ),
+                                                  ))
+                                            ],
+                                          )
+                                        ])
+                                      ],
+                                    )))
+                              ],
+                            ),
+                          ],
+                        )));
               });
         } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
+          return Text("======${snapshot.error}");
         }
         return SpinKitCircle(color: Colors.deepPurple);
       },
@@ -394,7 +418,6 @@ class CartViewScreenState extends State<CartView> {
                       new Container(
                           margin: EdgeInsets.all(3.0),
                           child: Card(
-                              color: Colors.grey[300],
                               child: Padding(
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 5,
@@ -412,6 +435,7 @@ class CartViewScreenState extends State<CartView> {
                                                   fontWeight: FontWeight.bold))
                                         ],
                                       ),
+                                      new Divider(),
                                       Row(
                                         children: <Widget>[
                                           Text(
@@ -421,12 +445,13 @@ class CartViewScreenState extends State<CartView> {
                                                 fontSize: 15),
                                           ),
                                           Spacer(),
-                                          Text('Rs. $price ',
+                                          Text('\u20B9. $price ',
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 15))
                                         ],
                                       ),
+                                      new Divider(),
                                       Row(
                                         children: <Widget>[
                                           Text(
@@ -438,11 +463,12 @@ class CartViewScreenState extends State<CartView> {
                                           Spacer(),
                                           Text('Free',
                                               style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 15))
+                                                color: Colors.green,
+                                                fontSize: 15,
+                                              ))
                                         ],
                                       ),
-                                      new Divider(),
+                                      new Divider(color: Colors.black),
                                       Row(
                                         children: <Widget>[
                                           Text(
@@ -453,7 +479,7 @@ class CartViewScreenState extends State<CartView> {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Spacer(),
-                                          Text('Rs. $price',
+                                          Text('\u20B9. $price',
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 20))

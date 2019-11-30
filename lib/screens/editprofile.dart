@@ -36,7 +36,7 @@ class EditprofileScreenState extends State<EditprofileScreen> {
     super.initState();
     getProfile();
   }
-
+/** This function for open Gallery and pick image and this function call from showChoiceDialog */
   opeGallery(BuildContext context) async {
     var picture = await ImagePicker.pickImage(source: ImageSource.gallery);
     this.setState(() {
@@ -45,7 +45,7 @@ class EditprofileScreenState extends State<EditprofileScreen> {
     print('imageFile$imageFile');
     Navigator.of(context).pop();
   }
-
+/** This function for open camera and pick image and this function call from showChoiceDialog */
   opeCamera(BuildContext context) async {
     var picture = await ImagePicker.pickImage(source: ImageSource.camera);
     this.setState(() {
@@ -53,7 +53,7 @@ class EditprofileScreenState extends State<EditprofileScreen> {
     });
     Navigator.of(context).pop();
   }
-
+/** This function for choose image for update Profile */
   Future<void> showChoiceDialog(BuildContext context) {
     print('call function');
     return showDialog(
@@ -76,7 +76,7 @@ class EditprofileScreenState extends State<EditprofileScreen> {
           );
         });
   }
-
+/** This function for get profile value */
   Future<String> getProfile() async {
     final prefs = await SharedPreferences.getInstance();
     var show_token = prefs.getString('jwt_token');
@@ -104,7 +104,7 @@ class EditprofileScreenState extends State<EditprofileScreen> {
       return "Successfull";
     }
   }
-
+/** This function for update profile. */
   Future<String> updatePost() async {
     final prefs = await SharedPreferences.getInstance();
     var show_token = prefs.getString('jwt_token');
@@ -149,7 +149,7 @@ class EditprofileScreenState extends State<EditprofileScreen> {
       }
     }
   }
-
+/** This function for image view */
   Widget decideImageView() {
     if (imageFile == null && _avtarcontroller == '') {
       print("call function edit if");
@@ -177,7 +177,7 @@ class EditprofileScreenState extends State<EditprofileScreen> {
       );
     }
   }
-
+/** This Function contains validate Email. this call from widget*/
   String validateEmail(String value) {
     String pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';

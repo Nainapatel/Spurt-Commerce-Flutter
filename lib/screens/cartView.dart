@@ -76,11 +76,13 @@ class CartViewScreenState extends State<CartView> {
     priceCount();
   }
 
+/** This function for addition of price */
   priceCount() async {
     print("call price count");
     final prefs = await SharedPreferences.getInstance();
 
-    show_obj = prefs.getStringList('obj_list') ?? List<String>();
+    show_obj = prefs.getStringList('obj_list') ??
+        List<String>(); // show_obj contains id, qty and price.
 
     if (show_obj.length != 0) {
       print("in if price====${jsonDecode(show_obj.toString())[0]['price']}");
@@ -105,6 +107,10 @@ class CartViewScreenState extends State<CartView> {
     print("price======$lengthofitems");
   }
 
+/** @params {object} data contains instance  of Cart class
+ * @params {int} index of product
+ * @params {String} id of produce
+ */
   decremateQtyProduct(data, index, id) async {
     print("==========================");
 
@@ -154,6 +160,10 @@ class CartViewScreenState extends State<CartView> {
     priceCount();
   }
 
+/** @params {object} data contains instance  of Cart class
+ * @params {int} index of product
+ * @params {String} id of produce
+ */
   incremateQtyProduct(data, index, id) async {
     print("==========================");
 
@@ -201,11 +211,14 @@ class CartViewScreenState extends State<CartView> {
     priceCount();
   }
 
+/** @params {String} id of Product */
   deleteCartItem(id) async {
     final prefs = await SharedPreferences.getInstance();
-    List<String> show_obj = prefs.getStringList('obj_list') ?? List<String>();
-    List<String> show_id = prefs.getStringList('id_list') ?? List<String>();
-
+    List<String> show_obj = prefs.getStringList('obj_list') ??
+        List<String>(); // show_obj contains id, qty and price.
+    List<String> show_id = prefs.getStringList('id_list') ??
+        List<String>(); // show_obj contains id.
+// delete product id wisw
     show_obj.removeWhere((item) => jsonDecode(item.toString())['id'] == id);
     cartProductArray.removeWhere((item) => item['productId'] == id);
     prefs.setStringList('obj_list', show_obj);
@@ -221,10 +234,10 @@ class CartViewScreenState extends State<CartView> {
   }
 
   Future<List<Cart>> _fetchcartItem() async {
-    var response = await fetchcartItem();
+    var response = await fetchcartItem(); // call from services
     return response;
   }
-
+  /** cartItem fetch all cart item */
   Widget cartItem() {
     print("call cart item======");
     return FutureBuilder<List<Cart>>(
@@ -291,15 +304,24 @@ class CartViewScreenState extends State<CartView> {
                                         'Qty. :  ',
                                         style: TextStyle(fontSize: 15.0),
                                       ),
-                                      GestureDetector(
-                                          onTap: () async {
-                                            decremateQtyProduct(
-                                                data, i, data[i].productId);
-                                          },
-                                          child: Text(
-                                            '-     ',
-                                            style: TextStyle(fontSize: 20),
-                                          )),
+                                      jsonDecode(show_obj.toString())[i]
+                                                  ['qty'] ==
+                                              1
+                                          ? GestureDetector(
+                                              onTap: () {},
+                                              child: Text(
+                                                '     ',
+                                                style: TextStyle(fontSize: 20),
+                                              ))
+                                          : GestureDetector(
+                                              onTap: () async {
+                                                decremateQtyProduct(
+                                                    data, i, data[i].productId);
+                                              },
+                                              child: Text(
+                                                '-     ',
+                                                style: TextStyle(fontSize: 20),
+                                              )),
                                       Text(
                                         '${jsonDecode(show_obj.toString())[i]['qty']}',
                                         style: TextStyle(fontSize: 15.0),
@@ -338,7 +360,7 @@ class CartViewScreenState extends State<CartView> {
                               ],
                             )))
                       ],
-                    )
+                    ),
                   ],
                 );
               });

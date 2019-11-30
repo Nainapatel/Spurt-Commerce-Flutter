@@ -32,7 +32,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     this.getProfile(); // Function for get product details
   }
-
+/** get profile value */
   Future<String> getProfile() async {
     final prefs = await SharedPreferences.getInstance();
     var show_token = prefs.getString('jwt_token');

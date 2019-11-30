@@ -29,7 +29,7 @@ class ProductViewScreenState extends State<ProductViewScreen> {
   var obj;
   var objPrice;
   List<dynamic> listobj = [];
-   List<dynamic> listprice = [];
+  List<dynamic> listprice = [];
   @override
   void initState() {
     super.initState();
@@ -37,6 +37,7 @@ class ProductViewScreenState extends State<ProductViewScreen> {
     this.checkinCartid();
   }
 
+/** This function for check  product added or not in wishlist and cart */
   checkinCartid() async {
     var id = this.widget.id;
     final prefs = await SharedPreferences.getInstance();
@@ -46,6 +47,7 @@ class ProductViewScreenState extends State<ProductViewScreen> {
         prefs.getStringList('id_wishlist') ?? List<String>();
     List<String> wishlist = show_wishlist;
     loader = true;
+    //For cart
     var n = list.contains(id);
     if (n == true) {
       setState(() {
@@ -56,7 +58,7 @@ class ProductViewScreenState extends State<ProductViewScreen> {
         iswishlisted = true;
       });
     }
-
+// For wishlist
     var listid = wishlist.contains(id);
     if (listid == true) {
       setState(() {
@@ -70,7 +72,7 @@ class ProductViewScreenState extends State<ProductViewScreen> {
   }
 
 /*
- *  For Product get by id
+ *  Fetch Product get by id
  */
   Future<String> getProduct() async {
     var id = this.widget.id;
@@ -89,13 +91,16 @@ class ProductViewScreenState extends State<ProductViewScreen> {
     return "Successfull";
   }
 
+/** save qty value when click on Add to cart button  
+ * store Array(id,qty,price,updatedqty) in SharedPreferences
+*/
   _saveQtyValue(id, price) async {
     print(id);
     final prefs = await SharedPreferences.getInstance();
     List<String> show_obj = prefs.getStringList('obj_list') ?? List<String>();
     listobj = show_obj;
     print('price===$price');
-    obj = {'id': id, 'qty': qty, 'price' : price, 'updatedPrice': price};
+    obj = {'id': id, 'qty': qty, 'price': price, 'updatedPrice': price};
     print('obj====$obj');
     listobj.add(json.encode(obj));
     prefs.setStringList('obj_list', listobj);
@@ -112,7 +117,7 @@ class ProductViewScreenState extends State<ProductViewScreen> {
       isaddtocart = false;
     });
   }
-
+/** add to wishlist when click on favorite icon */
   addtowishlist(id) async {
     final prefs = await SharedPreferences.getInstance();
     var show_token = prefs.getString('jwt_token');
@@ -122,12 +127,12 @@ class ProductViewScreenState extends State<ProductViewScreen> {
       Navigator.of(context).pushNamed("/login");
     } else {
       List<String> show_wishid =
-          prefs.getStringList('id_wishlist') ?? List<String>(); // <-EDITED HERE
+          prefs.getStringList('id_wishlist') ?? List<String>();
 
       List<String> wishlist = show_wishid;
       wishlist.add(id);
       prefs.setStringList('id_wishlist', wishlist);
-
+  // wishlist api call
       var response = await http.post(
         config.baseUrl + 'customer/add-product-to-wishlist',
         headers: {"Authorization": json.decode(show_token)},
@@ -303,7 +308,8 @@ class ProductViewScreenState extends State<ProductViewScreen> {
                                                                     onPressed:
                                                                         () => {
                                                                       _saveQtyValue(
-                                                                          '${product[i]['productId']}','${product[i]['price']}')
+                                                                          '${product[i]['productId']}',
+                                                                          '${product[i]['price']}')
                                                                     },
                                                                     color: Color
                                                                         .fromRGBO(

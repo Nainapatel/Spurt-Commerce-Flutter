@@ -44,7 +44,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
 /*
- *  For Banner
+ *  For get Banner Image 
  */
   Future<String> getJSONData() async {
     var response = await http.get(
@@ -63,7 +63,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   /*
- *  For Category
+ *  For fetch get Category name
  */
   Future<String> getCategoty() async {
     var response = await http.get(
@@ -76,12 +76,10 @@ class HomeScreenState extends State<HomeScreen> {
     return "Successfull";
   }
 
-  _changeOpacity() {
-    setState(() => opacityLevel = opacityLevel == 0 ? 1.0 : 0.0);
-  }
+ 
 
   /*
- *  For getFeatureProduct
+ *  For get FeatureProduct list
  */
   Future<String> getFeatureProduct() async {
     var response = await http.get(
@@ -93,7 +91,7 @@ class HomeScreenState extends State<HomeScreen> {
     loader = true;
     return "Successfull";
   }
-
+/** This widget for display category name over image */
   Widget buildTitle(String name) {
     return Center(
       child: Container(

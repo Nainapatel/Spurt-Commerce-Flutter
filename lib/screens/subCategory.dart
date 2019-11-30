@@ -33,7 +33,7 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
     this.getSubCategory();
     this.getimg();
   }
-
+/** Set static image for sub category list */
   getimg() {
 
     if (this.widget.name == "ELECTRONICS") {
@@ -88,7 +88,7 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
   }
 
 /*
- *  For Banner
+ *  For Banner image 
  */
   Future<String> getJSONData() async {
     var response = await http.get(
@@ -102,7 +102,7 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
   }
 
   /*
- *  For Category
+ *  For sub category list
  */
   Future<String> getSubCategory() async {
     var id = this.widget.id;

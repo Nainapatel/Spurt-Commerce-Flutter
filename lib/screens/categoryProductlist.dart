@@ -26,7 +26,7 @@ class CategoryProductlistScreenState extends State<CategoryProductlistScreen> {
   }
 
   /*
- *  For getFeatureProduct
+ *  For get FeatureProduct
  */
   Future<String> getCategoryProduct() async {
     var id = this.widget.id;

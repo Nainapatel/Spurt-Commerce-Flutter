@@ -21,7 +21,7 @@ class SignupScreenState extends State<SignupScreen> {
   TextEditingController _confirmPassword = TextEditingController();
   TextEditingController _phoneNumber = TextEditingController();
   TextEditingController _emailController = TextEditingController();
-
+/** This for Register value */
   Future<http.Response> signup() async {
     if (_emailController.text != '' &&
         _passwordController.text != '' &&

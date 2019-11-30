@@ -27,7 +27,7 @@ class WishlistScreenState extends State<WishlistScreen> {
   }
 
   /*
- *  For Product get by id
+ *  Fetch Product get by id
  */
   Future<String> getWishlist() async {
     final prefs = await SharedPreferences.getInstance();
@@ -49,7 +49,9 @@ class WishlistScreenState extends State<WishlistScreen> {
       return "Successfull";
     }
   }
-
+/** @params {String} id for remove product
+ * This Function contains remove product from wishlist
+ */
   removeWishlistProduct(id) async {
     final prefs = await SharedPreferences.getInstance();
     var show_token = prefs.getString('jwt_token');

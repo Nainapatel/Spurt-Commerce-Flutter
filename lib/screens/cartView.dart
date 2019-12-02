@@ -16,6 +16,7 @@ class Cart {
   final List<Product> productImage;
   final String productId;
   dynamic qty;
+  final String metaTagTitle;
 
   Cart(
       {this.id,
@@ -24,7 +25,8 @@ class Cart {
       this.shipping,
       this.productImage,
       this.productId,
-      this.qty});
+      this.qty,
+      this.metaTagTitle});
 
   factory Cart.fromJson(Map<String, dynamic> json) {
     var productImage = json['productImage'] as List;
@@ -37,7 +39,8 @@ class Cart {
         shipping: json['shipping'],
         productImage: cartProductImage,
         productId: json['productId'],
-        qty: json['qty']);
+        qty: json['qty'],
+        metaTagTitle:json['metaTagTitle']);
   }
 }
 
@@ -122,15 +125,15 @@ class CartViewScreenState extends State<CartView> {
     List show_obj = prefs.getStringList('obj_list');
 
     var prodLists = jsonDecode(show_obj.toString())
-        .where((prod) => prod["id"] == id)
+        .where((prod) => prod["productId"] == id)
         .toList();
 
     oldPriceValue = jsonDecode(show_obj.toString())[index]['price'];
 
-    dynamic value = prodLists[0]['qty'];
+    dynamic value = prodLists[0]['quantity'];
     value--;
 
-    var updatedqty = jsonDecode(show_obj.toString())[index]['qty'] = value;
+    var updatedqty = jsonDecode(show_obj.toString())[index]['quantity'] = value;
     if (jsonDecode(show_obj.toString())[index]['price'].runtimeType == String) {
       updateprice = jsonDecode(show_obj.toString())[index]['price'] =
           int.parse(jsonDecode(show_obj.toString())[index]['updatedPrice']) -
@@ -141,16 +144,18 @@ class CartViewScreenState extends State<CartView> {
               oldPriceValue;
     }
     obj = {
-      'id': id,
-      'qty': updatedqty,
+      'productId': id,
+      'quantity': updatedqty,
       'price': data[index].price,
-      'updatedPrice': updateprice
+      'updatedPrice': updateprice,
+      'name' : data[index].name,
+      'model':data[index].metaTagTitle
     };
-    if (obj['id'] == id) {
+    if (obj['productId'] == id) {
       indexofremoveobj = show_obj
-          .indexWhere((prod) => jsonDecode(prod.toString())['id'] == id);
+          .indexWhere((prod) => jsonDecode(prod.toString())['productId'] == id);
 
-      show_obj.removeWhere((item) => jsonDecode(item.toString())['id'] == id);
+      show_obj.removeWhere((item) => jsonDecode(item.toString())['productId'] == id);
     }
     var idx = indexofremoveobj;
     show_obj.insert(idx, json.encode(obj));
@@ -176,15 +181,15 @@ class CartViewScreenState extends State<CartView> {
     List show_obj = prefs.getStringList('obj_list');
 
     var prodLists = jsonDecode(show_obj.toString())
-        .where((prod) => prod["id"] == id)
+        .where((prod) => prod["productId"] == id)
         .toList();
 
     oldPriceValue = jsonDecode(show_obj.toString())[index]['price'];
 
-    dynamic value = prodLists[0]['qty'];
+    dynamic value = prodLists[0]['quantity'];
     value++;
 
-    var updatedqty = jsonDecode(show_obj.toString())[index]['qty'] = value;
+    var updatedqty = jsonDecode(show_obj.toString())[index]['quantity'] = value;
     if (jsonDecode(show_obj.toString())[index]['price'].runtimeType == String) {
       updateprice = jsonDecode(show_obj.toString())[index]['price'] =
           int.parse(oldPriceValue) * updatedqty;
@@ -193,16 +198,18 @@ class CartViewScreenState extends State<CartView> {
           oldPriceValue * updatedqty;
     }
     obj = {
-      'id': id,
-      'qty': updatedqty,
+      'productId': id,
+      'quantity': updatedqty,
       'price': data[index].price,
-      'updatedPrice': updateprice
+      'updatedPrice': updateprice,
+      'name' : data[index].name,
+      'model':data[index].metaTagTitle
     };
-    if (obj['id'] == id) {
+    if (obj['productId'] == id) {
       indexofremoveobj = show_obj
-          .indexWhere((prod) => jsonDecode(prod.toString())['id'] == id);
+          .indexWhere((prod) => jsonDecode(prod.toString())['productId'] == id);
 
-      show_obj.removeWhere((item) => jsonDecode(item.toString())['id'] == id);
+      show_obj.removeWhere((item) => jsonDecode(item.toString())['productId'] == id);
     }
     var idx = indexofremoveobj;
     show_obj.insert(idx, json.encode(obj));
@@ -226,7 +233,7 @@ class CartViewScreenState extends State<CartView> {
     List<String> show_id = prefs.getStringList('id_list') ??
         List<String>(); // show_obj contains id.
 // delete product id wisw
-    show_obj.removeWhere((item) => jsonDecode(item.toString())['id'] == id);
+    show_obj.removeWhere((item) => jsonDecode(item.toString())['productId'] == id);
     cartProductArray.removeWhere((item) => item['productId'] == id);
     prefs.setStringList('obj_list', show_obj);
     Toast.show("Remove item Successfully", context,
@@ -323,7 +330,7 @@ class CartViewScreenState extends State<CartView> {
                                                     TextStyle(fontSize: 15.0),
                                               ),
                                               jsonDecode(show_obj.toString())[i]
-                                                          ['qty'] ==
+                                                          ['quantity'] ==
                                                       1
                                                   ? GestureDetector(
                                                       onTap: () {},
@@ -345,7 +352,7 @@ class CartViewScreenState extends State<CartView> {
                                                             fontSize: 20),
                                                       )),
                                               Text(
-                                                '${jsonDecode(show_obj.toString())[i]['qty']}',
+                                                '${jsonDecode(show_obj.toString())[i]['quantity']}',
                                                 style:
                                                     TextStyle(fontSize: 15.0),
                                               ),

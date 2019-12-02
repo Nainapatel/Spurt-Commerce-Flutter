@@ -94,13 +94,13 @@ class ProductViewScreenState extends State<ProductViewScreen> {
 /** save qty value when click on Add to cart button  
  * store Array(id,qty,price,updatedqty) in SharedPreferences
 */
-  _saveQtyValue(id, price) async {
+  _saveQtyValue(id, price,name, model) async {
     print(id);
     final prefs = await SharedPreferences.getInstance();
     List<String> show_obj = prefs.getStringList('obj_list') ?? List<String>();
     listobj = show_obj;
     print('price===$price');
-    obj = {'id': id, 'qty': qty, 'price': price, 'updatedPrice': price};
+    obj = {'productId': id, 'quantity': qty, 'price': price, 'updatedPrice': price,'name':name, 'model':model };
     print('obj====$obj');
     listobj.add(json.encode(obj));
     prefs.setStringList('obj_list', listobj);
@@ -329,7 +329,9 @@ class ProductViewScreenState extends State<ProductViewScreen> {
                                                                         () => {
                                                                       _saveQtyValue(
                                                                           '${product[i]['productId']}',
-                                                                          '${product[i]['price']}')
+                                                                          '${product[i]['price']}',
+                                                                          '${product[i]['name']}',
+                                                                          '${product[i]['metaTagTitle']}')
                                                                     },
                                                                     color: Color
                                                                         .fromRGBO(

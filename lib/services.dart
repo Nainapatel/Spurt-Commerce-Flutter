@@ -20,12 +20,12 @@ Future<List<Cart>> fetchcartItem() async {
   for (var i = 0; i < show_obj.length; i++) {
     var response = await http.get(
         Uri.encodeFull(config.baseUrl +
-            'product-store/productdetail/${jsonDecode(show_obj.toString())[i]['id']}'),
+            'product-store/productdetail/${jsonDecode(show_obj.toString())[i]['productId']}'),
         headers: {"Accept": "application/json"});
     jsonResponseCart = await json.decode(response.body);
     List prodLists = cartProductArray
         .where((prod) =>
-            prod["productId"] == jsonDecode(show_obj.toString())[i]['id'])
+            prod["productId"] == jsonDecode(show_obj.toString())[i]['productId'])
         .toList();
 
     checkvalueofitem = prodLists.length == 1 ?? prodLists[0];

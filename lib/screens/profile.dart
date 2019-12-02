@@ -74,7 +74,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
         drawer: DrawerScreen(),
-        bottomNavigationBar: BottomTabScreen(),
+        // bottomNavigationBar: BottomTabScreen(),
         appBar: new AppBar(
           title: new Text('Profile'),
           actions: <Widget>[

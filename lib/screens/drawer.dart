@@ -151,6 +151,52 @@ class DrawerScreenState extends State<DrawerScreen> {
                 alignment: Alignment.center,
                 child: SpinKitCircle(color: Colors.deepPurple),
               ),
+        new Divider(),
+        Container(
+          margin: const EdgeInsets.only(left: 15.0),
+          child: Column(
+            children: <Widget>[
+              new Container(
+                  margin: const EdgeInsets.only(top: 18.0),
+                  child: GestureDetector(
+                    onTap: () {
+                     Navigator.of(context).pushNamed("/wishlist");
+                    },
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'WISHLIST',
+                        style: TextStyle(
+                            fontSize: 14.0, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ))
+            ],
+          ),
+        ),
+          Container(
+          margin: const EdgeInsets.only(left: 15.0),
+          child: Column(
+            children: <Widget>[
+              new Container(
+                  margin: const EdgeInsets.only(top: 18.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      datatoken == true ?
+                     Navigator.of(context).pushNamed("/profile") : Navigator.of(context).pushNamed("/login");
+                    },
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'PROFILE',
+                        style: TextStyle(
+                            fontSize: 14.0, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ))
+            ],
+          ),
+        ),
         Container(
           margin: const EdgeInsets.only(left: 15.0),
           child: Column(

@@ -76,8 +76,6 @@ class HomeScreenState extends State<HomeScreen> {
     return "Successfull";
   }
 
- 
-
   /*
  *  For get FeatureProduct list
  */
@@ -91,6 +89,7 @@ class HomeScreenState extends State<HomeScreen> {
     loader = true;
     return "Successfull";
   }
+
 /** This widget for display category name over image */
   Widget buildTitle(String name) {
     return Center(
@@ -127,10 +126,30 @@ class HomeScreenState extends State<HomeScreen> {
 
     return new Scaffold(
         drawer: DrawerScreen(),
-        bottomNavigationBar: BottomTabScreen(),
+        // bottomNavigationBar: BottomTabScreen(),
         appBar: new AppBar(
           title: new Text('Home'),
           actions: [
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed("/cart");
+              },
+              child: Icon(
+                Icons.shopping_cart,
+                color: Colors.white,
+                size: 24.0,
+              ),
+            ),
+              GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed("/wishlist");
+              },
+              child: Icon(
+                Icons.favorite,
+                color: Colors.white,
+                size: 24.0,
+              ),
+            ),
             Icon(
               Icons.notifications,
               color: Colors.yellowAccent,

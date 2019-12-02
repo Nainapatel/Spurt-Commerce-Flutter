@@ -45,16 +45,36 @@ class CategoryProductlistScreenState extends State<CategoryProductlistScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
       drawer: DrawerScreen(),
-      bottomNavigationBar: BottomTabScreen(),
+      // bottomNavigationBar: BottomTabScreen(),
       appBar: new AppBar(
         title: new Text(this.widget.name),
         actions: [
-          Icon(
-            Icons.notifications,
-            color: Colors.yellowAccent,
-            size: 24.0,
-          ),
-        ],
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed("/cart");
+              },
+              child: Icon(
+                Icons.shopping_cart,
+                color: Colors.white,
+                size: 24.0,
+              ),
+            ),
+              GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed("/wishlist");
+              },
+              child: Icon(
+                Icons.favorite,
+                color: Colors.white,
+                size: 24.0,
+              ),
+            ),
+            Icon(
+              Icons.notifications,
+              color: Colors.yellowAccent,
+              size: 24.0,
+            ),
+          ],
       ),
          body: Center(
             child: loader == true

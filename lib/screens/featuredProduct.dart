@@ -44,7 +44,27 @@ class FeaturedProductScreenState extends State<FeaturedProductScreen> {
     return new Scaffold(
         appBar: new AppBar(
           title: new Text('Featured Product'),
-          actions: [
+           actions: [
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed("/cart");
+              },
+              child: Icon(
+                Icons.shopping_cart,
+                color: Colors.white,
+                size: 24.0,
+              ),
+            ),
+              GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed("/wishlist");
+              },
+              child: Icon(
+                Icons.favorite,
+                color: Colors.white,
+                size: 24.0,
+              ),
+            ),
             Icon(
               Icons.notifications,
               color: Colors.yellowAccent,

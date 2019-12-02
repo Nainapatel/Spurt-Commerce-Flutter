@@ -10,6 +10,7 @@ import 'package:spurtcommerce/screens/featuredProduct.dart';
 import 'package:spurtcommerce/screens/productView.dart';
 import 'package:spurtcommerce/screens/categoryProductlist.dart';
 import 'package:spurtcommerce/screens/editprofile.dart';
+import 'package:spurtcommerce/screens/placeorder.dart';
 
 class Routes {
   var routes = <String, WidgetBuilder>{
@@ -25,6 +26,7 @@ class Routes {
     "/login": (BuildContext context) => new LoginScreen(),
     "/signup": (BuildContext context) => new SignupScreen(),
     "/editprofile": (BuildContext context) => new EditprofileScreen(),
+    "/placeorder" : (BuildContext context) => new PlaceorderScreen(),
   };
 
   Routes() {

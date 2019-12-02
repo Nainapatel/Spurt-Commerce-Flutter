@@ -6,6 +6,7 @@ import 'package:spurtcommerce/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:toast/toast.dart';
+import 'package:spurtcommerce/screens/placeorder.dart';
 
 class Cart {
   final int id;
@@ -305,7 +306,7 @@ class CartViewScreenState extends State<CartView> {
                                         Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
-                                            '\u20B9. ${jsonDecode(show_obj.toString())[i]['updatedPrice']}',
+                                            '\u20B9 ${jsonDecode(show_obj.toString())[i]['updatedPrice']}',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                                 fontSize: 15.0,
@@ -399,98 +400,150 @@ class CartViewScreenState extends State<CartView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: CustomScrollView(
-      slivers: <Widget>[
-        SliverList(
-            delegate: SliverChildListDelegate(
-          [
-            Column(
-              children: <Widget>[cartItem()],
-            ),
-            new Divider(),
-          ],
-        )),
-        SliverList(
-            delegate: SliverChildListDelegate([
-          Container(
-              child: loader == true
-                  ? Column(children: <Widget>[
-                      new Container(
-                          margin: EdgeInsets.all(3.0),
-                          child: Card(
-                              child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 5,
-                                    vertical: 5,
-                                  ),
-                                  child: Column(
-                                    children: <Widget>[
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                              'PRICE DETAILS ($lengthofitems Items)',
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverList(
+              delegate: SliverChildListDelegate(
+            [
+              Column(
+                children: <Widget>[cartItem()],
+              ),
+              new Divider(),
+            ],
+          )),
+          SliverList(
+              delegate: SliverChildListDelegate([
+            Container(
+                child: loader == true
+                    ? Column(children: <Widget>[
+                        new Container(
+                            margin: EdgeInsets.all(3.0),
+                            child: Card(
+                                child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5,
+                                      vertical: 5,
+                                    ),
+                                    child: Column(
+                                      children: <Widget>[
+                                        Row(
+                                          children: <Widget>[
+                                            lengthofitems == 1
+                                                ? Text(
+                                                    'PRICE DETAILS ($lengthofitems Item)',
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.bold))
+                                                : Text(
+                                                    'PRICE DETAILS ($lengthofitems Items)',
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.bold))
+                                          ],
+                                        ),
+                                        new Divider(),
+                                        Row(
+                                          children: <Widget>[
+                                            Text(
+                                              'Sub total',
                                               style: TextStyle(
                                                   color: Colors.black,
+                                                  fontSize: 15),
+                                            ),
+                                            Spacer(),
+                                            Text('\u20B9 $price ',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15))
+                                          ],
+                                        ),
+                                        new Divider(),
+                                        Row(
+                                          children: <Widget>[
+                                            Text(
+                                              'Shipping',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 15),
+                                            ),
+                                            Spacer(),
+                                            Text('Free',
+                                                style: TextStyle(
+                                                  color: Colors.green,
                                                   fontSize: 15,
-                                                  fontWeight: FontWeight.bold))
-                                        ],
-                                      ),
-                                      new Divider(),
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            'Sub total',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 15),
-                                          ),
-                                          Spacer(),
-                                          Text('\u20B9. $price ',
+                                                ))
+                                          ],
+                                        ),
+                                        new Divider(color: Colors.black),
+                                        Row(
+                                          children: <Widget>[
+                                            Text(
+                                              'Total',
                                               style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 15))
-                                        ],
-                                      ),
-                                      new Divider(),
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            'Shipping',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 15),
-                                          ),
-                                          Spacer(),
-                                          Text('Free',
-                                              style: TextStyle(
-                                                color: Colors.green,
-                                                fontSize: 15,
-                                              ))
-                                        ],
-                                      ),
-                                      new Divider(color: Colors.black),
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            'Total',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Spacer(),
-                                          Text('\u20B9. $price',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 20))
-                                        ],
-                                      )
-                                    ],
-                                  )))),
-                    ])
-                  : null)
-        ]))
-      ],
-    ));
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Spacer(),
+                                            Text('\u20B9 $price',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 20))
+                                          ],
+                                        )
+                                      ],
+                                    )))),
+                      ])
+                    : null)
+          ]))
+        ],
+      ),
+      bottomNavigationBar: new Container(
+          height: 45.0,
+          color: Color.fromRGBO(94, 199, 182, 0.9),
+          child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 5,
+                vertical: 5,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        '\u20B9 $price',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.black, fontSize: 20),
+                      )
+                    ],
+                  ),
+                  new VerticalDivider(color: Colors.black),
+                  Column(
+                    children: <Widget>[
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PlaceorderScreen(),
+                                ));
+                          },
+                          child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Place order",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 20),
+                              )))
+                    ],
+                  )
+                ],
+              ))),
+    );
   }
 }

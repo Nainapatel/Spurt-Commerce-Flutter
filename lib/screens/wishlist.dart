@@ -67,16 +67,23 @@ class WishlistScreenState extends State<WishlistScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
       drawer: DrawerScreen(),
-      bottomNavigationBar: BottomTabScreen(),
+      // bottomNavigationBar: BottomTabScreen(),
       appBar: new AppBar(
         title: new Text('Wishlist'),
-        actions: [
-          Icon(
-            Icons.notifications,
-            color: Colors.yellowAccent,
-            size: 24.0,
-          ),
-        ],
+         actions: [
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed("/cart");
+              },
+              child: Icon(
+                Icons.shopping_cart,
+                color: Colors.white,
+                size: 24.0,
+              ),
+            ),
+             
+           
+          ],
       ),
       body: Center(
           child: loader == true

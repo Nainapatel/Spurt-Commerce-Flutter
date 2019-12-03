@@ -5,7 +5,9 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'package:spurtcommerce/config.dart' as config;
+import 'package:spurtcommerce/screens/successOrderScreen.dart';
 import 'package:toast/toast.dart';
+import 'dart:io';
 
 void main() {
   runApp(new PlaceorderScreen());
@@ -31,7 +33,7 @@ class PlaceorderScreenState extends State<PlaceorderScreen> {
   List<dynamic> stateList;
   var dropdowncountryValue;
   var dropdownstateValue;
-
+  var successOrder;
   @override
   void initState() {
     super.initState();
@@ -42,81 +44,70 @@ class PlaceorderScreenState extends State<PlaceorderScreen> {
 
   placeorder() async {
     final prefs = await SharedPreferences.getInstance();
-    var show_token = prefs.getString('jwt_token');
     List show_obj = prefs.getStringList('obj_list');
-    print("in place order============$show_obj");
+    print("in place order============${json.decode(show_obj.toString())}");
+    var show_token = prefs.getString('jwt_token');
 
     if (show_token == null) {
       print('call if');
       Navigator.of(context).pushNamed("/login");
     } else {
       print('call else');
-      var body = {
-        json.encode("productDetails".toString()): show_obj,
-        json.encode("shippingFirstName".toString()):
-            json.encode(_firstnamecontroller.text.toString()),
-        json.encode("shippingLastName".toString()):
-            json.encode(_firstnamecontroller.text.toString()),
-        json.encode("shippingAddress_1".toString()):
-            json.encode(_addressonecontroller.text.toString()),
-        json.encode("shippingAddress_2".toString()):
-            json.encode(_addresstwocontroller.text.toString()),
-        json.encode("shippingCity".toString()):
-            json.encode(_citycontroller.text.toString()),
-        json.encode("shippingPostCode".toString()):
-            json.encode(_pincodecontroller.text.toString()),
-        json.encode("shippingCountry".toString()):
-            json.encode(dropdowncountryValue.toString()),
-        json.encode("shippingZone".toString()):
-            json.encode(dropdownstateValue.toString()),
-        json.encode("phoneNumber".toString()):
-            json.encode(_phonenumbercontroller.text.toString()),
-        json.encode("emailId".toString()):
-            json.encode(_emailcontroller.text.toString()),
+      String url = config.baseUrl + 'orders/customer-checkout';
+      Map body = {
+        "productDetails": json.decode(show_obj.toString()),
+        "shippingFirstName": _firstnamecontroller.text,
+        "shippingLastName": _firstnamecontroller.text,
+        "shippingAddress_1": _addressonecontroller.text,
+        "shippingAddress_2": _addresstwocontroller.text,
+        "shippingCity": _citycontroller.text,
+        "shippingPostCode": _pincodecontroller.text,
+        "shippingCountry": dropdowncountryValue,
+        "shippingZone": dropdownstateValue,
+        "phoneNumber": _phonenumbercontroller.text,
+        "emailId": _emailcontroller.text,
       };
-      print("body===$body");
-
-      var response = await http
-          .post(config.baseUrl + 'orders/customer-checkout', headers: {
-        "Authorization": json.decode(show_token),
-      }, body: {
-        json.encode("productDetails".toString()): show_obj,
-        json.encode("shippingFirstName".toString()):
-            json.encode(_firstnamecontroller.text.toString()),
-        json.encode("shippingLastName".toString()):
-            json.encode(_firstnamecontroller.text.toString()),
-        json.encode("shippingAddress_1".toString()):
-            json.encode(_addressonecontroller.text.toString()),
-        json.encode("shippingAddress_2".toString()):
-            json.encode(_addresstwocontroller.text.toString()),
-        json.encode("shippingCity".toString()):
-            json.encode(_citycontroller.text.toString()),
-        json.encode("shippingPostCode".toString()):
-            json.encode(_pincodecontroller.text.toString()),
-        json.encode("shippingCountry".toString()):
-            json.encode(dropdowncountryValue.toString()),
-        json.encode("shippingZone".toString()):
-            json.encode(dropdownstateValue.toString()),
-        json.encode("phoneNumber".toString()):
-            json.encode(_phonenumbercontroller.text.toString()),
-        json.encode("emailId".toString()):
-            json.encode(_emailcontroller.text.toString()),
-      }).toString();
-      print('res====$response');
-
-      Toast.show("Submit order Successfully", context,
-          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-      Navigator.of(context).pushNamed("/dashboard");
-     
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-        preferences.getKeys();
-        for(String key in preferences.getKeys()) {
-          if(key != "jwt_token") {
-            preferences.remove(key);
-          }
-        }
-      return "Successfull";
+      print('========== =======${await apiRequest(url, body)}');
     }
+  }
+
+  Future<String> apiRequest(String url, Map jsonMap) async {
+    print("call");
+    final prefs = await SharedPreferences.getInstance();
+    var show_token = prefs.getString('jwt_token');
+
+    HttpClient httpClient = new HttpClient();
+    HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
+    request.headers.set('Authorization', json.decode(show_token));
+    request.headers.set('content-type', 'application/json');
+    request.add(utf8.encode(json.encode(jsonMap)));
+    HttpClientResponse response = await request.close();
+    String reply = await response.transform(utf8.decoder).join();
+    httpClient.close();
+    setState(() {
+      successOrder = reply;
+    });
+    print("reply====${json.decode(reply.toString())['data']['email']}");
+    Toast.show("Submit order Successfully", context,
+        duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SuccessOrderScreen(
+              id: '${json.decode(reply.toString())['data']['orderId']}',
+              total: '${json.decode(reply.toString())['data']['total']}',
+              email: '${json.decode(reply.toString())['data']['email']}'),
+        ));
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.getKeys();
+    for (String key in preferences.getKeys()) {
+      if (key != "jwt_token") {
+        preferences.remove(key);
+      }
+    }
+
+    return reply;
   }
 
 /*

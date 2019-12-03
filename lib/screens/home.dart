@@ -150,11 +150,7 @@ class HomeScreenState extends State<HomeScreen> {
                 size: 24.0,
               ),
             ),
-            Icon(
-              Icons.notifications,
-              color: Colors.yellowAccent,
-              size: 24.0,
-            ),
+           
           ],
         ),
         body: Center(

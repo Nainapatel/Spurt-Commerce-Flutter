@@ -4,6 +4,7 @@ import 'package:spurtcommerce/screens/login.dart';
 import 'package:spurtcommerce/screens/signup.dart';
 import 'package:spurtcommerce/screens/cart.dart';
 import 'package:spurtcommerce/screens/profile.dart';
+import 'package:spurtcommerce/screens/successOrderScreen.dart' as prefix0;
 import 'package:spurtcommerce/screens/wishlist.dart';
 import 'package:spurtcommerce/screens/subCategory.dart';
 import 'package:spurtcommerce/screens/featuredProduct.dart';
@@ -11,6 +12,7 @@ import 'package:spurtcommerce/screens/productView.dart';
 import 'package:spurtcommerce/screens/categoryProductlist.dart';
 import 'package:spurtcommerce/screens/editprofile.dart';
 import 'package:spurtcommerce/screens/placeorder.dart';
+import 'package:spurtcommerce/screens/successOrderScreen.dart';
 
 class Routes {
   var routes = <String, WidgetBuilder>{
@@ -27,6 +29,8 @@ class Routes {
     "/signup": (BuildContext context) => new SignupScreen(),
     "/editprofile": (BuildContext context) => new EditprofileScreen(),
     "/placeorder" : (BuildContext context) => new PlaceorderScreen(),
+    "/successOrderScreen" : (BuildContext context) => new SuccessOrderScreen(),
+
   };
 
   Routes() {

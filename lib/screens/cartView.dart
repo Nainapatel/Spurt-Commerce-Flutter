@@ -40,7 +40,7 @@ class Cart {
         productImage: cartProductImage,
         productId: json['productId'],
         qty: json['qty'],
-        metaTagTitle:json['metaTagTitle']);
+        metaTagTitle: json['metaTagTitle']);
   }
 }
 
@@ -148,14 +148,15 @@ class CartViewScreenState extends State<CartView> {
       'quantity': updatedqty,
       'price': data[index].price,
       'updatedPrice': updateprice,
-      'name' : data[index].name,
-      'model':data[index].metaTagTitle
+      'name': data[index].name,
+      'model': data[index].metaTagTitle
     };
     if (obj['productId'] == id) {
       indexofremoveobj = show_obj
           .indexWhere((prod) => jsonDecode(prod.toString())['productId'] == id);
 
-      show_obj.removeWhere((item) => jsonDecode(item.toString())['productId'] == id);
+      show_obj.removeWhere(
+          (item) => jsonDecode(item.toString())['productId'] == id);
     }
     var idx = indexofremoveobj;
     show_obj.insert(idx, json.encode(obj));
@@ -202,14 +203,15 @@ class CartViewScreenState extends State<CartView> {
       'quantity': updatedqty,
       'price': data[index].price,
       'updatedPrice': updateprice,
-      'name' : data[index].name,
-      'model':data[index].metaTagTitle
+      'name': data[index].name,
+      'model': data[index].metaTagTitle
     };
     if (obj['productId'] == id) {
       indexofremoveobj = show_obj
           .indexWhere((prod) => jsonDecode(prod.toString())['productId'] == id);
 
-      show_obj.removeWhere((item) => jsonDecode(item.toString())['productId'] == id);
+      show_obj.removeWhere(
+          (item) => jsonDecode(item.toString())['productId'] == id);
     }
     var idx = indexofremoveobj;
     show_obj.insert(idx, json.encode(obj));
@@ -233,7 +235,8 @@ class CartViewScreenState extends State<CartView> {
     List<String> show_id = prefs.getStringList('id_list') ??
         List<String>(); // show_obj contains id.
 // delete product id wisw
-    show_obj.removeWhere((item) => jsonDecode(item.toString())['productId'] == id);
+    show_obj
+        .removeWhere((item) => jsonDecode(item.toString())['productId'] == id);
     cartProductArray.removeWhere((item) => item['productId'] == id);
     prefs.setStringList('obj_list', show_obj);
     Toast.show("Remove item Successfully", context,
@@ -256,12 +259,13 @@ class CartViewScreenState extends State<CartView> {
    cartItem fetch all cart item 
    */
   Widget cartItem() {
-    print("call cart item======");
     return FutureBuilder<List<Cart>>(
       future: _fetchcartItem(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<Cart> data = snapshot.data;
+          print("call cart item=====${data.length}=");
+
           return ListView.builder(
               shrinkWrap: true,
               itemCount: data.length,
@@ -407,150 +411,186 @@ class CartViewScreenState extends State<CartView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverList(
-              delegate: SliverChildListDelegate(
-            [
-              Column(
-                children: <Widget>[cartItem()],
-              ),
-              new Divider(),
-            ],
-          )),
-          SliverList(
-              delegate: SliverChildListDelegate([
-            Container(
-                child: loader == true
-                    ? Column(children: <Widget>[
-                        new Container(
-                            margin: EdgeInsets.all(3.0),
-                            child: Card(
-                                child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5,
-                                      vertical: 5,
-                                    ),
-                                    child: Column(
-                                      children: <Widget>[
-                                        Row(
-                                          children: <Widget>[
-                                            lengthofitems == 1
-                                                ? Text(
-                                                    'PRICE DETAILS ($lengthofitems Item)',
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 15,
-                                                        fontWeight:
-                                                            FontWeight.bold))
-                                                : Text(
-                                                    'PRICE DETAILS ($lengthofitems Items)',
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 15,
-                                                        fontWeight:
-                                                            FontWeight.bold))
-                                          ],
-                                        ),
-                                        new Divider(),
-                                        Row(
-                                          children: <Widget>[
-                                            Text(
-                                              'Sub total',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 15),
-                                            ),
-                                            Spacer(),
-                                            Text('\u20B9 $price ',
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 15))
-                                          ],
-                                        ),
-                                        new Divider(),
-                                        Row(
-                                          children: <Widget>[
-                                            Text(
-                                              'Shipping',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 15),
-                                            ),
-                                            Spacer(),
-                                            Text('Free',
-                                                style: TextStyle(
-                                                  color: Colors.green,
-                                                  fontSize: 15,
-                                                ))
-                                          ],
-                                        ),
-                                        new Divider(color: Colors.black),
-                                        Row(
-                                          children: <Widget>[
-                                            Text(
-                                              'Total',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Spacer(),
-                                            Text('\u20B9 $price',
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 20))
-                                          ],
-                                        )
-                                      ],
-                                    )))),
-                      ])
-                    : null)
-          ]))
-        ],
-      ),
-      bottomNavigationBar: new Container(
-          height: 45.0,
-          color: Color.fromRGBO(94, 199, 182, 0.9),
-          child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 5,
-                vertical: 5,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Text(
-                        '\u20B9 $price',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      )
-                    ],
-                  ),
-                  new VerticalDivider(color: Colors.black),
-                  Column(
-                    children: <Widget>[
-                      GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PlaceorderScreen(),
-                                ));
-                          },
-                          child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Place order",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 20),
-                              )))
-                    ],
-                  )
-                ],
-              ))),
-    );
+        body: Center(
+          child: show_obj.length == 0
+              ? Column(
+                
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                  
+                    Text(
+                      "Your Cart is empty",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    RaisedButton(
+                      color: Colors.deepPurple,
+                      onPressed: () {
+                        Navigator.of(context).pushNamed("/dashboard");
+                      },
+                      child: Text(
+                        'Countinue Shopping',
+                        style: TextStyle(color: Colors.white, fontSize: 18.0),
+                      ),
+                    ),
+                  ],
+                )
+              : CustomScrollView(
+                  slivers: <Widget>[
+                    SliverList(
+                        delegate: SliverChildListDelegate(
+                      [
+                        Column(
+                          children: <Widget>[cartItem()],
+                        ),
+                        new Divider(),
+                      ],
+                    )),
+                    SliverList(
+                        delegate: SliverChildListDelegate([
+                      Container(
+                          child: loader == true
+                              ? Column(children: <Widget>[
+                                  new Container(
+                                      margin: EdgeInsets.all(3.0),
+                                      child: Card(
+                                          child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 5,
+                                                vertical: 5,
+                                              ),
+                                              child: Column(
+                                                children: <Widget>[
+                                                  Row(
+                                                    children: <Widget>[
+                                                      lengthofitems == 1
+                                                          ? Text(
+                                                              'PRICE DETAILS ($lengthofitems Item)',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 15,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold))
+                                                          : Text(
+                                                              'PRICE DETAILS ($lengthofitems Items)',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 15,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold))
+                                                    ],
+                                                  ),
+                                                  new Divider(),
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Text(
+                                                        'Sub total',
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 15),
+                                                      ),
+                                                      Spacer(),
+                                                      Text('\u20B9 $price ',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 15))
+                                                    ],
+                                                  ),
+                                                  new Divider(),
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Text(
+                                                        'Shipping',
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 15),
+                                                      ),
+                                                      Spacer(),
+                                                      Text('Free',
+                                                          style: TextStyle(
+                                                            color: Colors.green,
+                                                            fontSize: 15,
+                                                          ))
+                                                    ],
+                                                  ),
+                                                  new Divider(
+                                                      color: Colors.black),
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Text(
+                                                        'Total',
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      Spacer(),
+                                                      Text('\u20B9 $price',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 20))
+                                                    ],
+                                                  )
+                                                ],
+                                              )))),
+                                ])
+                              : null)
+                    ]))
+                  ],
+                ),
+        ),
+        bottomNavigationBar: loader == true
+            ? new Container(
+                height: 45.0,
+                color: Color.fromRGBO(94, 199, 182, 0.9),
+                child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 5,
+                      vertical: 5,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Column(
+                          children: <Widget>[
+                            Text(
+                              '\u20B9 $price',
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 20),
+                            )
+                          ],
+                        ),
+                        new VerticalDivider(color: Colors.black),
+                        Column(
+                          children: <Widget>[
+                            GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            PlaceorderScreen(),
+                                      ));
+                                },
+                                child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      "Place order",
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 20),
+                                    )))
+                          ],
+                        )
+                      ],
+                    )))
+            : null);
   }
 }

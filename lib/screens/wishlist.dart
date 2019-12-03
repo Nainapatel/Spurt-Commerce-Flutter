@@ -49,6 +49,7 @@ class WishlistScreenState extends State<WishlistScreen> {
       return "Successfull";
     }
   }
+
 /*
  * @params {String} id for remove product
  * This Function contains remove product from wishlist
@@ -70,121 +71,144 @@ class WishlistScreenState extends State<WishlistScreen> {
       // bottomNavigationBar: BottomTabScreen(),
       appBar: new AppBar(
         title: new Text('Wishlist'),
-         actions: [
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).pushNamed("/cart");
-              },
-              child: Icon(
-                Icons.shopping_cart,
-                color: Colors.white,
-                size: 24.0,
-              ),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed("/cart");
+            },
+            child: Icon(
+              Icons.shopping_cart,
+              color: Colors.white,
+              size: 24.0,
             ),
-             
-           
-          ],
+          ),
+        ],
       ),
       body: Center(
-          child: loader == true
+          child: wishlist.length == 0
               ? Column(
-                  children: wishlist.map((i) {
-                  return Card(
-                    child: Row(
-                      children: <Widget>[
-                        Column(
-                          children: <Widget>[
-                            Image.network(
-                              config.mediaUrl +
-                                  '${i['productImage']['containerName']}' +
-                                  '${i['productImage']['image']}',
-                              width: 100,
-                              height: 100,
-                            ),
-                          ],
-                        ),
-                        Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "Your Wish List is empty",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    RaisedButton(
+                      color: Colors.deepPurple,
+                      onPressed: () {
+                        Navigator.of(context).pushNamed("/dashboard");
+                      },
+                      child: Text(
+                        'Countinue Shopping',
+                        style: TextStyle(color: Colors.white, fontSize: 18.0),
+                      ),
+                    ),
+                  ],
+                )
+              : loader == true
+                  ? Column(
+                      children: wishlist.map((i) {
+                      return Card(
+                        child: Row(
                           children: <Widget>[
                             Column(
                               children: <Widget>[
-                                SizedBox(
-                                    width: 250,
-                                    child: Column(
-                                      children: <Widget>[
-                                        Align(
-                                          child:
-                                              Text('${i['product']['name']}'),
-                                        ),
-                                        new Divider(),
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            'Rs. ${i['product']['price']}',
-                                            style: TextStyle(color: Colors.red),
-                                          ),
-                                        ),
-                                        Row(
+                                Image.network(
+                                  config.mediaUrl +
+                                      '${i['productImage']['containerName']}' +
+                                      '${i['productImage']['image']}',
+                                  width: 100,
+                                  height: 100,
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: <Widget>[
+                                Column(
+                                  children: <Widget>[
+                                    SizedBox(
+                                        width: 250,
+                                        child: Column(
                                           children: <Widget>[
-                                            new Container(
-                                              margin: const EdgeInsets.only(
-                                                  right: 30.0),
-                                              child: FlatButton(
-                                                color: Colors.grey[200],
-                                                textColor: Colors.grey,
-                                                padding: EdgeInsets.all(8.0),
-                                                splashColor: Colors.blueAccent,
-                                                onPressed: () {
-                                                  removeWishlistProduct(
-                                                      '${i['_id']}');
-                                                },
-                                                child: Text(
-                                                  'Remove',
-                                                  style:
-                                                      TextStyle(fontSize: 12.0),
-                                                ),
+                                            Align(
+                                              child: Text(
+                                                  '${i['product']['name']}'),
+                                            ),
+                                            new Divider(),
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                'Rs. ${i['product']['price']}',
+                                                style: TextStyle(
+                                                    color: Colors.red),
                                               ),
                                             ),
-                                            new Container(
-                                              margin: const EdgeInsets.only(
-                                                  left: 30.0),
-                                              child: FlatButton(
-                                                color: Colors.deepPurple,
-                                                textColor: Colors.white,
-                                                padding: EdgeInsets.all(8.0),
-                                                splashColor: Colors.blueAccent,
-                                                onPressed: () {
-                                                  // Navigator.push(
-                                                  //     context,
-                                                  //     MaterialPageRoute(
-                                                  //       builder: (context) =>
-                                                  //           SubCategoryScreen(
-                                                  //               id: '${i["categoryId"]}',
-                                                  //               name: '${i["name"]}'),
-                                                  //     ));
-                                                },
-                                                child: Text(
-                                                  'Add To Cart',
-                                                  style:
-                                                      TextStyle(fontSize: 12.0),
+                                            Row(
+                                              children: <Widget>[
+                                                new Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 30.0),
+                                                  child: FlatButton(
+                                                    color: Colors.grey[200],
+                                                    textColor: Colors.grey,
+                                                    padding:
+                                                        EdgeInsets.all(8.0),
+                                                    splashColor:
+                                                        Colors.blueAccent,
+                                                    onPressed: () {
+                                                      removeWishlistProduct(
+                                                          '${i['_id']}');
+                                                    },
+                                                    child: Text(
+                                                      'Remove',
+                                                      style: TextStyle(
+                                                          fontSize: 12.0),
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
+                                                new Container(
+                                                  margin: const EdgeInsets.only(
+                                                      left: 30.0),
+                                                  child: FlatButton(
+                                                    color: Colors.deepPurple,
+                                                    textColor: Colors.white,
+                                                    padding:
+                                                        EdgeInsets.all(8.0),
+                                                    splashColor:
+                                                        Colors.blueAccent,
+                                                    onPressed: () {
+                                                      // Navigator.push(
+                                                      //     context,
+                                                      //     MaterialPageRoute(
+                                                      //       builder: (context) =>
+                                                      //           SubCategoryScreen(
+                                                      //               id: '${i["categoryId"]}',
+                                                      //               name: '${i["name"]}'),
+                                                      //     ));
+                                                    },
+                                                    child: Text(
+                                                      'Add To Cart',
+                                                      style: TextStyle(
+                                                          fontSize: 12.0),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
                                             )
                                           ],
-                                        )
-                                      ],
-                                    ))
+                                        ))
+                                  ],
+                                )
                               ],
                             )
                           ],
-                        )
-                      ],
-                    ),
-                  );
-                }).toList())
-              : Align(
-                  alignment: Alignment.center,
-                  child: SpinKitCircle(color: Colors.deepPurple),
-                )),
+                        ),
+                      );
+                    }).toList())
+                  : Align(
+                      alignment: Alignment.center,
+                      child: SpinKitCircle(color: Colors.deepPurple),
+                    )),
     );
   }
 }

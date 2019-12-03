@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'package:spurtcommerce/config.dart' as config;
+import 'package:toast/toast.dart';
 
 void main() {
   runApp(new PlaceorderScreen());
@@ -50,38 +51,70 @@ class PlaceorderScreenState extends State<PlaceorderScreen> {
       Navigator.of(context).pushNamed("/login");
     } else {
       print('call else');
-    
+      var body = {
+        json.encode("productDetails".toString()): show_obj,
+        json.encode("shippingFirstName".toString()):
+            json.encode(_firstnamecontroller.text.toString()),
+        json.encode("shippingLastName".toString()):
+            json.encode(_firstnamecontroller.text.toString()),
+        json.encode("shippingAddress_1".toString()):
+            json.encode(_addressonecontroller.text.toString()),
+        json.encode("shippingAddress_2".toString()):
+            json.encode(_addresstwocontroller.text.toString()),
+        json.encode("shippingCity".toString()):
+            json.encode(_citycontroller.text.toString()),
+        json.encode("shippingPostCode".toString()):
+            json.encode(_pincodecontroller.text.toString()),
+        json.encode("shippingCountry".toString()):
+            json.encode(dropdowncountryValue.toString()),
+        json.encode("shippingZone".toString()):
+            json.encode(dropdownstateValue.toString()),
+        json.encode("phoneNumber".toString()):
+            json.encode(_phonenumbercontroller.text.toString()),
+        json.encode("emailId".toString()):
+            json.encode(_emailcontroller.text.toString()),
+      };
+      print("body===$body");
 
-      var response = await http.post(
-          Uri.encodeFull(config.baseUrl + 'orders/customer-checkout'),
-          headers: {
-            "Authorization": json.decode(show_token),
-            "Accept": "application/json"
-          },
-          body: {
-            json.encode("productDetails".toString()): show_obj,
-            json.encode("shippingFirstName".toString()):
-                json.encode(_firstnamecontroller.text.toString()),
-            json.encode("shippingLastName".toString()):
-                json.encode(_firstnamecontroller.text.toString()),
-            json.encode("shippingAddress_1".toString()):
-                json.encode(_addressonecontroller.text.toString()),
-            json.encode("shippingAddress_2".toString()):
-                json.encode(_addresstwocontroller.text.toString()),
-            json.encode("shippingCity".toString()):
-                json.encode(_citycontroller.text.toString()),
-            json.encode("shippingPostCode".toString()):
-                json.encode(_pincodecontroller.text.toString()),
-            json.encode("shippingCountry".toString()): json.encode(dropdowncountryValue.toString()),
-            json.encode("shippingZone".toString()): json.encode(dropdownstateValue.toString()),
-            json.encode("phoneNumber".toString()):
-                json.encode(_phonenumbercontroller.text.toString()),
-            json.encode("emailId".toString()):
-                json.encode(_emailcontroller.text.toString()),
-          });
-      print('res====${response.body}');
-    
+      var response = await http
+          .post(config.baseUrl + 'orders/customer-checkout', headers: {
+        "Authorization": json.decode(show_token),
+      }, body: {
+        json.encode("productDetails".toString()): show_obj,
+        json.encode("shippingFirstName".toString()):
+            json.encode(_firstnamecontroller.text.toString()),
+        json.encode("shippingLastName".toString()):
+            json.encode(_firstnamecontroller.text.toString()),
+        json.encode("shippingAddress_1".toString()):
+            json.encode(_addressonecontroller.text.toString()),
+        json.encode("shippingAddress_2".toString()):
+            json.encode(_addresstwocontroller.text.toString()),
+        json.encode("shippingCity".toString()):
+            json.encode(_citycontroller.text.toString()),
+        json.encode("shippingPostCode".toString()):
+            json.encode(_pincodecontroller.text.toString()),
+        json.encode("shippingCountry".toString()):
+            json.encode(dropdowncountryValue.toString()),
+        json.encode("shippingZone".toString()):
+            json.encode(dropdownstateValue.toString()),
+        json.encode("phoneNumber".toString()):
+            json.encode(_phonenumbercontroller.text.toString()),
+        json.encode("emailId".toString()):
+            json.encode(_emailcontroller.text.toString()),
+      }).toString();
+      print('res====$response');
 
+      Toast.show("Submit order Successfully", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      Navigator.of(context).pushNamed("/dashboard");
+     
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+        preferences.getKeys();
+        for(String key in preferences.getKeys()) {
+          if(key != "jwt_token") {
+            preferences.remove(key);
+          }
+        }
       return "Successfull";
     }
   }
@@ -293,7 +326,7 @@ This function for get country list
                         placeorder();
                       },
                       child: Text(
-                        'Save',
+                        'Submit Order',
                         style:
                             TextStyle(color: Colors.blueAccent, fontSize: 18.0),
                       ),

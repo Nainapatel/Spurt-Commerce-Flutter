@@ -18,6 +18,7 @@ class LoginScreenState extends State<LoginScreen> {
 
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
+  bool autoValidate = false;
 
   Future<http.Response> login() async {
     if (_emailController.text != '' && _passwordController.text != '') {
@@ -41,10 +42,27 @@ class LoginScreenState extends State<LoginScreen> {
     }
   }
 
+/*
+ This Function contains validate Email. this call from widget
+ */
+  String validateEmail(String value) {
+    String pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regExp = new RegExp(pattern);
+    if (value.length == 0) {
+      return "Email is required";
+    } else if (!regExp.hasMatch(value)) {
+      return "Invalid Email";
+    } else {
+      return null;
+    }
+  }
+
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+
     super.dispose();
   }
 
@@ -55,16 +73,9 @@ class LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         title: Text('Login'),
       ),
-      body: Container(
-        child: Container(
-          decoration: new BoxDecoration(
-            image: new DecorationImage(
-              image: new AssetImage("login.png"),
-              colorFilter: new ColorFilter.mode(
-                  Colors.red.withOpacity(0.3), BlendMode.dstATop),
-              fit: BoxFit.cover,
-            ),
-          ),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(8.0),
           child: Center(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -79,18 +90,23 @@ class LoginScreenState extends State<LoginScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    TextFormField(
-                      autofocus: true,
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: "email",
-                        //  color: Colors.white,
-                        icon: Icon(
-                          Icons.email,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
+                    Image.asset(
+                      'assets/logo.png',
+                      width: 200,
+                      height: 200,
                     ),
+                    TextFormField(
+                        autofocus: true,
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          labelText: "email",
+                          //  color: Colors.white,
+                          icon: Icon(
+                            Icons.email,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        validator: validateEmail),
                     TextFormField(
                       controller: _passwordController,
                       decoration: InputDecoration(
@@ -100,16 +116,22 @@ class LoginScreenState extends State<LoginScreen> {
                           color: Theme.of(context).primaryColor,
                         ),
                       ),
+                      validator: (String arg) {
+                        if (!(arg.length > 8) && arg.isNotEmpty)
+                          return 'Password must be less than 8 charater';
+                        else
+                          return null;
+                      },
                       obscureText: true,
                     ),
                     RaisedButton(
+                      color: Colors.deepPurple,
                       onPressed: () {
                         login();
                       },
                       child: Text(
                         'Login',
-                        style:
-                            TextStyle(color: Colors.blueAccent, fontSize: 18.0),
+                        style: TextStyle(color: Colors.white, fontSize: 18.0),
                       ),
                     ),
                     GestureDetector(
@@ -119,7 +141,7 @@ class LoginScreenState extends State<LoginScreen> {
                       child: const Text(
                         'New Here? Create Account',
                         style:
-                            TextStyle(color: Colors.blueAccent, fontSize: 18.0),
+                            TextStyle(color: Colors.deepPurple, fontSize: 18.0),
                       ),
                     ),
                   ],

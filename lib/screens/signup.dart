@@ -21,7 +21,10 @@ class SignupScreenState extends State<SignupScreen> {
   TextEditingController _confirmPassword = TextEditingController();
   TextEditingController _phoneNumber = TextEditingController();
   TextEditingController _emailController = TextEditingController();
-/** This for Register value */
+  bool _autoValidate = false;
+/*
+This for Register value
+*/
   Future<http.Response> signup() async {
     if (_emailController.text != '' &&
         _passwordController.text != '' &&
@@ -48,9 +51,25 @@ class SignupScreenState extends State<SignupScreen> {
       list = json.decode(response.body)['data'];
       Navigator.of(context).pop();
       print('username======${list['username']}');
-       final prefs = await SharedPreferences.getInstance();
-      prefs.setString('username',list['username'] );
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('username', list['username']);
       return response;
+    }
+  }
+
+/*
+ * This Function contains validate Email. this call from widget
+ */
+  String validateEmail(String value) {
+    String pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regExp = new RegExp(pattern);
+    if (value.length == 0) {
+      return "Email is required";
+    } else if (!regExp.hasMatch(value)) {
+      return "Invalid Email";
+    } else {
+      return null;
     }
   }
 
@@ -71,16 +90,9 @@ class SignupScreenState extends State<SignupScreen> {
       appBar: AppBar(
         title: Text('Signup'),
       ),
-      body: Container(
-        child: Container(
-          decoration: new BoxDecoration(
-            image: new DecorationImage(
-              image: new AssetImage("login.png"),
-              colorFilter: new ColorFilter.mode(
-                  Colors.red.withOpacity(0.3), BlendMode.dstATop),
-              fit: BoxFit.cover,
-            ),
-          ),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(8.0),
           child: Center(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -105,6 +117,12 @@ class SignupScreenState extends State<SignupScreen> {
                           color: Theme.of(context).primaryColor,
                         ),
                       ),
+                      validator: (String arg) {
+                        if (!(arg.length > 3) && arg.isNotEmpty)
+                          return 'Name must be more than 2 charater';
+                        else
+                          return null;
+                      },
                     ),
                     TextFormField(
                       autofocus: true,
@@ -116,6 +134,7 @@ class SignupScreenState extends State<SignupScreen> {
                           color: Theme.of(context).primaryColor,
                         ),
                       ),
+                      validator: validateEmail,
                     ),
                     TextFormField(
                       controller: _passwordController,
@@ -126,6 +145,12 @@ class SignupScreenState extends State<SignupScreen> {
                           color: Theme.of(context).primaryColor,
                         ),
                       ),
+                      validator: (String arg) {
+                        if (!(arg.length > 8) && arg.isNotEmpty )
+                          return 'Password must be less than 8 charater';
+                        else
+                          return null;
+                      },
                       obscureText: true,
                     ),
                     TextFormField(
@@ -137,6 +162,12 @@ class SignupScreenState extends State<SignupScreen> {
                           color: Theme.of(context).primaryColor,
                         ),
                       ),
+                      validator: (String arg) {
+                        if (!(arg.length > 8) && arg.isNotEmpty )
+                          return 'Confirm Password is required';
+                        else
+                          return null;
+                      },
                       obscureText: true,
                     ),
                     TextFormField(
@@ -149,9 +180,16 @@ class SignupScreenState extends State<SignupScreen> {
                           color: Theme.of(context).primaryColor,
                         ),
                       ),
+                      validator: (String arg) {
+                        if ((arg.length > 10 || arg.length < 10 ) &&  arg.isNotEmpty)
+                          return 'Phone Number not valid';
+                        else
+                          return null;
+                      },
                       // obscureText: true,
                     ),
                     RaisedButton(
+                      color: Colors.deepPurple,
                       onPressed: () {
                         // signup(_emailController.text, _passwordController.text,
                         //     _nameController.text,_confirmPassword.text,_phoneNumber.value);
@@ -159,8 +197,7 @@ class SignupScreenState extends State<SignupScreen> {
                       },
                       child: Text(
                         'Signup',
-                        style:
-                            TextStyle(color: Colors.blueAccent, fontSize: 18.0),
+                        style: TextStyle(color: Colors.white, fontSize: 18.0),
                       ),
                     ),
                     GestureDetector(
@@ -170,7 +207,7 @@ class SignupScreenState extends State<SignupScreen> {
                       child: const Text(
                         'Already have an account. Login',
                         style:
-                            TextStyle(color: Colors.blueAccent, fontSize: 18.0),
+                            TextStyle(color: Colors.deepPurple, fontSize: 18.0),
                       ),
                     ),
                   ],

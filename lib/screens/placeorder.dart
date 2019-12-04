@@ -34,6 +34,7 @@ class PlaceorderScreenState extends State<PlaceorderScreen> {
   var dropdowncountryValue;
   var dropdownstateValue;
   var successOrder;
+   bool _autoValidate = false;
   @override
   void initState() {
     super.initState();
@@ -158,6 +159,20 @@ This function for get country list
     }
   }
 
+/** This Function contains validate Email. this call from widget*/
+  String validateEmail(String value) {
+    String pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regExp = new RegExp(pattern);
+    if (value.length == 0) {
+      return "Email is required";
+    } else if (!regExp.hasMatch(value)) {
+      return "Invalid Email";
+    } else {
+      return null;
+    }
+  }
+
 /*
  This function for get profile value
   */
@@ -193,8 +208,9 @@ This function for get country list
       appBar: new AppBar(
         title: new Text('Address'),
       ),
-      body: Container(
-        child: Container(
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(8.0),
           child: Center(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -214,18 +230,31 @@ This function for get country list
                       controller: _firstnamecontroller,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(labelText: "name"),
+                      validator: (String arg) {
+                        if (!(arg.length > 3) && arg.isNotEmpty)
+                          return 'Name must be more than 2 charater';
+                        else
+                          return null;
+                      },
                     ),
                     TextFormField(
                       autofocus: true,
                       controller: _emailcontroller,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(labelText: "email"),
+                      validator: validateEmail,
                     ),
                     TextFormField(
                       autofocus: true,
                       controller: _phonenumbercontroller,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(labelText: "Phone Number"),
+                      validator: (String arg) {
+                        if ((arg.length > 10 || arg.length < 10 ) && arg.isNotEmpty)
+                          return 'Phone Number not valid';
+                        else
+                          return null;
+                      },
                     ),
                     Container(
                         width: 300.0,
@@ -253,26 +282,42 @@ This function for get country list
                             );
                           }).toList(),
                         )),
+                    Divider(),
                     Container(
+                      color: Colors.deepPurple,
+                      padding: EdgeInsets.all(8.0),
                       child: Align(
-                        alignment: Alignment.topLeft,
+                        alignment: Alignment.center,
                         child: Text(
                           "Add Address",
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(fontSize: 20, color: Colors.white),
                         ),
                       ),
                     ),
+                    Divider(),
                     TextFormField(
                       autofocus: true,
                       controller: _addressonecontroller,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(labelText: "Address Line 1"),
+                      validator: (String arg) {
+                         if (!(arg.length > 3) && arg.isNotEmpty)
+                          return 'Address 1 is required';
+                        else
+                          return null;
+                      },
                     ),
                     TextFormField(
                       autofocus: true,
                       controller: _addresstwocontroller,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(labelText: "Address Line 2"),
+                      validator: (String arg) {
+                         if (!(arg.length > 3) && arg.isNotEmpty)
+                          return 'Address 2 is required';
+                        else
+                          return null;
+                      },
                     ),
                     Container(
                         width: 300.0,
@@ -305,21 +350,33 @@ This function for get country list
                       controller: _citycontroller,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(labelText: "City"),
+                      validator: (String arg) {
+                        if (!(arg.length > 1) && arg.isNotEmpty)
+                          return 'City is required';
+                        else
+                          return null;
+                      },
                     ),
                     TextFormField(
                       autofocus: true,
                       controller: _pincodecontroller,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(labelText: "Pincode"),
+                      validator: (String arg) {
+                        if ((arg.length > 6 || arg.length < 6) && arg.isNotEmpty)
+                          return 'Pine Number not valid';
+                        else
+                          return null;
+                      },
                     ),
                     RaisedButton(
+                      color: Colors.deepPurple,
                       onPressed: () {
                         placeorder();
                       },
                       child: Text(
                         'Submit Order',
-                        style:
-                            TextStyle(color: Colors.blueAccent, fontSize: 18.0),
+                        style: TextStyle(color: Colors.white, fontSize: 18.0),
                       ),
                     ),
                   ],

@@ -88,7 +88,7 @@ class DrawerScreenState extends State<DrawerScreen> {
                     ),
               Align(
                 alignment: Alignment.bottomLeft,
-                child: Image.asset('assets/favicon.png',
+                child: Image.asset('assets/logo.png',
                     width: 80, height: 80, fit: BoxFit.fill),
               ),
               new GestureDetector(

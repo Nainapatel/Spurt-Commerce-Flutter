@@ -34,7 +34,8 @@ class PlaceorderScreenState extends State<PlaceorderScreen> {
   var dropdowncountryValue;
   var dropdownstateValue;
   var successOrder;
-   bool _autoValidate = false;
+  bool autovalidate = false;
+
   @override
   void initState() {
     super.initState();
@@ -54,6 +55,7 @@ class PlaceorderScreenState extends State<PlaceorderScreen> {
       Navigator.of(context).pushNamed("/login");
     } else {
       print('call else');
+
       String url = config.baseUrl + 'orders/customer-checkout';
       Map body = {
         "productDetails": json.decode(show_obj.toString()),
@@ -74,6 +76,7 @@ class PlaceorderScreenState extends State<PlaceorderScreen> {
 
   Future<String> apiRequest(String url, Map jsonMap) async {
     print("call");
+
     final prefs = await SharedPreferences.getInstance();
     var show_token = prefs.getString('jwt_token');
 
@@ -164,9 +167,7 @@ This function for get country list
     String pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regExp = new RegExp(pattern);
-    if (value.length == 0) {
-      return "Email is required";
-    } else if (!regExp.hasMatch(value)) {
+    if (!(regExp.hasMatch(value)) && value.isNotEmpty) {
       return "Invalid Email";
     } else {
       return null;
@@ -250,7 +251,8 @@ This function for get country list
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(labelText: "Phone Number"),
                       validator: (String arg) {
-                        if ((arg.length > 10 || arg.length < 10 ) && arg.isNotEmpty)
+                        if ((arg.length > 10 || arg.length < 10) &&
+                            arg.isNotEmpty)
                           return 'Phone Number not valid';
                         else
                           return null;
@@ -301,7 +303,7 @@ This function for get country list
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(labelText: "Address Line 1"),
                       validator: (String arg) {
-                         if (!(arg.length > 3) && arg.isNotEmpty)
+                        if (!(arg.length > 3) && arg.isNotEmpty)
                           return 'Address 1 is required';
                         else
                           return null;
@@ -313,7 +315,7 @@ This function for get country list
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(labelText: "Address Line 2"),
                       validator: (String arg) {
-                         if (!(arg.length > 3) && arg.isNotEmpty)
+                        if (!(arg.length > 3) && arg.isNotEmpty)
                           return 'Address 2 is required';
                         else
                           return null;
@@ -363,22 +365,39 @@ This function for get country list
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(labelText: "Pincode"),
                       validator: (String arg) {
-                        if ((arg.length > 6 || arg.length < 6) && arg.isNotEmpty)
+                        if ((arg.length > 6 || arg.length < 6) &&
+                            arg.isNotEmpty)
                           return 'Pine Number not valid';
                         else
                           return null;
                       },
                     ),
-                    RaisedButton(
-                      color: Colors.deepPurple,
-                      onPressed: () {
-                        placeorder();
-                      },
-                      child: Text(
-                        'Submit Order',
-                        style: TextStyle(color: Colors.white, fontSize: 18.0),
-                      ),
-                    ),
+                    _addressonecontroller.text.isNotEmpty &&
+                            _addresstwocontroller.text.isNotEmpty &&
+                            _citycontroller.text.isNotEmpty &&
+                            _pincodecontroller.text.isNotEmpty
+                        ? RaisedButton(
+                            color: Colors.deepPurple,
+                            onPressed: () {
+                              placeorder();
+                            },
+                            child: Text(
+                              'Submit Order',
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 18.0),
+                            ),
+                          )
+                        : RaisedButton(
+                            color: Colors.grey,
+                            onPressed: () {
+                              null;
+                            },
+                            child: Text(
+                              'Submit Order',
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 18.0),
+                            ),
+                          )
                   ],
                 ),
               ),

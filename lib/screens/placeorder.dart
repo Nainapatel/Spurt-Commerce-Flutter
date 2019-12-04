@@ -8,6 +8,7 @@ import 'package:spurtcommerce/config.dart' as config;
 import 'package:spurtcommerce/screens/successOrderScreen.dart';
 import 'package:toast/toast.dart';
 import 'dart:io';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 void main() {
   runApp(new PlaceorderScreen());
@@ -198,6 +199,7 @@ This function for get country list
           text: json.decode(response.body)['data']['firstName']);
       _phonenumbercontroller = new TextEditingController(
           text: json.decode(response.body)['data']['mobileNumber']);
+          loader = true;
       return "Successfull";
     }
   }
@@ -209,9 +211,25 @@ This function for get country list
       // bottomNavigationBar: BottomTabScreen(),
       appBar: new AppBar(
         title: new Text('Address'),
+         actions: [
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed("/cart");
+              },
+              child: Icon(
+                Icons.keyboard_arrow_left,
+                color: Colors.white,
+                size: 30.0,
+              ),
+            ),
+              
+           
+          ],
       ),
+      
       body: Center(
-        child: SingleChildScrollView(
+        child: loader == true ?
+         SingleChildScrollView(
           padding: const EdgeInsets.all(8.0),
           child: Center(
             child: Padding(
@@ -404,7 +422,10 @@ This function for get country list
               ),
             ),
           ),
-        ),
+        ) : Align(
+                    alignment: Alignment.center,
+                    child: SpinKitCircle(color: Colors.deepPurple),
+                  )
       ),
     );
   }

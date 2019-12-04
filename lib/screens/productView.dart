@@ -46,7 +46,7 @@ class ProductViewScreenState extends State<ProductViewScreen> {
     List<String> show_wishlist =
         prefs.getStringList('id_wishlist') ?? List<String>();
     List<String> wishlist = show_wishlist;
-    loader = true;
+    
     //For cart
     var n = list.contains(id);
     if (n == true) {
@@ -112,7 +112,7 @@ class ProductViewScreenState extends State<ProductViewScreen> {
     prefs.setStringList('id_list', list);
     Toast.show("Added to cart", context,
         duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-    loader = true;
+    
     setState(() {
       isaddtocart = false;
     });

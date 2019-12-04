@@ -35,6 +35,7 @@ class PlaceorderScreenState extends State<PlaceorderScreen> {
   var dropdownstateValue;
   var successOrder;
   bool autovalidate = false;
+  bool loader = false;
 
   @override
   void initState() {

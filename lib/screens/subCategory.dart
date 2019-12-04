@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'package:spurtcommerce/config.dart' as config;
-import 'package:carousel_pro/carousel_pro.dart';import 'package:spurtcommerce/screens/categoryProductlist.dart';
+import 'package:carousel_pro/carousel_pro.dart';
+import 'package:spurtcommerce/screens/categoryProductlist.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 void main() {
@@ -33,9 +34,11 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
     this.getSubCategory();
     this.getimg();
   }
-/** Set static image for sub category list */
-  getimg() {
 
+/*
+ Set static image for sub category list 
+ */
+  getimg() {
     if (this.widget.name == "ELECTRONICS") {
       image = [
         'assets/electronics/mobile.png',
@@ -43,7 +46,6 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
         'assets/electronics/headphone.jpg',
         'assets/electronics/tv.jpg'
       ];
-     
     } else if (this.widget.name == "MEN's FASHION") {
       image = [
         'assets/men/menwatch.jpg',
@@ -51,7 +53,6 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
         'assets/men/shoesmen.jpg',
         'assets/men/shortswear.jpg',
       ];
-     
     } else if (this.widget.name == "BABY & KIDS") {
       image = [
         'assets/baby/toys.jpg',
@@ -59,7 +60,6 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
         'assets/baby/girlcloths.jpg',
         'assets/baby/kidbag.jpeg',
       ];
-      
     } else if (this.widget.name == "SPORTS") {
       image = [
         'assets/sports/cricket.jpg',
@@ -67,7 +67,6 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
         'assets/sports/badminton.jpg',
         'assets/sports/football.jpg',
       ];
-      
     } else if (this.widget.name == "HOME DECOR & FURNITURE") {
       image = [
         'assets/home/kitchen.jpg',
@@ -75,7 +74,6 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
         'assets/home/decore.jpg',
         'assets/home/lighting.jpg',
       ];
-      
     } else if (this.widget.name == "WOMEN FASHION") {
       image = [
         'assets/women/watch.webp',
@@ -83,12 +81,11 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
         'assets/women/shoes.jpg',
         'assets/women/shortwear.jpg',
       ];
-     
     }
   }
 
 /*
- *  For Banner image 
+   For Banner image 
  */
   Future<String> getJSONData() async {
     var response = await http.get(
@@ -102,7 +99,8 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
   }
 
   /*
- *  For sub category list
+ 
+  For sub category list
  */
   Future<String> getSubCategory() async {
     var id = this.widget.id;
@@ -141,7 +139,7 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
                 size: 24.0,
               ),
             ),
-              GestureDetector(
+            GestureDetector(
               onTap: () {
                 Navigator.of(context).pushNamed("/wishlist");
               },
@@ -265,7 +263,6 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
                               ));
                             }
                           }, childCount: subcategoryList.length)),
-                     
                     ],
                   )
                 : Align(

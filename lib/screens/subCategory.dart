@@ -149,11 +149,7 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
                 size: 24.0,
               ),
             ),
-            Icon(
-              Icons.notifications,
-              color: Colors.yellowAccent,
-              size: 24.0,
-            ),
+           
           ],
         ),
         body: Center(

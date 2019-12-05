@@ -65,11 +65,7 @@ class FeaturedProductScreenState extends State<FeaturedProductScreen> {
                 size: 24.0,
               ),
             ),
-            Icon(
-              Icons.notifications,
-              color: Colors.yellowAccent,
-              size: 24.0,
-            ),
+            
           ],
         ),
         body: Center(

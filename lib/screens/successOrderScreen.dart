@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(new SuccessOrderScreen());
-}
+
 
 class SuccessOrderScreen extends StatefulWidget {
   final id;

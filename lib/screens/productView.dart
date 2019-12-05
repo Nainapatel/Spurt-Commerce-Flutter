@@ -161,27 +161,34 @@ class ProductViewScreenState extends State<ProductViewScreen> {
     return new Scaffold(
         appBar: new AppBar(
           title: new Text(this.widget.name),
-          actions: [
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).pushNamed("/cart");
-              },
-              child: Icon(
-                Icons.shopping_cart,
-                color: Colors.white,
-                size: 24.0,
+           actions: [
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 0, 25, 0),
+              child: Row(
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed("/cart");
+                    },
+                    child: Icon(
+                      Icons.shopping_cart,
+                      color: Colors.white,
+                      size: 24.0,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed("/wishlist");
+                    },
+                    child: Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                      size: 24.0,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).pushNamed("/wishlist");
-              },
-              child: Icon(
-                Icons.favorite,
-                color: Colors.white,
-                size: 24.0,
-              ),
-            ),
+            )
           ],
         ),
         body: Center(

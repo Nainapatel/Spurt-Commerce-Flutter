@@ -415,8 +415,14 @@ class CartViewScreenState extends State<CartView> {
           child: show_obj.length == 0
               ? Column(
                 
+                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
+                     Image.asset(
+                              'assets/cart_wish.jpeg',
+                              width: 200,
+                              height: 200,
+                            ),
                   
                     Text(
                       "Your Cart is empty",

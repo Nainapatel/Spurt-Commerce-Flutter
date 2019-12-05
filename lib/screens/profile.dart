@@ -32,6 +32,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     this.getProfile(); // Function for get product details
   }
+
 /** get profile value */
   Future<String> getProfile() async {
     final prefs = await SharedPreferences.getInstance();
@@ -78,22 +79,26 @@ class ProfileScreenState extends State<ProfileScreen> {
         appBar: new AppBar(
           title: new Text('Profile'),
           actions: <Widget>[
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditprofileScreen(
-                        id: '$id',
-                      ),
-                    ));
-              },
-              child: Icon(
-                Icons.edit,
-                color: Colors.white,
-                size: 24.0,
-              ),
-            )
+            Container(
+                margin: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                child: Row(children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditprofileScreen(
+                              id: '$id',
+                            ),
+                          ));
+                    },
+                    child: Icon(
+                      Icons.edit,
+                      color: Colors.white,
+                      size: 24.0,
+                    ),
+                  )
+                ]))
           ],
         ),
         body: Center(

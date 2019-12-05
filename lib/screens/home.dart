@@ -94,6 +94,7 @@ class HomeScreenState extends State<HomeScreen> {
   Widget buildTitle(String name) {
     return Center(
       child: Container(
+        constraints: BoxConstraints(minWidth: 200, maxWidth: 200),
         child: Text(
           name,
           textAlign: TextAlign.center,
@@ -130,26 +131,33 @@ class HomeScreenState extends State<HomeScreen> {
         appBar: new AppBar(
           title: new Text('Home'),
           actions: [
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).pushNamed("/cart");
-              },
-              child: Icon(
-                Icons.shopping_cart,
-                color: Colors.white,
-                size: 24.0,
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 0, 25, 0),
+              child: Row(
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed("/cart");
+                    },
+                    child: Icon(
+                      Icons.shopping_cart,
+                      color: Colors.white,
+                      size: 24.0,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed("/wishlist");
+                    },
+                    child: Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                      size: 24.0,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).pushNamed("/wishlist");
-              },
-              child: Icon(
-                Icons.favorite,
-                color: Colors.white,
-                size: 24.0,
-              ),
-            ),
+            )
           ],
         ),
         body: Center(

@@ -114,27 +114,37 @@ class WishlistScreenState extends State<WishlistScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
       drawer: DrawerScreen(),
-      // bottomNavigationBar: BottomTabScreen(),
       appBar: new AppBar(
         title: new Text('Wishlist'),
         actions: [
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed("/cart");
-            },
-            child: Icon(
-              Icons.shopping_cart,
-              color: Colors.white,
-              size: 24.0,
-            ),
-          ),
+          Container(
+              margin: EdgeInsets.fromLTRB(0, 0, 25, 0),
+              child: Row(children: <Widget>[
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushNamed("/cart");
+                  },
+                  child: Icon(
+                    Icons.shopping_cart,
+                    color: Colors.white,
+                    size: 24.0,
+                  ),
+                ),
+              ]))
         ],
       ),
       body: Center(
           child: wishlist.length == 0
               ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
+                     Image.asset(
+                              'assets/cart_wish.jpeg',
+                              width: 200,
+                              height: 200,
+                            ),
+                  
                     Text(
                       "Your Wish List is empty",
                       style: TextStyle(color: Colors.grey),

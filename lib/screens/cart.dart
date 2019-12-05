@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:spurtcommerce/screens/cartView.dart';
 import 'package:spurtcommerce/screens/drawer.dart';
 
-
 void main() {
   runApp(new CartScreen());
 }
@@ -26,16 +25,20 @@ class CartScreenState extends State<CartScreen> {
       appBar: new AppBar(
         title: new Text('Cart'),
         actions: [
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed("/wishlist");
-            },
-            child: Icon(
-              Icons.favorite,
-              color: Colors.white,
-              size: 24.0,
-            ),
-          ),
+          Container(
+              margin: EdgeInsets.fromLTRB(0, 0, 25, 0),
+              child: Row(children: <Widget>[
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushNamed("/wishlist");
+                  },
+                  child: Icon(
+                    Icons.favorite,
+                    color: Colors.white,
+                    size: 24.0,
+                  ),
+                ),
+              ]))
         ],
       ),
       body: Center(child: CartView()),

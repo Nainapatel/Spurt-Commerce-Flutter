@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:spurtcommerce/config.dart' as config;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:toast/toast.dart';
 
 void main() {
   runApp(new WishlistScreen());
@@ -20,6 +21,9 @@ class WishlistScreen extends StatefulWidget {
 class WishlistScreenState extends State<WishlistScreen> {
   List wishlist;
   bool loader = false;
+  dynamic qty = 1;
+  var obj;
+  List<dynamic> listobj = [];
   @override
   void initState() {
     super.initState();
@@ -50,13 +54,55 @@ class WishlistScreenState extends State<WishlistScreen> {
     }
   }
 
+  /*
+ *  save qty value when click on Add to cart button  
+ * store Array(id,qty,price,updatedqty) in SharedPreferences
+*/
+  _saveQtyValue(id, price, name, model, wishId) async {
+    print(id);
+    final prefs = await SharedPreferences.getInstance();
+    List<String> show_obj = prefs.getStringList('obj_list') ?? List<String>();
+    listobj = show_obj;
+    print('price===$price');
+    obj = {
+      'productId': id,
+      'quantity': qty,
+      'price': price,
+      'updatedPrice': price,
+      'name': name,
+      'model': model
+    };
+    print('obj====$obj');
+    listobj.add(json.encode(obj));
+    prefs.setStringList('obj_list', listobj);
+    print("in product view ===$show_obj");
+
+    List<String> show_id = prefs.getStringList('id_list') ?? List<String>();
+    List<String> list = show_id;
+    var show_token = prefs.getString('jwt_token');
+    list.add(id);
+    prefs.setStringList('id_list', list);
+    Toast.show("Added to cart", context,
+        duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    removeWishlistProduct(wishId, id);
+  }
+
 /*
  * @params {String} id for remove product
  * This Function contains remove product from wishlist
  */
-  removeWishlistProduct(id) async {
+  removeWishlistProduct(id, productId) async {
     final prefs = await SharedPreferences.getInstance();
     var show_token = prefs.getString('jwt_token');
+
+    List<String> show_wishid =
+        prefs.getStringList('id_wishlist') ?? List<String>();
+
+    show_wishid.remove(productId);
+    prefs.setStringList('id_wishlist', show_wishid);
+    List<String> show_wishids =
+        prefs.getStringList('id_wishlist') ?? List<String>();
+
     var response = await http.delete(
       Uri.encodeFull(config.baseUrl + 'customer/wishlist-product-delete/$id'),
       headers: {"Authorization": json.decode(show_token)},
@@ -157,7 +203,8 @@ class WishlistScreenState extends State<WishlistScreen> {
                                                         Colors.blueAccent,
                                                     onPressed: () {
                                                       removeWishlistProduct(
-                                                          '${i['_id']}');
+                                                          '${i['_id']}',
+                                                          '${i['product']['_id']}');
                                                     },
                                                     child: Text(
                                                       'Remove',
@@ -177,14 +224,12 @@ class WishlistScreenState extends State<WishlistScreen> {
                                                     splashColor:
                                                         Colors.blueAccent,
                                                     onPressed: () {
-                                                      // Navigator.push(
-                                                      //     context,
-                                                      //     MaterialPageRoute(
-                                                      //       builder: (context) =>
-                                                      //           SubCategoryScreen(
-                                                      //               id: '${i["categoryId"]}',
-                                                      //               name: '${i["name"]}'),
-                                                      //     ));
+                                                      _saveQtyValue(
+                                                          '${i['product']['_id']}',
+                                                          '${i['product']['price']}',
+                                                          '${i['product']['name']}',
+                                                          '${i['product']['metaTagTitle']}',
+                                                          '${i['_id']}');
                                                     },
                                                     child: Text(
                                                       'Add To Cart',

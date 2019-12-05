@@ -16,7 +16,7 @@ Future<List<Cart>> fetchcartItem() async {
   final prefs = await SharedPreferences.getInstance();
 
   List<String> show_obj = prefs.getStringList('obj_list') ?? List<String>();
-
+print("in servic======$show_obj");
   for (var i = 0; i < show_obj.length; i++) {
     var response = await http.get(
         Uri.encodeFull(config.baseUrl +
@@ -30,11 +30,11 @@ Future<List<Cart>> fetchcartItem() async {
 
     checkvalueofitem = prodLists.length == 1 ?? prodLists[0];
   }
-
   if (checkvalueofitem == false) {
     cartProductArray.add(jsonResponseCart['data'][0]);
   }
 
+print("cartproduct in servic====${cartProductArray.length}");
 
 
   return cartProductArray.map((i) => new Cart.fromJson(i)).toList();

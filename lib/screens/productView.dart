@@ -45,8 +45,7 @@ class ProductViewScreenState extends State<ProductViewScreen> {
     List<String> list = show_id;
     List<String> show_wishlist =
         prefs.getStringList('id_wishlist') ?? List<String>();
-    List<String> wishlist = show_wishlist;
-    
+
     //For cart
     var n = list.contains(id);
     if (n == true) {
@@ -59,7 +58,7 @@ class ProductViewScreenState extends State<ProductViewScreen> {
       });
     }
 // For wishlist
-    var listid = wishlist.contains(id);
+    var listid = show_wishlist.contains(id);
     if (listid == true) {
       setState(() {
         iswishlisted = false;
@@ -91,16 +90,24 @@ class ProductViewScreenState extends State<ProductViewScreen> {
     return "Successfull";
   }
 
-/** save qty value when click on Add to cart button  
+/*
+ *  save qty value when click on Add to cart button  
  * store Array(id,qty,price,updatedqty) in SharedPreferences
 */
-  _saveQtyValue(id, price,name, model) async {
+  _saveQtyValue(id, price, name, model) async {
     print(id);
     final prefs = await SharedPreferences.getInstance();
     List<String> show_obj = prefs.getStringList('obj_list') ?? List<String>();
     listobj = show_obj;
     print('price===$price');
-    obj = {'productId': id, 'quantity': qty, 'price': price, 'updatedPrice': price,'name':name, 'model':model };
+    obj = {
+      'productId': id,
+      'quantity': qty,
+      'price': price,
+      'updatedPrice': price,
+      'name': name,
+      'model': model
+    };
     print('obj====$obj');
     listobj.add(json.encode(obj));
     prefs.setStringList('obj_list', listobj);
@@ -112,12 +119,15 @@ class ProductViewScreenState extends State<ProductViewScreen> {
     prefs.setStringList('id_list', list);
     Toast.show("Added to cart", context,
         duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-    
+
     setState(() {
       isaddtocart = false;
     });
   }
-/** add to wishlist when click on favorite icon */
+
+/*
+* add to wishlist when click on favorite icon
+ */
   addtowishlist(id) async {
     final prefs = await SharedPreferences.getInstance();
     var show_token = prefs.getString('jwt_token');
@@ -132,12 +142,13 @@ class ProductViewScreenState extends State<ProductViewScreen> {
       List<String> wishlist = show_wishid;
       wishlist.add(id);
       prefs.setStringList('id_wishlist', wishlist);
-  // wishlist api call
+      // wishlist api call
       var response = await http.post(
         config.baseUrl + 'customer/add-product-to-wishlist',
         headers: {"Authorization": json.decode(show_token)},
         body: {'productId': id},
       );
+      print("response=wishlist===${response.body}");
       loader = true;
       setState(() {
         iswishlisted = false;
@@ -161,7 +172,7 @@ class ProductViewScreenState extends State<ProductViewScreen> {
                 size: 24.0,
               ),
             ),
-              GestureDetector(
+            GestureDetector(
               onTap: () {
                 Navigator.of(context).pushNamed("/wishlist");
               },
@@ -171,11 +182,7 @@ class ProductViewScreenState extends State<ProductViewScreen> {
                 size: 24.0,
               ),
             ),
-            Icon(
-              Icons.notifications,
-              color: Colors.yellowAccent,
-              size: 24.0,
-            ),
+          
           ],
         ),
         body: Center(

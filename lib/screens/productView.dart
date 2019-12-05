@@ -220,6 +220,7 @@ class ProductViewScreenState extends State<ProductViewScreen> {
                             child: SizedBox(
                                 height: 700.0,
                                 child: new ListView.builder(
+                                  scrollDirection: Axis.vertical,
                                   itemCount: product.length,
                                   itemBuilder: (BuildContext ctxt, int i) {
                                     return SizedBox(

@@ -6,7 +6,7 @@ import 'package:spurtcommerce/config.dart' as config;
 import 'package:spurtcommerce/screens/subCategory.dart';
 import 'package:spurtcommerce/screens/productView.dart';
 import 'package:spurtcommerce/screens/drawer.dart';
-import 'package:spurtcommerce/screens/bottomTab.dart';
+
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 
@@ -90,16 +90,17 @@ class HomeScreenState extends State<HomeScreen> {
     return "Successfull";
   }
 
-/** This widget for display category name over image */
+/*This widget for display category name over image */
   Widget buildTitle(String name) {
     return Center(
       child: Container(
         child: Text(
           name,
+          textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
         ),
-        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+        padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
         decoration: BoxDecoration(
             boxShadow: [
               new BoxShadow(
@@ -126,7 +127,6 @@ class HomeScreenState extends State<HomeScreen> {
 
     return new Scaffold(
         drawer: DrawerScreen(),
-        // bottomNavigationBar: BottomTabScreen(),
         appBar: new AppBar(
           title: new Text('Home'),
           actions: [
@@ -140,7 +140,7 @@ class HomeScreenState extends State<HomeScreen> {
                 size: 24.0,
               ),
             ),
-              GestureDetector(
+            GestureDetector(
               onTap: () {
                 Navigator.of(context).pushNamed("/wishlist");
               },
@@ -150,7 +150,6 @@ class HomeScreenState extends State<HomeScreen> {
                 size: 24.0,
               ),
             ),
-           
           ],
         ),
         body: Center(
@@ -395,8 +394,8 @@ class HomeScreenState extends State<HomeScreen> {
                                         .pushNamed("/featuredProduct");
                                   },
                                   child: Image.asset(
-                                    'assets/sale/offer.jpg',
-                                    height: 300,
+                                    'assets/off.gif',
+                                    height: 400,
                                     width: MediaQuery.of(context).size.width,
                                   ))
                             ],

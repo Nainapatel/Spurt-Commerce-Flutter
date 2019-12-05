@@ -182,7 +182,6 @@ class ProductViewScreenState extends State<ProductViewScreen> {
                 size: 24.0,
               ),
             ),
-          
           ],
         ),
         body: Center(
@@ -204,7 +203,7 @@ class ProductViewScreenState extends State<ProductViewScreen> {
                                           config.mediaUrl +
                                               '${i['containerName']}' +
                                               '${i['image']}',
-                                          width: 200,
+                                          width: 250,
                                           height: 200,
                                           fit: BoxFit.fill));
                                 },
@@ -290,113 +289,131 @@ class ProductViewScreenState extends State<ProductViewScreen> {
                                                     ],
                                                   )),
                                                   new Divider(),
-                                                  iswishlisted == true
-                                                      ? GestureDetector(
-                                                          onTap: () {
-                                                            addtowishlist(
-                                                                '${product[i]['productId']}');
-                                                          },
-                                                          child: Align(
-                                                            alignment: Alignment
-                                                                .center,
-                                                            child: Icon(
-                                                              Icons.favorite,
-                                                              color: Colors
-                                                                  .deepPurple,
-                                                              size: 40.0,
-                                                            ),
-                                                          ),
-                                                        )
-                                                      : GestureDetector(
-                                                          onTap: () {
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          WishlistScreen(),
-                                                                ));
-                                                          },
-                                                          child: Align(
-                                                            alignment: Alignment
-                                                                .center,
-                                                            child: Icon(
-                                                              Icons.favorite,
-                                                              color: Colors.red,
-                                                              size: 40.0,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                  new Divider(),
-                                                  Align(
-                                                    child: Card(
-                                                        child:
-                                                            isaddtocart == true
-                                                                ? FlatButton(
-                                                                    onPressed:
-                                                                        () => {
-                                                                      _saveQtyValue(
-                                                                          '${product[i]['productId']}',
-                                                                          '${product[i]['price']}',
-                                                                          '${product[i]['name']}',
-                                                                          '${product[i]['metaTagTitle']}')
-                                                                    },
-                                                                    color: Color
-                                                                        .fromRGBO(
-                                                                            94,
-                                                                            199,
-                                                                            182,
-                                                                            0.9),
-                                                                    padding:
-                                                                        EdgeInsets.all(
-                                                                            10.0),
-                                                                    child: Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: <
-                                                                          Widget>[
-                                                                        Icon(Icons
-                                                                            .shopping_cart),
-                                                                        Text(
-                                                                          "   Add to Cart",
-                                                                        )
-                                                                      ],
-                                                                    ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: <Widget>[
+                                                      iswishlisted == true
+                                                          ? FlatButton(
+                                                              onPressed: () => {
+                                                                addtowishlist(
+                                                                    '${product[i]['productId']}')
+                                                              },
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(
+                                                                          10.0),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: <
+                                                                    Widget>[
+                                                                  Icon(Icons
+                                                                      .favorite_border),
+                                                                  Text(
+                                                                    "    Wishlist",
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
                                                                   )
-                                                                : FlatButton(
-                                                                    onPressed:
-                                                                        () => {
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                            builder: (context) =>
-                                                                                CartScreen(),
-                                                                          ))
-                                                                    },
-                                                                    color: Color
-                                                                        .fromRGBO(
-                                                                            94,
-                                                                            199,
-                                                                            182,
-                                                                            0.9),
-                                                                    padding:
-                                                                        EdgeInsets.all(
-                                                                            10.0),
-                                                                    child: Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: <
-                                                                          Widget>[
-                                                                        Icon(Icons
-                                                                            .shopping_basket),
-                                                                        Text(
-                                                                          "   Go to Cart",
-                                                                        )
-                                                                      ],
-                                                                    ),
-                                                                  )),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : FlatButton(
+                                                              onPressed: () => {
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              WishlistScreen(),
+                                                                    )),
+                                                              },
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(
+                                                                          10.0),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: <
+                                                                    Widget>[
+                                                                  Icon(Icons
+                                                                      .favorite),
+                                                                  Text(
+                                                                    "    Wishlisted",
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                      // Flexible(fit: FlexFit.tight, child: SizedBox()),
+                                                      new VerticalDivider(
+                                                          color: Colors.black),
+                                                      Align(
+                                                          child:
+                                                              isaddtocart ==
+                                                                      true
+                                                                  ? FlatButton(
+                                                                      onPressed:
+                                                                          () =>
+                                                                              {
+                                                                        _saveQtyValue(
+                                                                            '${product[i]['productId']}',
+                                                                            '${product[i]['price']}',
+                                                                            '${product[i]['name']}',
+                                                                            '${product[i]['metaTagTitle']}')
+                                                                      },
+                                                                      padding:
+                                                                          EdgeInsets.all(
+                                                                              10.0),
+                                                                      child:
+                                                                          Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: <
+                                                                            Widget>[
+                                                                          Icon(Icons
+                                                                              .shopping_cart),
+                                                                          Text(
+                                                                              "   Add to Cart",
+                                                                              style: TextStyle(fontWeight: FontWeight.bold))
+                                                                        ],
+                                                                      ),
+                                                                    )
+                                                                  : FlatButton(
+                                                                      onPressed:
+                                                                          () =>
+                                                                              {
+                                                                        Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(
+                                                                              builder: (context) => CartScreen(),
+                                                                            ))
+                                                                      },
+                                                                      padding:
+                                                                          EdgeInsets.all(
+                                                                              10.0),
+                                                                      child:
+                                                                          Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: <
+                                                                            Widget>[
+                                                                          Icon(Icons
+                                                                              .shopping_basket),
+                                                                          Text(
+                                                                              "   Go to Cart",
+                                                                              style: TextStyle(fontWeight: FontWeight.bold))
+                                                                        ],
+                                                                      ),
+                                                                    )),
+                                                    ],
                                                   ),
                                                   new Divider(),
                                                   Align(

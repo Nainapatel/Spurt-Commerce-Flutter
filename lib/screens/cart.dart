@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spurtcommerce/screens/cartView.dart';
 import 'package:spurtcommerce/screens/drawer.dart';
-import 'package:spurtcommerce/screens/bottomTab.dart';
+
 
 void main() {
   runApp(new CartScreen());

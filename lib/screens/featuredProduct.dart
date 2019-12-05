@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:spurtcommerce/config.dart' as config;
 import 'package:spurtcommerce/screens/productView.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
+import 'package:spurtcommerce/screens/drawer.dart';
 void main() {
   runApp(new FeaturedProductScreen());
 }
@@ -42,6 +42,7 @@ class FeaturedProductScreenState extends State<FeaturedProductScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      drawer: DrawerScreen(),
         appBar: new AppBar(
           title: new Text('Featured Product'),
            actions: [

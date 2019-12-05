@@ -6,7 +6,7 @@ import 'package:spurtcommerce/config.dart' as config;
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:spurtcommerce/screens/categoryProductlist.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
+import 'package:spurtcommerce/screens/drawer.dart';
 void main() {
   runApp(new SubCategoryScreen());
 }
@@ -126,6 +126,7 @@ class SubCategoryScreenState extends State<SubCategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      drawer: DrawerScreen(),
         appBar: new AppBar(
           title: new Text(this.widget.name),
           actions: [

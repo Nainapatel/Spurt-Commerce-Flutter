@@ -164,13 +164,27 @@ This function for get country list
     }
   }
 
-/** This Function contains validate Email. this call from widget*/
+/*
+ *  This Function contains validate Email. this call from widget
+ */
   String validateEmail(String value) {
     String pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regExp = new RegExp(pattern);
     if (!(regExp.hasMatch(value)) && value.isNotEmpty) {
       return "Invalid Email";
+    } else {
+      return null;
+    }
+  }
+
+
+  
+    String validateCity(String value) {
+  ;
+    RegExp regExp = new RegExp(r'^[a-zA-Z_\-=@,\.;]+$');
+    if (!(regExp.hasMatch(value)) && value.isNotEmpty) {
+      return "Invalid City Name";
     } else {
       return null;
     }
@@ -199,7 +213,7 @@ This function for get country list
           text: json.decode(response.body)['data']['firstName']);
       _phonenumbercontroller = new TextEditingController(
           text: json.decode(response.body)['data']['mobileNumber']);
-          loader = true;
+      loader = true;
       return "Successfull";
     }
   }
@@ -211,222 +225,220 @@ This function for get country list
       // bottomNavigationBar: BottomTabScreen(),
       appBar: new AppBar(
         title: new Text('Address'),
-         actions: [
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).pushNamed("/cart");
-              },
-              child: Icon(
-                Icons.keyboard_arrow_left,
-                color: Colors.white,
-                size: 30.0,
-              ),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed("/cart");
+            },
+            child: Icon(
+              Icons.keyboard_arrow_left,
+              color: Colors.white,
+              size: 30.0,
             ),
-              
-           
-          ],
+          ),
+        ],
       ),
-      
+
       body: Center(
-        child: loader == true ?
-         SingleChildScrollView(
-          padding: const EdgeInsets.all(8.0),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Form(
-                key: _formKey,
-                autovalidate: true,
-                onWillPop: () async {
-                  return false;
-                },
-                onChanged: () {},
-                child: Column(
-                  // mainAxisSize: MainAxisSize.min,
-                  // crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    TextFormField(
-                      autofocus: true,
-                      controller: _firstnamecontroller,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(labelText: "name"),
-                      validator: (String arg) {
-                        if (!(arg.length > 3) && arg.isNotEmpty)
-                          return 'Name must be more than 2 charater';
-                        else
-                          return null;
-                      },
-                    ),
-                    TextFormField(
-                      autofocus: true,
-                      controller: _emailcontroller,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(labelText: "email"),
-                      validator: validateEmail,
-                    ),
-                    TextFormField(
-                      autofocus: true,
-                      controller: _phonenumbercontroller,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(labelText: "Phone Number"),
-                      validator: (String arg) {
-                        if ((arg.length > 10 || arg.length < 10) &&
-                            arg.isNotEmpty)
-                          return 'Phone Number not valid';
-                        else
-                          return null;
-                      },
-                    ),
-                    Container(
-                        width: 300.0,
-                        child: DropdownButton<String>(
-                          value: dropdowncountryValue,
-                          icon: Icon(Icons.arrow_drop_down),
-                          iconSize: 24,
-                          elevation: 16,
-                          style: TextStyle(color: Colors.deepPurple),
-                          underline: Container(
-                            height: 2,
-                            width: MediaQuery.of(context).size.width,
-                            color: Colors.deepPurpleAccent,
-                          ),
-                          onChanged: (String newValue) {
-                            setState(() {
-                              dropdowncountryValue = newValue;
-                            });
-                          },
-                          items: countryList
-                              .map<DropdownMenuItem<String>>((value) {
-                            return DropdownMenuItem<String>(
-                              value: value['_id'],
-                              child: Text(value['name']),
-                            );
-                          }).toList(),
-                        )),
-                    Divider(),
-                    Container(
-                      color: Colors.deepPurple,
-                      padding: EdgeInsets.all(8.0),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "Add Address",
-                          style: TextStyle(fontSize: 20, color: Colors.white),
+          child: loader == true
+              ? SingleChildScrollView(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Form(
+                        key: _formKey,
+                        autovalidate: true,
+                        onWillPop: () async {
+                          return false;
+                        },
+                        onChanged: () {},
+                        child: Column(
+                          // mainAxisSize: MainAxisSize.min,
+                          // crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            TextFormField(
+                              autofocus: true,
+                              controller: _firstnamecontroller,
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecoration(labelText: "name"),
+                              validator: (String arg) {
+                                if (!(arg.length > 3) && arg.isNotEmpty)
+                                  return 'Name must be more than 2 charater';
+                                else
+                                  return null;
+                              },
+                            ),
+                            TextFormField(
+                              autofocus: true,
+                              controller: _emailcontroller,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: InputDecoration(labelText: "email"),
+                              validator: validateEmail,
+                            ),
+                            TextFormField(
+                              autofocus: true,
+                              controller: _phonenumbercontroller,
+                              keyboardType: TextInputType.number,
+                              decoration:
+                                  InputDecoration(labelText: "Phone Number"),
+                              validator: (String arg) {
+                                if ((arg.length > 10 || arg.length < 10) &&
+                                    arg.isNotEmpty)
+                                  return 'Phone Number not valid';
+                                else
+                                  return null;
+                              },
+                            ),
+                            Container(
+                                width: 300.0,
+                                child: DropdownButton<String>(
+                                  value: dropdowncountryValue,
+                                  icon: Icon(Icons.arrow_drop_down),
+                                  iconSize: 24,
+                                  elevation: 16,
+                                  style: TextStyle(color: Colors.deepPurple),
+                                  underline: Container(
+                                    height: 2,
+                                    width: MediaQuery.of(context).size.width,
+                                    color: Colors.deepPurpleAccent,
+                                  ),
+                                  onChanged: (String newValue) {
+                                    setState(() {
+                                      dropdowncountryValue = newValue;
+                                    });
+                                  },
+                                  items: countryList
+                                      .map<DropdownMenuItem<String>>((value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value['_id'],
+                                      child: Text(value['name']),
+                                    );
+                                  }).toList(),
+                                )),
+                            Divider(),
+                            Container(
+                              color: Colors.deepPurple,
+                              padding: EdgeInsets.all(8.0),
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "Add Address",
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.white),
+                                ),
+                              ),
+                            ),
+                            Divider(),
+                            TextFormField(
+                              autofocus: true,
+                              controller: _addressonecontroller,
+                              keyboardType: TextInputType.text,
+                              decoration:
+                                  InputDecoration(labelText: "Address Line 1"),
+                              validator: (String arg) {
+                                if (!(arg.length > 3) && arg.isNotEmpty)
+                                  return 'Address 1 is required';
+                                else
+                                  return null;
+                              },
+                            ),
+                            TextFormField(
+                              autofocus: true,
+                              controller: _addresstwocontroller,
+                              keyboardType: TextInputType.text,
+                              decoration:
+                                  InputDecoration(labelText: "Address Line 2"),
+                              validator: (String arg) {
+                                if (!(arg.length > 3) && arg.isNotEmpty)
+                                  return 'Address 2 is required';
+                                else
+                                  return null;
+                              },
+                            ),
+                            Container(
+                                width: 300.0,
+                                child: DropdownButton<String>(
+                                  value: dropdownstateValue,
+                                  icon: Icon(Icons.arrow_drop_down),
+                                  iconSize: 24,
+                                  elevation: 16,
+                                  style: TextStyle(color: Colors.deepPurple),
+                                  underline: Container(
+                                    height: 2,
+                                    width: MediaQuery.of(context).size.width,
+                                    color: Colors.deepPurpleAccent,
+                                  ),
+                                  onChanged: (String newValue) {
+                                    setState(() {
+                                      dropdownstateValue = newValue;
+                                    });
+                                  },
+                                  items: stateList
+                                      .map<DropdownMenuItem<String>>((value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value['_id'],
+                                      child: Text(value['name']),
+                                    );
+                                  }).toList(),
+                                )),
+                            TextFormField(
+                              autofocus: true,
+                              controller: _citycontroller,
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecoration(labelText: "City"),
+                              validator: validateCity
+                            
+                            ),
+                            TextFormField(
+                              autofocus: true,
+                              controller: _pincodecontroller,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(labelText: "Pincode"),
+                              validator: (String arg) {
+                                if ((arg.length > 6 || arg.length < 6) &&
+                                    arg.isNotEmpty)
+                                  return 'Pine Number not valid';
+                                else
+                                  return null;
+                              },
+                            ),
+                            _addressonecontroller.text.isNotEmpty &&
+                                    _addresstwocontroller.text.isNotEmpty &&
+                                    _citycontroller.text.isNotEmpty &&
+                                    _pincodecontroller.text.isNotEmpty
+                                ? RaisedButton(
+                                    color: Colors.deepPurple,
+                                    onPressed: () {
+                                      placeorder();
+                                    },
+                                    child: Text(
+                                      'Submit Order',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18.0),
+                                    ),
+                                  )
+                                : RaisedButton(
+                                    color: Colors.grey,
+                                    onPressed: () {
+                                      null;
+                                    },
+                                    child: Text(
+                                      'Submit Order',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18.0),
+                                    ),
+                                  )
+                          ],
                         ),
                       ),
                     ),
-                    Divider(),
-                    TextFormField(
-                      autofocus: true,
-                      controller: _addressonecontroller,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(labelText: "Address Line 1"),
-                      validator: (String arg) {
-                        if (!(arg.length > 3) && arg.isNotEmpty)
-                          return 'Address 1 is required';
-                        else
-                          return null;
-                      },
-                    ),
-                    TextFormField(
-                      autofocus: true,
-                      controller: _addresstwocontroller,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(labelText: "Address Line 2"),
-                      validator: (String arg) {
-                        if (!(arg.length > 3) && arg.isNotEmpty)
-                          return 'Address 2 is required';
-                        else
-                          return null;
-                      },
-                    ),
-                    Container(
-                        width: 300.0,
-                        child: DropdownButton<String>(
-                          value: dropdownstateValue,
-                          icon: Icon(Icons.arrow_drop_down),
-                          iconSize: 24,
-                          elevation: 16,
-                          style: TextStyle(color: Colors.deepPurple),
-                          underline: Container(
-                            height: 2,
-                            width: MediaQuery.of(context).size.width,
-                            color: Colors.deepPurpleAccent,
-                          ),
-                          onChanged: (String newValue) {
-                            setState(() {
-                              dropdownstateValue = newValue;
-                            });
-                          },
-                          items:
-                              stateList.map<DropdownMenuItem<String>>((value) {
-                            return DropdownMenuItem<String>(
-                              value: value['_id'],
-                              child: Text(value['name']),
-                            );
-                          }).toList(),
-                        )),
-                    TextFormField(
-                      autofocus: true,
-                      controller: _citycontroller,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(labelText: "City"),
-                      validator: (String arg) {
-                        if (!(arg.length > 1) && arg.isNotEmpty)
-                          return 'City is required';
-                        else
-                          return null;
-                      },
-                    ),
-                    TextFormField(
-                      autofocus: true,
-                      controller: _pincodecontroller,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(labelText: "Pincode"),
-                      validator: (String arg) {
-                        if ((arg.length > 6 || arg.length < 6) &&
-                            arg.isNotEmpty)
-                          return 'Pine Number not valid';
-                        else
-                          return null;
-                      },
-                    ),
-                    _addressonecontroller.text.isNotEmpty &&
-                            _addresstwocontroller.text.isNotEmpty &&
-                            _citycontroller.text.isNotEmpty &&
-                            _pincodecontroller.text.isNotEmpty
-                        ? RaisedButton(
-                            color: Colors.deepPurple,
-                            onPressed: () {
-                              placeorder();
-                            },
-                            child: Text(
-                              'Submit Order',
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 18.0),
-                            ),
-                          )
-                        : RaisedButton(
-                            color: Colors.grey,
-                            onPressed: () {
-                              null;
-                            },
-                            child: Text(
-                              'Submit Order',
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 18.0),
-                            ),
-                          )
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ) : Align(
-                    alignment: Alignment.center,
-                    child: SpinKitCircle(color: Colors.deepPurple),
-                  )
-      ),
+                  ),
+                )
+              : Align(
+                  alignment: Alignment.center,
+                  child: SpinKitCircle(color: Colors.deepPurple),
+                )),
     );
   }
 }

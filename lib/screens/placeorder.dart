@@ -181,7 +181,7 @@ This function for get country list
 
   
     String validateCity(String value) {
-  ;
+  
     RegExp regExp = new RegExp(r'^[a-zA-Z_\-=@,\.;]+$');
     if (!(regExp.hasMatch(value)) && value.isNotEmpty) {
       return "Invalid City Name";

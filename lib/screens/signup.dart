@@ -76,6 +76,15 @@ This for Register value
     }
   }
 
+  String validateMobile(String value) {
+    String patttern = r'(^(?:[+0]9)?[0-9]{10}$)';
+    RegExp regExp = new RegExp(patttern);
+    if (!(regExp.hasMatch(value)) && value.isNotEmpty) {
+      return 'Please enter valid mobile number';
+    }
+    return null;
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -149,8 +158,8 @@ This for Register value
                           ),
                         ),
                         validator: (String arg) {
-                          if (!(arg.length > 8) && arg.isNotEmpty)
-                            return 'Password must not be less than 8 charater';
+                          if (!(arg.length < 8) && arg.isNotEmpty)
+                            return 'Password must not be more than 8 charater';
                           else
                             return null;
                         },
@@ -166,32 +175,26 @@ This for Register value
                           ),
                         ),
                         validator: (String arg) {
-                          if (!(arg.length > 8) && arg.isNotEmpty)
-                            return 'Confirm Password is required';
+                          if (!(arg.length < 8) && arg.isNotEmpty)
+                            return 'Confirm Password is required ';
                           else
                             return null;
                         },
                         obscureText: true,
                       ),
                       TextFormField(
-                        keyboardType: TextInputType.number,
-                        controller: _phoneNumber,
-                        decoration: InputDecoration(
-                          labelText: "Phone Number",
-                          icon: Icon(
-                            Icons.phone_android,
-                            color: Theme.of(context).primaryColor,
+                          keyboardType: TextInputType.number,
+                          controller: _phoneNumber,
+                          decoration: InputDecoration(
+                            labelText: "Phone Number",
+                            icon: Icon(
+                              Icons.phone_android,
+                              color: Theme.of(context).primaryColor,
+                            ),
                           ),
-                        ),
-                        validator: (String arg) {
-                          if ((arg.length > 10 || arg.length < 10) &&
-                              arg.isNotEmpty)
-                            return 'Phone Number not valid';
-                          else
-                            return null;
-                        },
-                        // obscureText: true,
-                      ),
+                          validator: validateMobile
+                          // obscureText: true,
+                          ),
                       _nameController.text.isNotEmpty &&
                               _emailController.text.isNotEmpty &&
                               _passwordController.text.isNotEmpty &&

@@ -23,12 +23,19 @@ class LoginScreenState extends State<LoginScreen> {
   bool isForgorpassword = false;
 
   Future<http.Response> login() async {
-    
-      final response =
-          await http.post(config.baseUrl + 'customer/login', body: {
-        'emailId': _emailController.text,
-        'password': _passwordController.text,
-      });
+    final response = await http.post(config.baseUrl + 'customer/login', body: {
+      'emailId': _emailController.text,
+      'password': _passwordController.text,
+    });
+    print("res in login screen ====${json.decode(response.body)['message']}");
+
+    if (json.decode(response.body)['message'] == 'Invalid Password') {
+      print("invalid password call if");
+      Toast.show("Invalid Password", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    } else {
+      print("call else in login screen");
+
       Navigator.of(context).pushNamed("/dashboard");
 
       Toast.show("Login Successfully", context,
@@ -39,9 +46,9 @@ class LoginScreenState extends State<LoginScreen> {
 
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('jwt_token', jsonEncode(list['token']));
+    }
 
-      return response;
-    
+    return response;
   }
 
 /*
@@ -65,7 +72,7 @@ class LoginScreenState extends State<LoginScreen> {
         await http.post(config.baseUrl + 'customer/forgot-password', body: {
       'emailId': _forgotemailController.text,
     });
-    print("res====${response.body}");
+    print("res===login======${response.body}");
     Toast.show(
         "Thank you,Your password send to your mail id please check your email.",
         context,
@@ -131,7 +138,7 @@ class LoginScreenState extends State<LoginScreen> {
                               controller: _passwordController,
                               decoration: InputDecoration(
                                 labelText: "password",
-                                icon: Icon(
+                                icon: Icon( 
                                   Icons.lock,
                                   color: Theme.of(context).primaryColor,
                                 ),
@@ -158,29 +165,30 @@ class LoginScreenState extends State<LoginScreen> {
                                         color: Colors.black, fontSize: 15.0),
                                   ),
                                 )),
-                                _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty ?
-                            RaisedButton(
-                              color: Colors.deepPurple,
-                              onPressed: () {
-                                login();
-                              },
-                              child: Text(
-                                'Login',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18.0),
-                              ),
-                            ) : 
-                             RaisedButton(
-                              color: Colors.grey,
-                              onPressed: () {
-                                null;
-                              },
-                              child: Text(
-                                'Login',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18.0),
-                              ),
-                            )
+                            _emailController.text.isNotEmpty &&
+                                    _passwordController.text.isNotEmpty
+                                ? RaisedButton(
+                                    color: Colors.deepPurple,
+                                    onPressed: () {
+                                      login();
+                                    },
+                                    child: Text(
+                                      'Login',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18.0),
+                                    ),
+                                  )
+                                : RaisedButton(
+                                    color: Colors.grey,
+                                    onPressed: () {
+                                      null;
+                                    },
+                                    child: Text(
+                                      'Login',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18.0),
+                                    ),
+                                  )
                           ],
                         ),
                       ),
@@ -230,7 +238,7 @@ class LoginScreenState extends State<LoginScreen> {
                                     });
                                   },
                                   child: Text(
-                                    'Cancle',
+                                    'Cancel',
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 18.0),
                                   ),

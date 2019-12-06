@@ -26,16 +26,25 @@ class SignupScreenState extends State<SignupScreen> {
 This for Register value
 */
   Future<http.Response> signup() async {
- 
-      final response =
-          await http.post(config.baseUrl + 'customer/register', body: {
-        'emailId': _emailController.text,
-        'password': _passwordController.text,
-        'name': _nameController.text,
-        'confirmPassword': _confirmPassword.text,
-        'phoneNumber': _phoneNumber.text
-      });
-      print(response.body);
+    final response =
+        await http.post(config.baseUrl + 'customer/register', body: {
+      'emailId': _emailController.text,
+      'password': _passwordController.text,
+      'name': _nameController.text,
+      'confirmPassword': _confirmPassword.text,
+      'phoneNumber': _phoneNumber.text
+    });
+    print('======================${response.body}');
+
+    if (json.decode(response.body)['message'] ==
+        "You already registered please login.") {
+      Toast.show("You already registered please login.", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    } else if (json.decode(response.body)['message'] ==
+        "A mismatch between password and confirm password. ") {
+      Toast.show("A mismatch between password and confirm password.", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    } else {
       _nameController.text = '';
       _emailController.text = '';
       _passwordController.text = '';
@@ -49,8 +58,8 @@ This for Register value
       print('username======${list['username']}');
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('username', list['username']);
-      return response;
-    
+    }
+    return response;
   }
 
 /*
@@ -183,27 +192,33 @@ This for Register value
                         },
                         // obscureText: true,
                       ),
-                      _nameController.text.isNotEmpty && _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty && _confirmPassword.text.isNotEmpty && _phoneNumber.text.isNotEmpty ?
-                      RaisedButton(
-                        color: Colors.deepPurple,
-                        onPressed: () {
-                          signup();
-                        },
-                        child: Text(
-                          'Signup',
-                          style: TextStyle(color: Colors.white, fontSize: 18.0),
-                        ),
-                      ) : 
-                      RaisedButton(
-                        color: Colors.grey,
-                        onPressed: () {
-                         null;
-                        },
-                        child: Text(
-                          'Signup',
-                          style: TextStyle(color: Colors.white, fontSize: 18.0),
-                        ),
-                      )
+                      _nameController.text.isNotEmpty &&
+                              _emailController.text.isNotEmpty &&
+                              _passwordController.text.isNotEmpty &&
+                              _confirmPassword.text.isNotEmpty &&
+                              _phoneNumber.text.isNotEmpty
+                          ? RaisedButton(
+                              color: Colors.deepPurple,
+                              onPressed: () {
+                                signup();
+                              },
+                              child: Text(
+                                'Signup',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18.0),
+                              ),
+                            )
+                          : RaisedButton(
+                              color: Colors.grey,
+                              onPressed: () {
+                                null;
+                              },
+                              child: Text(
+                                'Signup',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18.0),
+                              ),
+                            )
                     ],
                   ),
                 ),

@@ -33,7 +33,11 @@ class LoginScreenState extends State<LoginScreen> {
       print("invalid password call if");
       Toast.show("Invalid Password", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-    } else {
+    } else if (json.decode(response.body)['message'] == 'User not found'){
+       Toast.show("User not found", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    }
+    else {
       print("call else in login screen");
 
       Navigator.of(context).pushNamed("/dashboard");

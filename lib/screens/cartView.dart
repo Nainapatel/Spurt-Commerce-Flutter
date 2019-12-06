@@ -282,13 +282,13 @@ class CartViewScreenState extends State<CartView> {
                             Column(
                               children: <Widget>[
                                 new Container(
-                                   decoration: BoxDecoration(
-                                                    image: DecorationImage(
-                                                      image: AssetImage(
-                                                          "assets/img_loader.gif"),
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image:
+                                          AssetImage("assets/img_loader.gif"),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                   margin: const EdgeInsets.only(
                                       bottom: 20.0, top: 10.0),
                                   child: Image.network(
@@ -421,16 +421,14 @@ class CartViewScreenState extends State<CartView> {
         body: Center(
           child: show_obj.length == 0
               ? Column(
-                
-                   mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                     Image.asset(
-                              'assets/cart_wish.jpeg',
-                              width: 200,
-                              height: 200,
-                            ),
-                  
+                    Image.asset(
+                      'assets/cart_wish.jpeg',
+                      width: 200,
+                      height: 200,
+                    ),
                     Text(
                       "Your Cart is empty",
                       style: TextStyle(color: Colors.grey),

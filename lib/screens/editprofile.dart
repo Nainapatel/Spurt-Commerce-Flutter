@@ -160,7 +160,8 @@ class EditprofileScreenState extends State<EditprofileScreen> {
 /* This function for image view */
   Widget decideImageView() {
     // print("call this image function========${json.decode(_avtarcontroller.toString())}");
-    if (imageFile == null && json.encode(_avtarpathcontroller.toString()) == " ") {
+    if (imageFile == null &&
+        json.encode(_avtarpathcontroller.toString()) == " ") {
       print("call function edit if");
       return Image.asset('assets/user.png',
           width: MediaQuery.of(context).size.width / 3.0,

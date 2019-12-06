@@ -25,7 +25,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   var id;
   var avtar;
   var avatarPath;
-  bool isavtar = true;
+  dynamic isavtar = 0;
 
   @override
   void initState() {
@@ -48,7 +48,7 @@ class ProfileScreenState extends State<ProfileScreen> {
         headers: {"Authorization": json.decode(show_token)},
       );
 
-      print('profile======${json.decode(response.body)['data']['firstName']}');
+      print('profile======${json.decode(response.body )['data']}');
       setState(() {
         email = json.decode(response.body)['data']['email'];
         name = json.decode(response.body)['data']['firstName'];
@@ -58,13 +58,15 @@ class ProfileScreenState extends State<ProfileScreen> {
         avtar = json.decode(response.body)['data']['avatar'];
         avatarPath = json.decode(response.body)['data']['avatarPath'];
       });
-      if (avtar == '') {
+      if (json.encode(avtar.toString()) == "") {
+        print("call if in profile====${json.encode(avtar.toString())}");
         setState(() {
-          isavtar = false;
+          isavtar = 0;
         });
       } else {
+        print("call else in profile");
         setState(() {
-          isavtar = true;
+          isavtar = 1;
         });
       }
       return "Successfull";
@@ -114,12 +116,12 @@ class ProfileScreenState extends State<ProfileScreen> {
                     height: 200),
                 FractionalTranslation(
                     translation: Offset(0.0, 0.5),
-                    child: isavtar == true
+                    child: isavtar == 1
                         ? Container(
                             width: MediaQuery.of(context).size.width / 3.0,
                             height: MediaQuery.of(context).size.width / 3.0,
                             decoration: new BoxDecoration(
-                              color: const Color(0xff7c94b6),
+                              // color: const Color(0xff7c94b6),
                               image: new DecorationImage(
                                 image: new NetworkImage(
                                     config.mediaUrl + '$avatarPath' + '$avtar'),
@@ -137,7 +139,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                             width: MediaQuery.of(context).size.width / 3.0,
                             height: MediaQuery.of(context).size.width / 3.0,
                             decoration: new BoxDecoration(
-                              color: const Color(0xff7c94b6),
+                              // color: const Color(0xff7c94b6),
                               image: new DecorationImage(
                                 image: new ExactAssetImage('assets/user.png'),
                                 fit: BoxFit.cover,

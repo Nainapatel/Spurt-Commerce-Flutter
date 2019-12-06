@@ -35,6 +35,7 @@ class EditprofileScreenState extends State<EditprofileScreen> {
     super.initState();
     getProfile();
   }
+
 /** This function for open Gallery and pick image and this function call from showChoiceDialog */
   opeGallery(BuildContext context) async {
     var picture = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -44,6 +45,7 @@ class EditprofileScreenState extends State<EditprofileScreen> {
     print('imageFile$imageFile');
     Navigator.of(context).pop();
   }
+
 /** This function for open camera and pick image and this function call from showChoiceDialog */
   opeCamera(BuildContext context) async {
     var picture = await ImagePicker.pickImage(source: ImageSource.camera);
@@ -52,6 +54,7 @@ class EditprofileScreenState extends State<EditprofileScreen> {
     });
     Navigator.of(context).pop();
   }
+
 /** This function for choose image for update Profile */
   Future<void> showChoiceDialog(BuildContext context) {
     print('call function');
@@ -75,6 +78,7 @@ class EditprofileScreenState extends State<EditprofileScreen> {
           );
         });
   }
+
 /** This function for get profile value */
   Future<String> getProfile() async {
     final prefs = await SharedPreferences.getInstance();
@@ -99,11 +103,15 @@ class EditprofileScreenState extends State<EditprofileScreen> {
       _avtarcontroller = json.decode(response.body)['data']['avatar'];
       _avtarpathcontroller = json.decode(response.body)['data']['avatarPath'];
 
-      print('avtar=====$_avtarcontroller======$_avtarpathcontroller');
+      print(
+          'avtar=====${json.encode(_avtarpathcontroller.toString())}======$_avtarpathcontroller');
       return "Successfull";
     }
   }
-/** This function for update profile. */
+
+/*
+ This function for update profile.
+*/
   Future<String> updatePost() async {
     final prefs = await SharedPreferences.getInstance();
     var show_token = prefs.getString('jwt_token');
@@ -142,24 +150,24 @@ class EditprofileScreenState extends State<EditprofileScreen> {
               'phoneNumber': _phonenumbercontroller.text,
               'image': base64Image,
             });
-        print('res====${response.body}');
+        print('res===edit======${response.body}');
         Navigator.of(context).pushNamed("/profile");
         return "Successfull";
       }
     }
   }
-/** This function for image view */
-  Widget decideImageView() {
-    if (imageFile == null && _avtarcontroller == '') {
-      print("call function edit if");
 
+/* This function for image view */
+  Widget decideImageView() {
+    // print("call this image function========${json.decode(_avtarcontroller.toString())}");
+    if (imageFile == null && json.encode(_avtarpathcontroller.toString()) == " ") {
+      print("call function edit if");
       return Image.asset('assets/user.png',
           width: MediaQuery.of(context).size.width / 3.0,
           height: MediaQuery.of(context).size.width / 3.0,
           fit: BoxFit.fill);
-    } else if (_avtarcontroller == '') {
+    } else if (imageFile != null) {
       print("call function else if");
-
       return Image.file(
         imageFile,
         width: MediaQuery.of(context).size.width / 3.0,
@@ -176,6 +184,7 @@ class EditprofileScreenState extends State<EditprofileScreen> {
       );
     }
   }
+
 /** This Function contains validate Email. this call from widget*/
   String validateEmail(String value) {
     String pattern =

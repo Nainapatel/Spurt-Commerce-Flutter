@@ -114,6 +114,13 @@ class FeaturedProductScreenState extends State<FeaturedProductScreen> {
                                           child: Column(
                                             children: [
                                               new Container(
+                                                 decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                      image: AssetImage(
+                                                          "assets/img_loader.gif"),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
                                                 margin: const EdgeInsets.only(
                                                     bottom: 20.0, top: 10.0),
                                                 child: Image.network(

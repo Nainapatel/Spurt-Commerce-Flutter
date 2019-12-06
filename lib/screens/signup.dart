@@ -141,7 +141,7 @@ This for Register value
                         ),
                         validator: (String arg) {
                           if (!(arg.length > 8) && arg.isNotEmpty)
-                            return 'Password must be less than 8 charater';
+                            return 'Password must not be less than 8 charater';
                           else
                             return null;
                         },

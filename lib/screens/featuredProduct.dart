@@ -6,6 +6,8 @@ import 'package:spurtcommerce/config.dart' as config;
 import 'package:spurtcommerce/screens/productView.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:spurtcommerce/screens/drawer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 void main() {
   runApp(new FeaturedProductScreen());
 }
@@ -18,12 +20,21 @@ class FeaturedProductScreen extends StatefulWidget {
 class FeaturedProductScreenState extends State<FeaturedProductScreen> {
   List featuredProduct;
   bool loader = false;
+  List<String> count_cart;
+  List<String> count_wishlist;
   @override
   void initState() {
     super.initState();
     this.getFeatureProduct(); //Function for featured product
+  this.getCount();
   }
-
+  getCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    count_wishlist = prefs.getStringList('id_wishlist') ?? List<String>();
+    count_cart = prefs.getStringList('obj_list') ?? List<String>();
+    print(
+        ">>>>>>>>${count_wishlist.length}>>home>>>>>length of obj list====${count_cart.length}");
+  }
   /*
  *  For getFeatureProduct
  */
@@ -46,7 +57,7 @@ class FeaturedProductScreenState extends State<FeaturedProductScreen> {
         appBar: new AppBar(
           title: new Text('Featured Product'),
             actions: [
-            Container(
+             Container(
               margin: EdgeInsets.fromLTRB(0, 0, 25, 0),
               child: Row(
                 children: <Widget>[
@@ -54,20 +65,74 @@ class FeaturedProductScreenState extends State<FeaturedProductScreen> {
                     onTap: () {
                       Navigator.of(context).pushNamed("/cart");
                     },
-                    child: Icon(
-                      Icons.shopping_cart,
-                      color: Colors.white,
-                      size: 24.0,
+                    child: Stack(
+                      children: <Widget>[
+                        IconButton(
+                            icon: Icon(
+                          Icons.shopping_cart,
+                          color: Colors.white,
+                        )),
+                        new Positioned(
+                          right: 9,
+                          top: 5,
+                          child: new Container(
+                            padding: EdgeInsets.all(2),
+                            decoration: new BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            constraints: BoxConstraints(
+                              minWidth: 14,
+                              minHeight: 14,
+                            ),
+                            child: Text(
+                              '${count_cart.length}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 8,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).pushNamed("/wishlist");
                     },
-                    child: Icon(
-                      Icons.favorite,
-                      color: Colors.white,
-                      size: 24.0,
+                    child: Stack(
+                      children: <Widget>[
+                        new IconButton(
+                            icon: Icon(
+                          Icons.favorite,
+                          color: Colors.white,
+                        )),
+                        new Positioned(
+                          right: 9,
+                          top: 5,
+                          child: new Container(
+                            padding: EdgeInsets.all(2),
+                            decoration: new BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            constraints: BoxConstraints(
+                              minWidth: 14,
+                              minHeight: 14,
+                            ),
+                            child: Text(
+                              '${count_wishlist.length}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 8,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ],

@@ -77,22 +77,22 @@ class CartViewScreenState extends State<CartView> {
   @override
   void initState() {
     super.initState();
-    priceCount();
+    this.priceCount();
+  
   }
+
+
 
 /*
  This function for addition of price 
 */
   priceCount() async {
-    print("call price count");
     final prefs = await SharedPreferences.getInstance();
 
     show_obj = prefs.getStringList('obj_list') ??
         List<String>(); // show_obj contains id, qty and price.
 
     if (show_obj.length != 0) {
-      print("in if price====${jsonDecode(show_obj.toString())[0]['price']}");
-
       var result = show_obj
           .map<int>((m) =>
               jsonDecode(m.toString())['price'].runtimeType == String
@@ -103,14 +103,12 @@ class CartViewScreenState extends State<CartView> {
           );
       price = result;
       loader = true;
-      print("result==========$price=========");
     } else {
       loader = false;
     }
     setState(() {
       lengthofitems = show_obj.length;
     });
-    print("price======$lengthofitems");
   }
 
 /*
@@ -119,8 +117,6 @@ class CartViewScreenState extends State<CartView> {
  * @params {String} id of produce
  */
   decremateQtyProduct(data, index, id) async {
-    print("==========================");
-
     final prefs = await SharedPreferences.getInstance();
     List show_obj = prefs.getStringList('obj_list');
 
@@ -164,7 +160,7 @@ class CartViewScreenState extends State<CartView> {
     prefs.setStringList('obj_list', show_obj);
     List<String> show_objnew =
         prefs.getStringList('obj_list') ?? List<String>();
-    print("show_===at last time==$show_objnew");
+
     qty = true;
 
     priceCount();
@@ -176,8 +172,6 @@ class CartViewScreenState extends State<CartView> {
  * @params {String} id of produce
  */
   incremateQtyProduct(data, index, id) async {
-    print("==========================");
-
     final prefs = await SharedPreferences.getInstance();
     List show_obj = prefs.getStringList('obj_list');
 
@@ -219,7 +213,7 @@ class CartViewScreenState extends State<CartView> {
     prefs.setStringList('obj_list', show_obj);
     List<String> show_objnew =
         prefs.getStringList('obj_list') ?? List<String>();
-    print("show_===at last time==$show_objnew");
+
     qty = true;
 
     priceCount();
@@ -242,7 +236,7 @@ class CartViewScreenState extends State<CartView> {
     Toast.show("Remove item Successfully", context,
         duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
     priceCount();
-    print("after delete show===${cartProductArray.length}==${show_obj.length}");
+
     var listid = show_id.contains(id);
     if (listid == true) {
       show_id.remove(id);
@@ -264,13 +258,11 @@ class CartViewScreenState extends State<CartView> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<Cart> data = snapshot.data;
-          print("call cart item=====${data.length}=");
 
           return ListView.builder(
               shrinkWrap: true,
               itemCount: data.length,
               itemBuilder: (context, i) {
-                print("main loop in widget===${data.length}===$i");
                 return Card(
                     child: Padding(
                         padding: EdgeInsets.symmetric(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spurtcommerce/screens/drawer.dart';
-
+import 'package:spurtcommerce/screens/home.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -24,10 +24,21 @@ class WishlistScreenState extends State<WishlistScreen> {
   dynamic qty = 1;
   var obj;
   List<dynamic> listobj = [];
+   List<String> count_cart;
   @override
   void initState() {
     super.initState();
     this.getWishlist(); // Function for get product details
+    this.getCount();
+  }
+
+ 
+  getCount() async {
+    final prefs = await SharedPreferences.getInstance();
+   
+    count_cart = prefs.getStringList('obj_list') ?? List<String>();
+    print(
+        ">>>>>>>>home>>>>>length of obj list====${count_cart.length}");
   }
 
   /*
@@ -117,20 +128,51 @@ class WishlistScreenState extends State<WishlistScreen> {
       appBar: new AppBar(
         title: new Text('Wishlist'),
         actions: [
-          Container(
+         Container(
               margin: EdgeInsets.fromLTRB(0, 0, 25, 0),
-              child: Row(children: <Widget>[
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pushNamed("/cart");
-                  },
-                  child: Icon(
-                    Icons.shopping_cart,
-                    color: Colors.white,
-                    size: 24.0,
+              child: Row(
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed("/cart");
+                    },
+                    child: Stack(
+                      children: <Widget>[
+                        IconButton(
+                            icon: Icon(
+                          Icons.shopping_cart,
+                          color: Colors.white,
+                        )),
+                        new Positioned(
+                          right: 9,
+                          top: 5,
+                          child: new Container(
+                            padding: EdgeInsets.all(2),
+                            decoration: new BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            constraints: BoxConstraints(
+                              minWidth: 14,
+                              minHeight: 14,
+                            ),
+                            child: Text(
+                              '${count_cart.length}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 8,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ]))
+                 
+                ],
+              ),
+            )
         ],
       ),
       body: Center(
@@ -139,12 +181,11 @@ class WishlistScreenState extends State<WishlistScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                     Image.asset(
-                              'assets/cart_wish.jpeg',
-                              width: 200,
-                              height: 200,
-                            ),
-                  
+                    Image.asset(
+                      'assets/cart_wish.jpeg',
+                      width: 200,
+                      height: 200,
+                    ),
                     Text(
                       "Your Wish List is empty",
                       style: TextStyle(color: Colors.grey),

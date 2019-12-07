@@ -6,6 +6,7 @@ import 'package:spurtcommerce/config.dart' as config;
 import 'package:flutter_html/flutter_html.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spurtcommerce/screens/cart.dart';
+import 'package:spurtcommerce/screens/home.dart';
 import 'package:spurtcommerce/screens/wishlist.dart';
 import 'package:toast/toast.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -30,13 +31,23 @@ class ProductViewScreenState extends State<ProductViewScreen> {
   var objPrice;
   List<dynamic> listobj = [];
   List<dynamic> listprice = [];
+    List<String> count_cart;
+  List<String> count_wishlist;
+
   @override
   void initState() {
     super.initState();
     this.getProduct(); // Function for get product details
     this.checkinCartid();
+    this.getCount();
   }
-
+ getCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    count_wishlist = prefs.getStringList('id_wishlist') ?? List<String>();
+    count_cart = prefs.getStringList('obj_list') ?? List<String>();
+    print(
+        ">>>>>>>>${count_wishlist.length}>>home>>>>>length of obj list====${count_cart.length}");
+  }
 /** This function for check  product added or not in wishlist and cart */
   checkinCartid() async {
     var id = this.widget.id;
@@ -95,11 +106,10 @@ class ProductViewScreenState extends State<ProductViewScreen> {
  * store Array(id,qty,price,updatedqty) in SharedPreferences
 */
   _saveQtyValue(id, price, name, model) async {
-    print(id);
     final prefs = await SharedPreferences.getInstance();
     List<String> show_obj = prefs.getStringList('obj_list') ?? List<String>();
     listobj = show_obj;
-    print('price===$price');
+
     obj = {
       'productId': id,
       'quantity': qty,
@@ -108,10 +118,9 @@ class ProductViewScreenState extends State<ProductViewScreen> {
       'name': name,
       'model': model
     };
-    print('obj====$obj');
+
     listobj.add(json.encode(obj));
     prefs.setStringList('obj_list', listobj);
-    print("in product view ===$show_obj");
 
     List<String> show_id = prefs.getStringList('id_list') ?? List<String>();
     List<String> list = show_id;
@@ -123,6 +132,8 @@ class ProductViewScreenState extends State<ProductViewScreen> {
     setState(() {
       isaddtocart = false;
     });
+
+  
   }
 
 /*
@@ -133,7 +144,6 @@ class ProductViewScreenState extends State<ProductViewScreen> {
     var show_token = prefs.getString('jwt_token');
 
     if (show_token == null) {
-      print('call if');
       Navigator.of(context).pushNamed("/login");
     } else {
       List<String> show_wishid =
@@ -148,11 +158,12 @@ class ProductViewScreenState extends State<ProductViewScreen> {
         headers: {"Authorization": json.decode(show_token)},
         body: {'productId': id},
       );
-      print("response=wishlist===${response.body}");
+
       loader = true;
       setState(() {
         iswishlisted = false;
       });
+     
     }
   }
 
@@ -161,8 +172,8 @@ class ProductViewScreenState extends State<ProductViewScreen> {
     return new Scaffold(
         appBar: new AppBar(
           title: new Text(this.widget.name),
-           actions: [
-            Container(
+          actions: [
+              Container(
               margin: EdgeInsets.fromLTRB(0, 0, 25, 0),
               child: Row(
                 children: <Widget>[
@@ -170,20 +181,74 @@ class ProductViewScreenState extends State<ProductViewScreen> {
                     onTap: () {
                       Navigator.of(context).pushNamed("/cart");
                     },
-                    child: Icon(
-                      Icons.shopping_cart,
-                      color: Colors.white,
-                      size: 24.0,
+                    child: Stack(
+                      children: <Widget>[
+                        IconButton(
+                            icon: Icon(
+                          Icons.shopping_cart,
+                          color: Colors.white,
+                        )),
+                        new Positioned(
+                          right: 9,
+                          top: 5,
+                          child: new Container(
+                            padding: EdgeInsets.all(2),
+                            decoration: new BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            constraints: BoxConstraints(
+                              minWidth: 14,
+                              minHeight: 14,
+                            ),
+                            child: Text(
+                              '${count_cart.length}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 8,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).pushNamed("/wishlist");
                     },
-                    child: Icon(
-                      Icons.favorite,
-                      color: Colors.white,
-                      size: 24.0,
+                    child: Stack(
+                      children: <Widget>[
+                        new IconButton(
+                            icon: Icon(
+                          Icons.favorite,
+                          color: Colors.white,
+                        )),
+                        new Positioned(
+                          right: 9,
+                          top: 5,
+                          child: new Container(
+                            padding: EdgeInsets.all(2),
+                            decoration: new BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            constraints: BoxConstraints(
+                              minWidth: 14,
+                              minHeight: 14,
+                            ),
+                            child: Text(
+                              '${count_wishlist.length}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 8,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ],

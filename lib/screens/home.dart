@@ -6,7 +6,7 @@ import 'package:spurtcommerce/config.dart' as config;
 import 'package:spurtcommerce/screens/subCategory.dart';
 import 'package:spurtcommerce/screens/productView.dart';
 import 'package:spurtcommerce/screens/drawer.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 
@@ -34,6 +34,8 @@ class HomeScreenState extends State<HomeScreen> {
     'assets/house.jpg',
     'assets/women.jpeg'
   ];
+  List<String> count_cart;
+  List<String> count_wishlist;
 
   @override
   void initState() {
@@ -41,6 +43,15 @@ class HomeScreenState extends State<HomeScreen> {
     this.getJSONData(); // Function for banner Images
     this.getCategoty(); // Function for category display
     this.getFeatureProduct(); //Function for featured product
+    this.getCount();
+  }
+
+  getCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    count_wishlist = prefs.getStringList('id_wishlist') ?? List<String>();
+    count_cart = prefs.getStringList('obj_list') ?? List<String>();
+    print(
+        ">>>>>>>>${count_wishlist.length}>>home>>>>>length of obj list====${count_cart.length}");
   }
 
 /*
@@ -54,11 +65,7 @@ class HomeScreenState extends State<HomeScreen> {
       bannreData = json.decode(response.body)['data'];
     });
     loader = true;
-    print(config.mediaUrlBanner + '${bannreData[0]['image']}');
-    print(config.mediaUrlBanner + '${bannreData[1]['image']}');
-    print(config.mediaUrlBanner + '${bannreData[2]['image']}');
-    print(config.mediaUrlBanner + '${bannreData[3]['image']}');
-    print(config.mediaUrlBanner + '${bannreData[4]['image']}');
+
     return "Successfull";
   }
 
@@ -124,7 +131,6 @@ class HomeScreenState extends State<HomeScreen> {
     image.insert(3, AssetImage('assets/sale/men.jpg'));
     image.insert(4, AssetImage('assets/sale/sports.jpg'));
     image.insert(5, AssetImage('assets/sale/women.jpg'));
-    print('loader==$loader');
 
     return new Scaffold(
         drawer: DrawerScreen(),
@@ -139,20 +145,74 @@ class HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       Navigator.of(context).pushNamed("/cart");
                     },
-                    child: Icon(
-                      Icons.shopping_cart,
-                      color: Colors.white,
-                      size: 24.0,
+                    child: Stack(
+                      children: <Widget>[
+                        IconButton(
+                            icon: Icon(
+                          Icons.shopping_cart,
+                          color: Colors.white,
+                        )),
+                        new Positioned(
+                          right: 9,
+                          top: 5,
+                          child: new Container(
+                            padding: EdgeInsets.all(2),
+                            decoration: new BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            constraints: BoxConstraints(
+                              minWidth: 14,
+                              minHeight: 14,
+                            ),
+                            child: Text(
+                              '${count_cart.length}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 8,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).pushNamed("/wishlist");
                     },
-                    child: Icon(
-                      Icons.favorite,
-                      color: Colors.white,
-                      size: 24.0,
+                    child: Stack(
+                      children: <Widget>[
+                        new IconButton(
+                            icon: Icon(
+                          Icons.favorite,
+                          color: Colors.white,
+                        )),
+                        new Positioned(
+                          right: 9,
+                          top: 5,
+                          child: new Container(
+                            padding: EdgeInsets.all(2),
+                            decoration: new BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            constraints: BoxConstraints(
+                              minWidth: 14,
+                              minHeight: 14,
+                            ),
+                            child: Text(
+                              '${count_wishlist.length}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 8,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ],
